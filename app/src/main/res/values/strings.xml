@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">NanoClientKotlin</string>
+    <string name="item_name_1">ConnectToServer</string>
+    <string name="item_name_2">Caixa de Entrada</string>
+    <string name="item_description_1">Start Channel</string>
+    <string name="item_description_2">Mensagens recebidas</string>
+    <string name="dog_description_3">Stealing socks</string>
+    <string name="dog_description_4">Meeting new animals</string>
+    <string name="dog_description_5">Digging in the garden</string>
+    <string name="dog_description_6">Chasing sea foam</string>
+    <string name="dog_description_7">Bothering her paw-rents</string>
+    <string name="dog_description_8">Sunbathing</string>
+    <string name="dog_description_9">Sleeping in dangerous places</string>
+    <string name="about">About:</string>
+    <string name="years_old">%d years old</string>
+    <string name="expand_button_content_description">See more or less information about a dog.</string>
+</resources>
