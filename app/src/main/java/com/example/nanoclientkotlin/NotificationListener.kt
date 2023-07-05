@@ -4,9 +4,21 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 
+class NotificationListener(): PropertyChangeListener{
+    override fun propertyChange(evt: PropertyChangeEvent?) {
+       if(evt != null){
+           when (evt.propertyName) {
+               "messageCount"->{
+
+               }
+           }
+       }
+    }
+
+}
 
 class ItemClickHandler (){
     private val messageSenderAccess = MessageSenderAccess()

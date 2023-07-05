@@ -4,17 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,11 +31,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nanoclientkotlin.common.DefaultButton
 import com.example.nanoclientkotlin.navigation.NavGraph
+import com.example.nanoclientkotlin.vm.MessageViewModel
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             NanoClientKotlinTheme {
                 // A surface container using the 'background' color from the theme
@@ -61,26 +59,6 @@ fun NanoApp(){
     val context = LocalContext.current
     val navController = rememberNavController()
     NavGraph(navController = navController)
-//    Scaffold(
-//
-//        topBar = {
-//            NanoTopAppBar()
-//        }
-//
-//    ) { it ->
-//        LazyColumn(contentPadding = it) {
-//            items(items) {
-//                Item(
-//                    item = it,
-//                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)),
-//                    onClick = {
-//                            //Handle click
-//                            itemClickHandler.handleClickEvent(context, it.name)
-//                        }
-//                )
-//            }
-//        }
-//    }
 
 }
 
@@ -146,26 +124,4 @@ fun ItemInformation(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun NanoTopAppBar(modifier: Modifier = Modifier) {
-    CenterAlignedTopAppBar(
-        title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.image_size))
-                        .padding(dimensionResource(id = R.dimen.padding_small)),
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
-                    contentDescription = null
-                )
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-        },
-        modifier = modifier
-    )
-}
 

@@ -7,9 +7,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.nanoclientkotlin.screens.CheckListScreen
 import com.example.nanoclientkotlin.screens.HomeScreen
 import com.example.nanoclientkotlin.screens.InboxScreen
 import com.example.nanoclientkotlin.screens.LoginScreen
+import com.example.nanoclientkotlin.screens.SendMessageScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -23,6 +25,10 @@ fun NavGraph(navController: NavHostController) {
         addHomeScreen(navController, this)
 
         addProfileScreen(navController, this)
+
+        addSendMessageScreen(navController, this)
+
+        addCheckListScreen(navController, this)
 
         addSearchScreen(navController, this)
     }
@@ -43,7 +49,8 @@ private fun addLoginScreen(
 
 private fun addHomeScreen(
     navController: NavHostController,
-    navGraphBuilder: NavGraphBuilder
+    navGraphBuilder: NavGraphBuilder,
+    //messageViewModel: MessageViewModel
 ) {
     navGraphBuilder.composable(route = NavRoute.Home.path) {
 
@@ -51,11 +58,17 @@ private fun addHomeScreen(
             navigateToProfile = { id, showDetails ->
                 navController.navigate(NavRoute.Inbox.withArgs(id.toString(), showDetails.toString()))
             },
+            navigateToSendMessage = { query ->
+                navController.navigate(NavRoute.SendMessage.withArgs(query))
+            },
+            navigateToCheckList = { query ->
+                navController.navigate(NavRoute.CheckList.withArgs(query))
+            },
             navigateToSearch = { query ->
                 navController.navigate(NavRoute.Search.withArgs(query))
             },
             popBackStack = { navController.popBackStack() },
-            popUpToLogin= { popUpToLogin(navController) },
+            popUpToLogin = { popUpToLogin(navController) }
         )
     }
 }
@@ -86,6 +99,57 @@ private fun addProfileScreen(
         InboxScreen(
             id = args?.getInt(NavRoute.Inbox.id)!!,
             showDetails = args.getBoolean(NavRoute.Inbox.showDetails),
+            popBackStack = { navController.popBackStack() },
+            popUpToLogin = { popUpToLogin(navController) }
+        )
+    }
+}
+private fun addSendMessageScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.SendMessage.withArgsFormat(NavRoute.SendMessage.query),
+        arguments = listOf(
+            navArgument(NavRoute.SendMessage.query) {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
+    ) { navBackStackEntry ->
+
+        val args = navBackStackEntry.arguments
+
+        SendMessageScreen(
+            query = args?.getString(NavRoute.SendMessage.query),
+            popBackStack = { navController.popBackStack() },
+            popUpToLogin = { popUpToLogin(navController) },
+            onSendMessage = {message ->
+                // Handle sending the message
+                // e.g., call an API or perform any desired action
+                println("Sending message: $message")
+            }
+        )
+    }
+}
+private fun addCheckListScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.CheckList.withArgsFormat(NavRoute.CheckList.query),
+        arguments = listOf(
+            navArgument(NavRoute.CheckList.query) {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
+    ) { navBackStackEntry ->
+
+        val args = navBackStackEntry.arguments
+
+        CheckListScreen(
+            query = args?.getString(NavRoute.CheckList.query),
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) }
         )

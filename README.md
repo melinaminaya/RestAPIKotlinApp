@@ -1,5 +1,4 @@
 
-A Kotlin REST API project that demonstrates...
 
 ## Table of Contents
 ## Project Description

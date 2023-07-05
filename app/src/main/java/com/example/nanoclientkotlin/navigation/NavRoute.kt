@@ -11,7 +11,13 @@ sealed class NavRoute(val path: String) {
     }
 
     object Search: NavRoute("search") {
-        val query = "query"
+        const val query = "query"
+    }
+    object SendMessage: NavRoute("sendMessage") {
+        const val query = "query"
+    }
+    object CheckList: NavRoute("checkList") {
+        const val query = "query"
     }
 
     // build navigation path (for screen navigation)

@@ -1,38 +1,36 @@
 package com.example.nanoclientkotlin
 
-import android.app.Application
-import android.content.Context
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nanoclientkotlin.NanoWebsocketClient.TAG
+import com.example.nanoclientkotlin.consts.ConstsCommSvc
+import com.example.nanoclientkotlin.dataRemote.DbMessage
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import fi.iki.elonen.NanoHTTPD
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
-import org.json.JSONException
-import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import kotlin.coroutines.coroutineContext
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Date
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 
 
 object NanoWebsocketClient{
@@ -43,7 +41,7 @@ object NanoWebsocketClient{
     private const val MAX_RETRIES = 5
     private const val RETRY_DELAY_MS: Long = 5000 // 1 second
     private val client = OkHttpClient()
-    private val packageName = "com.example.nanoclientkotlin"
+    val packageName = "com.example.nanoclientkotlin"
     const val CONNECTION_CHECK_INTERVAL_MS = 1000
     // Declare the observable subject
     private val webSocketConnectionSubject: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
@@ -52,6 +50,17 @@ object NanoWebsocketClient{
 
 
     var connectionDisposable: Disposable? = null
+
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(serverUrl)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    private val webSocketApi: WebSocketApi by lazy {
+        retrofit.create(WebSocketApi::class.java)
+    }
     fun connect() {
         val authorizationToken = requestAuthorizationToken()
         if (authorizationToken != null) {
@@ -64,23 +73,13 @@ object NanoWebsocketClient{
                 ) // Add the JWT token as an Authorization header
                 .build()
 
+//            webSocketClient = webSocketApi.listenForMessages(request.url.toString())
+//        }
             webSocketClient = client.newWebSocket(request, object : WebSocketListener() {
                 override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
                     println("WebSocket connected")
                     webSocketConnectionSubject.onNext(true)
-//                    connectionDisposable = observeWebSocketConnection()
-//                        .subscribe { isConnected ->
-//                            // Handle the WebSocket connection status
-//                           // Thread.sleep(10000)
-//                            if (isConnected) {
-//                                // WebSocket is connected
-//                                Log.d(TAG, "Websocket is connected")
-//                            } else {
-//                                // WebSocket is disconnected
-//                                retryConnection()
-//                                Log.d(TAG, "Websocket is retrying connection")
-//                            }
-//                        }
+                    startSendingRequests()
                 }
 
                 override fun onMessage(webSocket: WebSocket, text: String) {
@@ -91,7 +90,7 @@ object NanoWebsocketClient{
                             val notification = gson.fromJson(text, ReceivedNotification::class.java)
                             when (notification.param1) {
                                 "notification" -> {
-                                    Log.d(TAG, "Received message: $notification")
+                                    Log.d(TAG, "Received notification: $notification")
                                     sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                     //Thread.sleep(500)
                                     //sendMessageList("messageList")
@@ -106,6 +105,52 @@ object NanoWebsocketClient{
                                             Log.d(TAG, "Received messageList: $notification")
                                             ObservableUtil.attachProperty("messageList", messagesList)
                                         }
+                                        "messageCount" ->{
+                                            val count = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received messageCount: $notification")
+                                            ObservableUtil.attachProperty("messageCount", count)
+                                        }
+                                        "messageDelete" ->{
+                                            val messageDeleted = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received messageDelete Response: $notification")
+                                        }
+                                        ConstsCommSvc.REQ_MESSAGE_SET_AS_READ ->{
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_MESSAGE_SET_AS_READ} Response: $notification")
+                                        }
+                                        ConstsCommSvc.REQ_FORM_LIST ->{
+                                            val formList = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_FORM_LIST}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_FORM_LIST, formList)
+                                        }
+                                        ConstsCommSvc.REQ_GET_CHECKLIST ->{
+                                            val checkList = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_CHECKLIST}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_CHECKLIST, checkList)
+                                        }
+                                        ConstsCommSvc.REQ_GET_CURRENT_DATE ->{
+                                            val objectReq = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_CURRENT_DATE}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_CURRENT_DATE, objectReq)
+                                        }
+                                        ConstsCommSvc.REQ_GET_MCT_PARAMETERS ->{
+                                            val objectReq = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_MCT_PARAMETERS}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_MCT_PARAMETERS, objectReq)
+                                        }
+                                        ConstsCommSvc.REQ_GET_POSITION_LAST ->{
+                                            val objectReq = notification.param3
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_POSITION_LAST}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_POSITION_LAST, objectReq)
+                                        }
+
                                     }
 
                                 }
@@ -146,6 +191,8 @@ object NanoWebsocketClient{
         }
 
     }
+
+
     fun retryConnection() {
         var retries = 0
 
@@ -182,7 +229,7 @@ object NanoWebsocketClient{
 
         val objectJson = gson.toJson(notificationSubscription)
         webSocketClient!!.send(objectJson)
-        sendMessageRequest("messageList")
+        sendMessageRequest("messageList", null, null, null)
         // Example: Send a binary message
 //        val binaryMessage = "Binary data".encodeUtf8()
 //        webSocketClient!!.send(binaryMessage)
@@ -212,21 +259,68 @@ object NanoWebsocketClient{
 
     }
 
-    fun sendMessageRequest(param: String) {
+    fun sendMessageRequest(param: String, param1: Any?, param2: Any?, param3: Any?) {
         try {
             val objectRequestJson: String
 
             val response: String = when (param) {
-                "messageList" -> {
+                ConstsCommSvc.REQ_MESSAGE_LIST -> {
                     val objectMessageList = MessageList(0, false, msgStatusNum = null)
                     gson.toJson(objectMessageList)
                 }
 
-                "messageCount" -> {
+                ConstsCommSvc.REQ_MESSAGE_COUNT -> {
                     val objectMessageCount = MessageCount(false, msgStatusNum = 3)
                     gson.toJson(objectMessageCount)
                 }
-
+                ConstsCommSvc.REQ_MESSAGE_DELETE ->{
+                    val objectDelete = MessageCode(msgCode = param1!! as Long)
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_MESSAGE_SET_AS_READ ->{
+                    val objectDelete = MessageCode(msgCode = param1!! as Long)
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_CONFIG_SERVICE_LOG ->{
+                    val objectDelete = MessageCode(msgCode =param1!! as Long)
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_FILE_OPERATION ->{
+                    val objectDelete = MessageCode(msgCode =param1!! as Long)
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_FORM_LIST ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_GET_CHECKLIST ->{
+                    val objectReq = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectReq)
+                }
+                ConstsCommSvc.REQ_GET_CURRENT_DATE ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_GET_MCT_PARAMETERS ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_GET_POSITION_LAST ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_POSITION_HISTORY_COUNT ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_POSITION_HISTORY_LIST ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
+                ConstsCommSvc.REQ_RESET_DATABASE ->{
+                    val objectDelete = RequestObject( param1 = param1, param2 = param2, param3 = param3 )
+                    gson.toJson(objectDelete)
+                }
                 else -> return // Return early if the parameter is not valid
             }
 
@@ -238,6 +332,23 @@ object NanoWebsocketClient{
             Log.d(TAG, "request $param: $objectRequestJson")
         } catch (e: Exception) {
             Log.d(TAG, "Exception on $param: $e")
+        }
+    }
+
+    /**
+     * startSendingRequests could be used outside of NanoWebsocketClient because it
+     * carries websocket inside, but not its functions.
+     */
+    fun startSendingRequests() {
+        val coroutineScope = CoroutineScope(Dispatchers.Default)
+
+        coroutineScope.launch {
+            while (true) {
+                // Send your request on the WebSocket
+                sendMessageRequest("messageCount", null, null, null)
+
+                delay(10000) // Delay for 5 seconds
+            }
         }
     }
 
@@ -299,16 +410,17 @@ object NanoWebsocketClient{
         return null
     }
 
-
 }
+
+
 
 class MessageSenderAccess {
 var messageInboxActivity = MessageInboxActivity()
     fun sendMessageToServer(message: DbMessage) {
         NanoWebsocketClient.getInstance().sendDbMessage(message)
     }
-    fun sendRequest(){
-        NanoWebsocketClient.getInstance().sendMessageRequest("messageList")
+    fun sendRequest(param: String, param1: Any?, param2: Any?, param3: Any?){
+        NanoWebsocketClient.getInstance().sendMessageRequest(param, param1, param2, param3 )
 
     }
 //    fun listenForMessageList(): Disposable {
@@ -326,6 +438,8 @@ data class SendObject(val param1: String?, val param2: Any?)
 data class ReceivedNotification(val param1: String?, val param2: String?, val param3: Any?)
 data class MessageList( val msgCode: Long, val isForward: Boolean?, val msgStatusNum: Int?)
 data class MessageCount(val isForward: Boolean?, val msgStatusNum: Int?)
+data class MessageCode(val msgCode: Long)
+data class RequestObject(val param1: Any?, val param2: Any?, val param3:Any?)
 
 
 class NanoHTTPClient {
@@ -362,27 +476,10 @@ class NanoHTTPClient {
     }
 }
 
-data class DbMessage(
-    val code: Long, val isForward: Boolean, val subject:String, val body:ByteArray, val sourceAddr:String, val dateTime: Date,
-    val createdTime:Date, val sndRcvdTime: Date, val deliveryTime : Date, val codeMsgStatus: Long, val lastStatusTime: Date,
-    val returnReadReceipt:Boolean, val subtype: Int, val codeMsgPriority:Long, val codeForm: Long, val gmn:Long,
-    val replyGmn:Long, val posLatitude:Int, val posLongitude:Int,
-    val posTime:Date, val posSpeed:Int, val posHeading:Float, val posAging:Int, val posFlags:Int, val transmissionChannel: Int,
-    val transmittedChannel:Int, val transmissionType:Int, val isOutOfBandMessage:Boolean, val outOfBandSessionId:Long,
-    val outOfBandFileName:String, val outOfBandNumMsgStatus:Int, val extDevMessageId: Int,val itemId:Long,val messageId:Long
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+interface WebSocketApi {
+    @GET("/")
+    fun connect(): Call<ResponseBody>
 
-        other as DbMessage
-
-        if (!body.contentEquals(other.body)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return body.contentHashCode()
-    }
+    @GET
+    fun listenForMessages(toString: String): WebSocket
 }
