@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.screens.CheckListScreen
 import com.example.nanoclientkotlin.screens.HomeScreen
 import com.example.nanoclientkotlin.screens.InboxScreen
@@ -24,7 +25,7 @@ fun NavGraph(navController: NavHostController) {
 
         addHomeScreen(navController, this)
 
-        addProfileScreen(navController, this)
+        addInboxScreen(navController, this)
 
         addSendMessageScreen(navController, this)
 
@@ -55,7 +56,7 @@ private fun addHomeScreen(
     navGraphBuilder.composable(route = NavRoute.Home.path) {
 
         HomeScreen(
-            navigateToProfile = { id, showDetails ->
+            navigateToInbox = { id, showDetails ->
                 navController.navigate(NavRoute.Inbox.withArgs(id.toString(), showDetails.toString()))
             },
             navigateToSendMessage = { query ->
@@ -77,14 +78,14 @@ private fun popUpToLogin(navController: NavHostController) {
     navController.popBackStack(NavRoute.Login.path, inclusive = false)
 }
 
-private fun addProfileScreen(
+private fun addInboxScreen(
     navController: NavHostController,
     navGraphBuilder: NavGraphBuilder
 ) {
     navGraphBuilder.composable(
-        route = NavRoute.Inbox.withArgsFormat(NavRoute.Inbox.id, NavRoute.Inbox.showDetails),
+        route = NavRoute.Inbox.withArgsFormat(NavRoute.Inbox.selectedTab, NavRoute.Inbox.showDetails),
         arguments = listOf(
-            navArgument(NavRoute.Inbox.id) {
+            navArgument(NavRoute.Inbox.selectedTab) {
                 type = NavType.IntType
             }
             ,
@@ -97,7 +98,7 @@ private fun addProfileScreen(
         val args = navBackStackEntry.arguments
 
         InboxScreen(
-            id = args?.getInt(NavRoute.Inbox.id)!!,
+            selectedTab = args?.getInt(NavRoute.Inbox.selectedTab)!!,
             showDetails = args.getBoolean(NavRoute.Inbox.showDetails),
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) }
@@ -119,13 +120,18 @@ private fun addSendMessageScreen(
     ) { navBackStackEntry ->
 
         val args = navBackStackEntry.arguments
+        val senderAccess = MessageSenderAccess()
 
         SendMessageScreen(
             query = args?.getString(NavRoute.SendMessage.query),
+            navigateToInbox = { id, showDetails ->
+                navController.navigate(NavRoute.Inbox.withArgs(id.toString(), showDetails.toString()))
+            },
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) },
             onSendMessage = {message ->
                 // Handle sending the message
+                senderAccess.sendMessageToServer(message = message)
                 // e.g., call an API or perform any desired action
                 println("Sending message: $message")
             }

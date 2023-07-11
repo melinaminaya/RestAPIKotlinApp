@@ -38,3 +38,41 @@ fun Alert(
         }
     )
 }
+@Composable
+fun CustomAlert(
+    onDismissRequest: () -> Unit,
+    title: String?,
+    content:String,
+    confirmBt:String,
+    onClick: () -> Unit
+){
+
+    //  val dialogState = remember { AlertDialogState() }
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        // state = dialogState,
+
+        title = {
+            if (title!= null){
+                Text(text = title)
+            }
+        },
+        text = {
+            Text(text = content)
+        },
+        confirmButton = {
+            Button(
+                onClick = onClick
+            ) {
+                Text(text = confirmBt)
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismissRequest
+            ) {
+                Text(text = "Fechar")
+            }
+        }
+    )
+}

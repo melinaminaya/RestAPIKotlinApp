@@ -30,6 +30,8 @@ class ConstsCommSvc {
         const val AUTH_ENDPOINT = "auth"
 
         const val REQ_MESSAGE_LIST = "messageList"
+        const val REQ_MESSAGE_LIST_INBOX = "messageListInbox"
+        const val REQ_MESSAGE_LIST_OUTBOX = "messageListOutbox"
         const val REQ_MESSAGE_COUNT = "messageCount"
         const val REQ_MESSAGE_DELETE = "messageDelete"
         const val REQ_MESSAGE_SET_AS_READ = "messageSetAsRead"

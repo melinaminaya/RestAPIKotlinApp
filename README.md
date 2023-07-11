@@ -2,9 +2,19 @@
 
 ## Table of Contents
 ## Project Description
+Simple RestApi Client App that connects and list messages. Made out of Kotlin and JetPackCompose.
 The `NanoWebsocketClient` is responsible for establishing a WebSocket connection with the server, sending and receiving messages, and handling connection status.
+
 ## Technologies Used
+UI made with JetPack Compose.
+
 ## Installation
+To Build Application
+- Java 17
+- Android Gradle Plugin Version: 8.0.1
+- Gradle Version: 8.0
+  Configure your Android Studio (Flamingo).
+
 ## Usage
 1. Create an instance of `NanoWebsocketClient` by calling `getInstance()`.
 
@@ -66,27 +76,6 @@ websocketClient.observeWebSocketConnection()
 
 - `REQ_MESSAGE_DELETE`: Represents the request type for deleting a message.
 
-## Contributing
-## License
-
-## Project Description
-Simple RestApi Client App that connects and list messages. Made out of Kotlin and JetPackCompose.
-
-## Technologies Used
-UI made with JetPack Compose.
-
-## Installation
-To Build Application
- - Java 17
- - Android Gradle Plugin Version: 8.0.1
- - Gradle Version: 8.0
- Configure your Android Studio (Flamingo).
-
-## Usage
-Just run in Android Studio and emulate on android.
-
-## API Endpoints
-JAVADoc to be built. 
 
 ## Contributing
 N/A

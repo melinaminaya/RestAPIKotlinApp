@@ -18,38 +18,8 @@ import com.google.gson.reflect.TypeToken
 class MessageInboxActivity {
     //var messageSenderAccess = MessageSenderAccess()
     var messages: ArrayList<DbMessage> = arrayListOf()
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        handleWebsocketRequestMessageList()
-//        setContent {
-//            NanoClientKotlinTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    InboxMessagesScreen()
-//                }
-//            }
-//        }
-//    }
-
-    private fun handleWebsocketRequestMessageList() {
-//        messageSenderAccess.sendRequest()
-//        messageSenderAccess.listenForMessageList()
-
-        // Pass the list of messages to the MessageInboxActivity composable
 
 
-        // return "Success"
-    }
-
-    fun setMessages(json: String) {
-        val gson = Gson()
-        val type = object : TypeToken<ArrayList<DbMessage>>() {}.type
-        messages = gson.fromJson(json, type)
-
-    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable

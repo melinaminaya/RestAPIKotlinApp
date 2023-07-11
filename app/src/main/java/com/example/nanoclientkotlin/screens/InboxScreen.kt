@@ -1,8 +1,11 @@
 package com.example.nanoclientkotlin.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -29,9 +32,12 @@ import com.example.nanoclientkotlin.ObservableUtil.addPropertyChangeListener
 import com.google.gson.Gson
 import java.beans.PropertyChangeListener
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 
 import com.example.nanoclientkotlin.dataRemote.DbMessage
 import com.fasterxml.jackson.core.type.TypeReference
@@ -42,17 +48,17 @@ import com.fasterxml.jackson.databind.ObjectMapper
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InboxScreen(
-    id: Int,
+    selectedTab: Int,
     showDetails: Boolean,
     popBackStack: () -> Unit,
     popUpToLogin: () -> Unit,
 //    messageViewModel: (MessageViewModel) -> Unit
 ) {
-
+    val selectedTabIndex = rememberSaveable { mutableStateOf(selectedTab) }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Caixa de Entrada") },
+                title = { Text(text = "Mensagens") },
                 navigationIcon = {
                     IconButton(onClick = popBackStack) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
@@ -66,19 +72,46 @@ fun InboxScreen(
             )
         }
     ) { it ->
-
         Column(
             modifier = Modifier.padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Spacer(modifier = Modifier.height(5.dp))
             Text("Details: $showDetails", fontSize = 20.sp)
 
-                MessageListScreen()
+            val tabs = listOf("Inbox", "Outbox")
+            TabRow(
+                selectedTabIndex = selectedTabIndex.value,
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.primary)
+            ) {
+                tabs.forEachIndexed { index, text ->
+                    Tab(
+                        text = { Text(text) },
+                        selected = selectedTabIndex.value == index,
+                        onClick = { selectedTabIndex.value = index }
+                    )
+                }
+            }
+
+            when (selectedTabIndex.value) {
+                0 -> MessageListScreen()
+                1 -> OutboxScreen()
+            }
 
         }
     }
+//        Column(
+//            modifier = Modifier.padding(it),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//
+//            Spacer(modifier = Modifier.height(5.dp))
+//            Text("Details: $showDetails", fontSize = 20.sp)
+//
+//                MessageListScreen()
+//
+//        }
+//    }
 }
 
 @Preview(showBackground = true)
@@ -90,7 +123,7 @@ private fun DefaultPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             InboxScreen(
-                id = 7,
+                selectedTab = 0,
                 showDetails = true,
                 popBackStack = {},
                 popUpToLogin = {},

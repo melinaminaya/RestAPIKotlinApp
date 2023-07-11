@@ -24,13 +24,16 @@ object ObservableUtil {
     }
     fun getValue(propertyName: String): Any? {
         return when (propertyName) {
-            "messageList" -> messageList
+            ConstsCommSvc.REQ_MESSAGE_LIST_INBOX -> messageListInbox
+            ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX -> messageListOutbox
             "messageCount" -> transformJsonToInteger(messageCount.toString())
             ConstsCommSvc.REQ_FORM_LIST -> formList
             ConstsCommSvc.REQ_GET_CHECKLIST -> checkList
             ConstsCommSvc.REQ_GET_CURRENT_DATE -> currentDate
             ConstsCommSvc.REQ_GET_MCT_PARAMETERS -> mctParams
             ConstsCommSvc.REQ_GET_POSITION_LAST -> lastPosition
+            ConstsCommSvc.REQ_POSITION_HISTORY_COUNT -> positionHistoryCount
+            ConstsCommSvc.REQ_RESET_DATABASE -> resetDatabase
 
             else -> null
         }
@@ -38,25 +41,30 @@ object ObservableUtil {
 
     fun <T> setValue(propertyName: String, value: T) {
         when (propertyName) {
-            "messageList" ->
-                    messageList = value
+            ConstsCommSvc.REQ_MESSAGE_LIST_INBOX -> messageListInbox = value
+            ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX -> messageListOutbox = value
             "messageCount" -> messageCount = value
             ConstsCommSvc.REQ_FORM_LIST -> formList = value
             ConstsCommSvc.REQ_GET_CHECKLIST -> checkList = value
             ConstsCommSvc.REQ_GET_CURRENT_DATE -> currentDate = value
             ConstsCommSvc.REQ_GET_MCT_PARAMETERS -> mctParams = value
             ConstsCommSvc.REQ_GET_POSITION_LAST -> lastPosition = value
+            ConstsCommSvc.REQ_POSITION_HISTORY_COUNT -> positionHistoryCount = value
+            ConstsCommSvc.REQ_RESET_DATABASE -> resetDatabase = value
 
         }
     }
 
-    var messageList: Any? = null
+    var messageListInbox: Any? = null
+    var messageListOutbox: Any? = null
     private var messageCount:Any? = null
     private var formList: Any? = null
     private var checkList: Any? = null
     private var currentDate: Any? = null
     private var mctParams: Any? = null
     private var lastPosition: Any? = null
+    private var positionHistoryCount: Any? = null
+    private var resetDatabase: Any? = null
 
     private fun transformJsonToInteger(json: String): Int? {
         val gson = Gson()

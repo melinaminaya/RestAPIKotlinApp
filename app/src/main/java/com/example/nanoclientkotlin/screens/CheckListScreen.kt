@@ -46,9 +46,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nanoclientkotlin.NanoClientKotlinTheme
+import com.example.nanoclientkotlin.common.DropdownCard
 import com.example.nanoclientkotlin.common.LoadingIcon
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
+import com.example.nanoclientkotlin.dataRemote.CheckList
 import com.example.nanoclientkotlin.dataRemote.LastPosition
+import com.example.nanoclientkotlin.dataRemote.ParameterModel
+import com.example.nanoclientkotlin.dataRemote.PositionHistory
 import com.example.nanoclientkotlin.vm.CheckListViewModel
 import com.example.nanoclientkotlin.vm.CurrentDateViewModel
 import com.example.nanoclientkotlin.vm.FormListViewModel
@@ -67,6 +71,8 @@ fun CheckListScreen( query : (String?),
     val currentDate by currentDateViewModel.currentDate.observeAsState("")
     val lastPositionViewModel: LastPositionViewModel = viewModel()
     val lastPosition by lastPositionViewModel.lastPosition.observeAsState<LastPosition>()
+    val positionHistoryCount by lastPositionViewModel.positionHistoryCount.observeAsState("")
+    val positionHistoryList by lastPositionViewModel.positionHistoryList.observeAsState(emptyList())
     val mctParamsViewModel: MctParamsViewModel = viewModel()
     val mctParams by mctParamsViewModel.mctParams.observeAsState(emptyList())
 
@@ -75,6 +81,8 @@ fun CheckListScreen( query : (String?),
         currentDateViewModel.fetchCurrentDate()
         mctParamsViewModel.fetchData()
         lastPositionViewModel.fetchPositionLast()
+        lastPositionViewModel.fetchPositionHistoryCount()
+        lastPositionViewModel.fetchPositionHistoryList()
     }
 
     Scaffold(
@@ -101,49 +109,10 @@ fun CheckListScreen( query : (String?),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = ConstsCommSvc.REQ_GET_CHECKLIST,
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        )
-                        // Rest of the checkList content
-                        checkList.forEach { item ->
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Cellular Status and Signal: ${item.cellularStatus} - ${item.cellularSignalLevel}",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "Satellite Status and Signal: ${item.hasSatelliteSignal} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "Wifi Status: ${item.wifiStatus} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "Last GPS Position Date: ${item.lastGpsPosDate} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "Service Version: ${item.serviceVersion} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "Interface Version: ${item.interfaceVersion} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "DatabaseVersion: ${item.databaseVersion} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Text(
-                                text = "SO System Version: ${item.soSystemVersion} ",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                        }
-                    }
+                DropdownCard(title = ConstsCommSvc.REQ_GET_CHECKLIST) {
+                    CheckListCard(
+                        content = checkList
+                    )
                 }
             }
 
@@ -163,53 +132,32 @@ fun CheckListScreen( query : (String?),
                 }
             }
             item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = ConstsCommSvc.REQ_GET_POSITION_LAST,
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        if(lastPosition!= null) {
-                            Text(
-                                text = "Code: ${lastPosition!!.code}",
-                                style = TextStyle(fontSize = 14.sp)
-                            )
-                            Text(
-                                text = "Altitude: ${lastPosition!!.altitude}",
-                                style = TextStyle(fontSize = 14.sp)
-                            )
-                            Text(
-                                text = "PositionTime: ${lastPosition!!.positionTime}",
-                                style = TextStyle(fontSize = 14.sp)
-                            )
-
-                        }else{
-                            LoadingIcon()
-                        }
-
-                    }
-                }
+                DropdownCard(title = ConstsCommSvc.REQ_GET_POSITION_LAST, content = {
+                    PositionLastCard(
+                        content = lastPosition
+                    )
+                })
             }
             item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = ConstsCommSvc.REQ_GET_MCT_PARAMETERS,
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        mctParams.forEach { param ->
-                            Text(
-                                text = "Param Type: ${param.type}",
-                                style = TextStyle(fontSize = 16.sp)
-                            )
-                            Text(
-                                text = "${param.number}: ${param.value}",
-                                style = TextStyle(fontSize = 14.sp)
-                            )
-                        }
-                    }
+                DropdownCard(title = ConstsCommSvc.REQ_POSITION_HISTORY_COUNT, content = {
+                    PositionCountCard(
+                        content = positionHistoryCount
+                    )
+                })
+            }
+            item {
+                DropdownCard(title = ConstsCommSvc.REQ_POSITION_HISTORY_LIST, content = {
+                    PositionHistoryListCard(
+                        content = positionHistoryList
+                    )
+                })
+            }
+
+            item {
+                DropdownCard(title = ConstsCommSvc.REQ_GET_MCT_PARAMETERS) {
+                    MctParametersCard(
+                        content = mctParams
+                    )
                 }
             }
 
@@ -231,5 +179,114 @@ private fun DefaultPreview() {
                 popUpToLogin = {}
             )
         }
+    }
+}
+
+@Composable
+fun PositionHistoryListCard(content:List<PositionHistory>?){
+    if (content != null) {
+        Spacer(modifier = Modifier.height(8.dp))
+        content.forEach { contentItem ->
+            Text(
+                text = contentItem.toString(),
+                style = TextStyle(fontSize = 14.sp)
+            )
+        }
+    } else {
+        Text(
+            text = "No position history list.",
+            style = TextStyle(fontSize = 14.sp)
+        )
+    }
+}
+@Composable
+fun MctParametersCard(content: List<ParameterModel>?){
+    if (content!= null){
+        Spacer(modifier = Modifier.height(8.dp))
+       content.forEach { param ->
+            Text(
+                text = "Param Type: ${param.type}",
+                style = TextStyle(fontSize = 16.sp)
+            )
+            Text(
+                text = "${param.number}: ${param.value}",
+                style = TextStyle(fontSize = 14.sp)
+            )
+        }
+    }
+}
+@Composable
+fun CheckListCard(content: List<CheckList>?){
+    if (content!=null){
+        Spacer(modifier = Modifier.height(8.dp))
+        content.forEach { item ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Cellular Status and Signal: ${item.cellularStatus} - ${item.cellularSignalLevel}",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Satellite Status and Signal: ${item.hasSatelliteSignal} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Wifi Status: ${item.wifiStatus} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Last GPS Position Date: ${item.lastGpsPosDate} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Service Version: ${item.serviceVersion} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Interface Version: ${item.interfaceVersion} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "DatabaseVersion: ${item.databaseVersion} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "SO System Version: ${item.soSystemVersion} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+    }
+
+}
+@Composable
+fun PositionLastCard(content: LastPosition?){
+    Spacer(modifier = Modifier.height(8.dp))
+    if(content!= null) {
+        Text(
+            text = "Code: ${content.code}",
+            style = TextStyle(fontSize = 14.sp)
+        )
+        Text(
+            text = "Altitude: ${content.altitude}",
+            style = TextStyle(fontSize = 14.sp)
+        )
+        Text(
+            text = "PositionTime: ${content.positionTime}",
+            style = TextStyle(fontSize = 14.sp)
+        )
+
+    }else{
+        LoadingIcon()
+    }
+}@Composable
+fun PositionCountCard(content: String?){
+    Spacer(modifier = Modifier.height(8.dp))
+    if(content!= null) {
+        Text(
+            text = content,
+            style = TextStyle(fontSize = 14.sp)
+        )
+
+    }else{
+        LoadingIcon()
     }
 }

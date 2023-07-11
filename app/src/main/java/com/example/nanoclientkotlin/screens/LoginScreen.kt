@@ -30,6 +30,7 @@ fun LoginScreen(
             text = "Log In",
             icon = R.drawable.baseline_login_24,
             modifier = Modifier.fillMaxWidth(),
+            color = null,
             onClick = navigateToHome
         )
     }

@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.nanoclientkotlin.NanoWebsocketClient.TAG
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.FilterModel
+import com.example.nanoclientkotlin.dataRemote.ParseData
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
@@ -31,6 +33,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import java.util.concurrent.TimeUnit
 
 
 object NanoWebsocketClient{
@@ -43,11 +46,11 @@ object NanoWebsocketClient{
     private val client = OkHttpClient()
     val packageName = "com.example.nanoclientkotlin"
     const val CONNECTION_CHECK_INTERVAL_MS = 1000
+    private const val WEBSOCKET_TIMEOUT_MS = 30000
     // Declare the observable subject
     private val webSocketConnectionSubject: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
     // Expose the observable to observe the WebSocket connection status
     private fun observeWebSocketConnection(): Observable<Boolean> = webSocketConnectionSubject
-
 
     var connectionDisposable: Disposable? = null
 
@@ -87,7 +90,7 @@ object NanoWebsocketClient{
                     try {
                         val jsonElement = JsonParser.parseString(text)
                         if (jsonElement.isJsonObject) {
-                            val notification = gson.fromJson(text, ReceivedNotification::class.java)
+                            val notification = gson.fromJson(text, ReceivedRequestResponse::class.java)
                             when (notification.param1) {
                                 "notification" -> {
                                     Log.d(TAG, "Received notification: $notification")
@@ -100,13 +103,21 @@ object NanoWebsocketClient{
                                 "request" -> {
                                     when(notification.param2){
                                         "messageList"->{
-                                            val messagesList = notification.param3
+                                            val messagesList = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received messageList: $notification")
-                                            ObservableUtil.attachProperty("messageList", messagesList)
+                                            val param3Json = notification.param3.toString()
+                                            val filterList = ParseData.parseMessageList(param3Json)
+                                            Log.d(TAG, "$filterList")
+                                            when(filterList.param2){
+                                                true->ObservableUtil.attachProperty(ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX, messagesList) // equal fetchOutboxMessages
+                                               false-> ObservableUtil.attachProperty(ConstsCommSvc.REQ_MESSAGE_LIST_INBOX, messagesList)
+
+                                            }
+
                                         }
                                         "messageCount" ->{
-                                            val count = notification.param3
+                                            val count = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received messageCount: $notification")
                                             ObservableUtil.attachProperty("messageCount", count)
@@ -121,40 +132,61 @@ object NanoWebsocketClient{
                                             Log.d(TAG, "Received ${ConstsCommSvc.REQ_MESSAGE_SET_AS_READ} Response: $notification")
                                         }
                                         ConstsCommSvc.REQ_FORM_LIST ->{
-                                            val formList = notification.param3
+                                            val formList = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received ${ConstsCommSvc.REQ_FORM_LIST}: $notification")
                                             ObservableUtil.attachProperty(ConstsCommSvc.REQ_FORM_LIST, formList)
                                         }
                                         ConstsCommSvc.REQ_GET_CHECKLIST ->{
-                                            val checkList = notification.param3
+                                            val checkList = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_CHECKLIST}: $notification")
                                             ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_CHECKLIST, checkList)
                                         }
                                         ConstsCommSvc.REQ_GET_CURRENT_DATE ->{
-                                            val objectReq = notification.param3
+                                            val objectReq = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_CURRENT_DATE}: $notification")
                                             ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_CURRENT_DATE, objectReq)
                                         }
                                         ConstsCommSvc.REQ_GET_MCT_PARAMETERS ->{
-                                            val objectReq = notification.param3
+                                            val objectReq = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_MCT_PARAMETERS}: $notification")
                                             ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_MCT_PARAMETERS, objectReq)
                                         }
                                         ConstsCommSvc.REQ_GET_POSITION_LAST ->{
-                                            val objectReq = notification.param3
+                                            val objectReq = notification.param4
                                             sendMessage(NanoHTTPD.Response.Status.OK.toString())
                                             Log.d(TAG, "Received ${ConstsCommSvc.REQ_GET_POSITION_LAST}: $notification")
                                             ObservableUtil.attachProperty(ConstsCommSvc.REQ_GET_POSITION_LAST, objectReq)
+                                        }
+                                        ConstsCommSvc.REQ_POSITION_HISTORY_COUNT ->{
+                                            val objectReq = notification.param4
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_POSITION_HISTORY_COUNT}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_POSITION_HISTORY_COUNT, objectReq)
+                                        }
+                                        ConstsCommSvc.REQ_POSITION_HISTORY_LIST ->{
+                                            val objectReq = notification.param4
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_POSITION_HISTORY_LIST}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_POSITION_HISTORY_LIST, objectReq)
+                                        }
+                                        ConstsCommSvc.REQ_RESET_DATABASE ->{
+                                            val objectReq = notification.param4
+                                            sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                            Log.d(TAG, "Received ${ConstsCommSvc.REQ_RESET_DATABASE}: $notification")
+                                            ObservableUtil.attachProperty(ConstsCommSvc.REQ_RESET_DATABASE, objectReq)
                                         }
 
                                     }
 
                                 }
-
+                                "messageSent" ->{
+                                    Log.d(TAG, "Received Sent Confirmation: $notification")
+                                    sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                                }
                                 else -> {
                                     // Handle case when notification.param1 is null
                                     Log.d(TAG, "Received message: $text")
@@ -229,7 +261,7 @@ object NanoWebsocketClient{
 
         val objectJson = gson.toJson(notificationSubscription)
         webSocketClient!!.send(objectJson)
-        sendMessageRequest("messageList", null, null, null)
+//        sendMessageRequest("messageList", null, null, null)
         // Example: Send a binary message
 //        val binaryMessage = "Binary data".encodeUtf8()
 //        webSocketClient!!.send(binaryMessage)
@@ -246,7 +278,7 @@ object NanoWebsocketClient{
     fun sendDbMessage(message: DbMessage) {
         try {
             val messageJson = gson.toJson(message, DbMessage::class.java)
-            val myObject = SendObject("message", messageJson)
+            val myObject = SendObject("messageSend", messageJson)
             val response = gson.toJson(myObject)
             if (webSocketClient != null) {
                 webSocketClient!!.send(response)
@@ -265,7 +297,7 @@ object NanoWebsocketClient{
 
             val response: String = when (param) {
                 ConstsCommSvc.REQ_MESSAGE_LIST -> {
-                    val objectMessageList = MessageList(0, false, msgStatusNum = null)
+                    val objectMessageList = RequestObject(param1, param2, param3)
                     gson.toJson(objectMessageList)
                 }
 
@@ -363,8 +395,9 @@ object NanoWebsocketClient{
         webSocketClient!!.close(1000, "Client disconnecting")
     }
     private fun requestAuthorizationToken(): String? {
-        val client = OkHttpClient()
-
+        val client = OkHttpClient.Builder()
+            .readTimeout(30, TimeUnit.SECONDS) // Increase the timeout duration as needed
+            .build()
         val request = Request.Builder()
             .url("$serverUrl/auth") // Replace with your server's endpoint URL
             .addHeader("User-Agent", System.getProperty("http.agent")!!)
@@ -375,6 +408,7 @@ object NanoWebsocketClient{
         while (response == null || !response.isSuccessful) {
             try {
                 response = client.newCall(request).execute()
+
                 if (response.isSuccessful) {
                     // Parse the response body to extract the authorization token
                     val tokenReceived = response.body?.string()
@@ -405,6 +439,9 @@ object NanoWebsocketClient{
             }catch (e: InterruptedException) {
                 // Interrupted while waiting, return null or throw an exception
                 return null
+            } finally {
+                // Close the response body if it is not null
+                response?.body?.close()
             }
         }
         return null
@@ -436,6 +473,7 @@ var messageInboxActivity = MessageInboxActivity()
 }
 data class SendObject(val param1: String?, val param2: Any?)
 data class ReceivedNotification(val param1: String?, val param2: String?, val param3: Any?)
+data class ReceivedRequestResponse(val param1: String?, val param2: String?, val param3: Any?, val param4:Any?)
 data class MessageList( val msgCode: Long, val isForward: Boolean?, val msgStatusNum: Int?)
 data class MessageCount(val isForward: Boolean?, val msgStatusNum: Int?)
 data class MessageCode(val msgCode: Long)

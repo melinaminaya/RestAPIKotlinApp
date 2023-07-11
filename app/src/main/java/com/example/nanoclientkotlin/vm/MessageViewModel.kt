@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -31,6 +32,10 @@ open class MessageViewModel (
 
     private val _messages = MutableLiveData<List<DbMessage>>()
     val messages: MutableLiveData<List<DbMessage>> get() = _messages
+
+    private val _outboxMessages = MutableLiveData<List<DbMessage>>()
+    val outboxMessages: MutableLiveData<List<DbMessage>> get() = _outboxMessages
+
     private val senderAccess = MessageSenderAccess()
     private val gson = Gson()
     private val mapper = ObjectMapper()
@@ -40,105 +45,28 @@ open class MessageViewModel (
 //            getGames()
         }
     // Function to fetch messages
-    fun fetchMessages() {
-        senderAccess.sendRequest("messageList", null, null, null)
+    suspend fun fetchMessages() {
+        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0, false, null)
 //        sendMessageAndWait("messageList")
         // Replace with your logic to fetch messages from a data source
         val fetchedMessages: List<DbMessage> = fetchDataFromDataSource()
-        _messages.value = fetchedMessages
-        val messages =  listOf(
-            DbMessage(
-                code = 1L,
-                isForward = false,
-                msgStatusNum = 0,
-                subtype = 1,
-                formCode = 123L,
-                subject = "Sample Subject 1",
-                body = null,
-                createdTime = "2023-05-30 12:00:00",
-                sendReceivedTime = "2023-05-30 12:10:00",
-                deliveryTime = "2023-05-30 12:15:00",
-                gmn = 12345L,
-                isOutOfBandMessage = false,
-                outOfBandFileName = null,
-                outOfBandNumMsgStatus = 0,
-                sourceAddress = "sender@example.com",
-                destAddress = "recipient@example.com",
-                lastStatusTime = "2023-05-30 12:20:00",
-                msgPriority = 2,
-                replyGmn = 0L,
-                posLatitude = 0,
-                posLongitude = 0,
-                positionTime = null,
-                posSpeed = 0,
-                positionHeading = 0.0f,
-                positionAging = 0,
-                transmissionChannel = 1,
-                transmittedChannel = 1,
-                transmissionType = 1
-            ),
-            DbMessage(
-                code = 2L,
-                isForward = true,
-                msgStatusNum = 1,
-                subtype = 2,
-                formCode = 456L,
-                subject = "Sample Subject 2",
-                body = null,
-                createdTime = "2023-05-30 13:00:00",
-                sendReceivedTime = "2023-05-30 13:10:00",
-                deliveryTime = "2023-05-30 13:15:00",
-                gmn = 67890L,
-                isOutOfBandMessage = true,
-                outOfBandFileName = "attachment.txt",
-                outOfBandNumMsgStatus = 1,
-                sourceAddress = "sender@example.com",
-                destAddress = "recipient@example.com",
-                lastStatusTime = "2023-05-30 13:20:00",
-                msgPriority = 1,
-                replyGmn = 0L,
-                posLatitude = 0,
-                posLongitude = 0,
-                positionTime = null,
-                posSpeed = 0,
-                positionHeading = 0.0f,
-                positionAging = 0,
-                transmissionChannel = 2,
-                transmittedChannel = 2,
-                transmissionType = 2
-            ),
-            DbMessage(
-                code = 3L,
-                isForward = false,
-                msgStatusNum = 2,
-                subtype = 3,
-                formCode = 789L,
-                subject = "Sample Subject 3",
-                body = null,
-                createdTime = "2023-05-30 14:00:00",
-                sendReceivedTime = "2023-05-30 14:10:00",
-                deliveryTime = "2023-05-30 14:15:00",
-                gmn = 13579L,
-                isOutOfBandMessage = false,
-                outOfBandFileName = null,
-                outOfBandNumMsgStatus = 0,
-                sourceAddress = "sender@example.com",
-                destAddress = "recipient@example.com",
-                lastStatusTime = "2023-05-30 14:20:00",
-                msgPriority = 0,
-                replyGmn = 0L,
-                posLatitude = 0,
-                posLongitude = 0,
-                positionTime = null,
-                posSpeed = 0,
-                positionHeading = 0.0f,
-                positionAging = 0,
-                transmissionChannel = 3,
-                transmittedChannel = 3,
-                transmissionType = 3
-            )
-        )
-//        _messages.value = messages
+        // Filter out messages that already exist in the current list
+        val newMessages = fetchedMessages.filter { message ->
+            _messages.value?.none { it.code == message.code } ?: true
+        }
+        // Append the new messages to the existing list
+        _messages.value = _messages.value.orEmpty() + newMessages
+
+    }
+    suspend fun fetchOutboxMessages() {
+        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0, true, null)
+
+        val fetchedMessages: List<DbMessage> = fetchDataFromDataSourceOutbox()
+        val newMessages = fetchedMessages.filter { message ->
+            _outboxMessages.value?.none { it.code == message.code } ?: true
+        }
+        _outboxMessages.value = _outboxMessages.value.orEmpty() + newMessages
+
     }
 
     // Function to delete a message
@@ -172,18 +100,26 @@ open class MessageViewModel (
     }
 
     // Dummy functions for demonstration purposes
-    private fun fetchDataFromDataSource(): List<DbMessage> {
-        val valueOnLaunched = ObservableUtil.getValue("messageList")
+    private suspend fun fetchDataFromDataSource(): List<DbMessage> {
+        delay(500)
+          val  valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_INBOX)
+
+
         val jsonOnLaunched = gson.toJson(valueOnLaunched)
+        val dateFormat = SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.ENGLISH)
+        mapper.dateFormat = dateFormat
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
-//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-//            .setDateFormat(StdDateFormat())
-//            .registerKotlinModule()
-//
-//        val simpleModule = SimpleModule()
-//            .addDeserializer(Date::class.java, CustomDateDeserializer())
-//
-//        mapper.registerModule(simpleModule)
+
+        return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<DbMessage>>() {})
+    }
+    private suspend fun fetchDataFromDataSourceOutbox(): List<DbMessage> {
+        delay(500)
+        val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX)
+
+        val jsonOnLaunched = gson.toJson(valueOnLaunched)
+        val dateFormat = SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.ENGLISH)
+        mapper.dateFormat = dateFormat
+        mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
 
         return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<DbMessage>>() {})
     }
@@ -200,6 +136,8 @@ open class MessageViewModel (
         val senderAccess = MessageSenderAccess()
         return@withContext senderAccess.sendRequest(message, null, null, null)
     }
+
+
 }
 class CustomDateDeserializer : StdDeserializer<Date>(Date::class.java) {
     private val dateFormat = SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault())

@@ -31,21 +31,24 @@ open class CheckListViewModel: ViewModel() {
     suspend fun fetchCheckList() {
         senderAccess.sendRequest(ConstsCommSvc.REQ_GET_CHECKLIST, null, null, null)
 
-        val fetchedMessages: List<CheckList> = fetchDataFromDataSource()
+        val fetchedMessages: List<CheckList>? = fetchDataFromDataSource()
         _checkList.value = fetchedMessages
     }
 
-    private suspend fun fetchDataFromDataSource(): List<CheckList> {
+    private suspend fun fetchDataFromDataSource(): List<CheckList>? {
         delay(500)
         val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_GET_CHECKLIST)
-        val jsonOnLaunched =  gson.toJson(valueOnLaunched)
+        if(valueOnLaunched != null) {
+            val jsonOnLaunched = gson.toJson(valueOnLaunched)
 
-        mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
+            mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
 
-        return mapper.readValue(
-            jsonOnLaunched,
-            object : TypeReference<MutableList<CheckList>>() {})
-
+            return mapper.readValue(
+                jsonOnLaunched,
+                object : TypeReference<MutableList<CheckList>>() {})
+        }else{
+            return null
+        }
     }
 
 }

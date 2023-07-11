@@ -50,6 +50,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        // Close the connection
+        NanoWebsocketClient.disconnect()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
