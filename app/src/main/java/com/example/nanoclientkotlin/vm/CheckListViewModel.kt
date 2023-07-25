@@ -29,7 +29,7 @@ open class CheckListViewModel: ViewModel() {
 
 
     suspend fun fetchCheckList() {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_CHECKLIST, null, null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_CHECKLIST, null, null, null, null)
 
         val fetchedMessages: List<CheckList>? = fetchDataFromDataSource()
         _checkList.value = fetchedMessages
@@ -38,18 +38,26 @@ open class CheckListViewModel: ViewModel() {
     private suspend fun fetchDataFromDataSource(): List<CheckList>? {
         delay(500)
         val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_GET_CHECKLIST)
-        if(valueOnLaunched != null) {
+        return if(valueOnLaunched != null) {
             val jsonOnLaunched = gson.toJson(valueOnLaunched)
 
             mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
 
-            return mapper.readValue(
+            mapper.readValue(
                 jsonOnLaunched,
                 object : TypeReference<MutableList<CheckList>>() {})
         }else{
-            return null
+            null
         }
     }
 
+    fun sendConfigServiceLog(enable: Boolean, maxFileCount: Int, maxFileSize: Long){
+        senderAccess.sendRequest(ConstsCommSvc.REQ_CONFIG_SERVICE_LOG,
+            enable, maxFileCount, maxFileSize, null)
+    }
+    fun sendFileOperation(files: Int, options: Int, destination: String, timeoutMS: Int){
+        senderAccess.sendRequest(ConstsCommSvc.REQ_CONFIG_SERVICE_LOG,
+            files, options, destination, timeoutMS)
+    }
 }
 

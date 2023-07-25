@@ -30,7 +30,8 @@ open class ResetDatabaseViewModel: ViewModel() {
 
 
    suspend fun fetchResetDb() {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_RESET_DATABASE, null, null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_RESET_DATABASE, null,
+            null, null, null)
 
         val fetchedMessages: String = fetchDataFromDataSource()
         _resetDatabase.value = fetchedMessages

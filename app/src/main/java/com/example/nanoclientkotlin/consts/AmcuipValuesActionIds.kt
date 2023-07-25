@@ -1,4 +1,4 @@
-package com.example.nanoclientkotlin
+package com.example.nanoclientkotlin.consts
 /**
  * Identificadores das ac�es.
  *
