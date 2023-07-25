@@ -42,13 +42,13 @@ open class LastPositionViewModel: ViewModel() {
 
     suspend fun fetchPositionLast() {
 
-        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_POSITION_LAST,0 , null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_POSITION_LAST,0 , null, null, null)
 
-        val fetchedMessages: LastPosition = fetchDataFromDataSource()
+        val fetchedMessages: LastPosition? = fetchDataFromDataSource()
         _lastPosition.value = fetchedMessages
     }
 
-    private suspend fun fetchDataFromDataSource(): LastPosition {
+    private suspend fun fetchDataFromDataSource(): LastPosition? {
         delay(500)
         val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_GET_POSITION_LAST)
 //        val jsonOnLaunched =  gson.toJson(valueOnLaunched)
@@ -83,7 +83,10 @@ open class LastPositionViewModel: ViewModel() {
 
     suspend fun fetchPositionHistoryCount() {
 
-        senderAccess.sendRequest(ConstsCommSvc.REQ_POSITION_HISTORY_COUNT,2 , null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_POSITION_HISTORY_COUNT,2 ,
+            null,
+            null,
+            null)
 
         val fetchedMessages: String = fetchDataFromDataSourceCount()
         _positionHistoryCount.value = fetchedMessages
@@ -112,7 +115,8 @@ open class LastPositionViewModel: ViewModel() {
      */
     suspend fun fetchPositionHistoryList() {
 
-        senderAccess.sendRequest(ConstsCommSvc.REQ_POSITION_HISTORY_LIST,0 , 4, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_POSITION_HISTORY_LIST,0 ,
+            4, null, null)
 
         val fetchedMessages: List<PositionHistory>? = fetchDataFromDataSourceList()
         _positionHistoryList.value = fetchedMessages

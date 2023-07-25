@@ -26,7 +26,8 @@ open class MctParamsViewModel: ViewModel() {
 
 
     suspend fun fetchData() {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_MCT_PARAMETERS, null, null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_MCT_PARAMETERS,
+            null, null, null, null)
 
         val fetchedMessages: List<ParameterModel> = fetchDataFromDataSource()
         _currentDate.value = fetchedMessages

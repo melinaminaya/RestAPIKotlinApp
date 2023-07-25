@@ -12,6 +12,7 @@ import com.example.nanoclientkotlin.screens.CheckListScreen
 import com.example.nanoclientkotlin.screens.HomeScreen
 import com.example.nanoclientkotlin.screens.InboxScreen
 import com.example.nanoclientkotlin.screens.LoginScreen
+import com.example.nanoclientkotlin.screens.ParametersScreen
 import com.example.nanoclientkotlin.screens.SendMessageScreen
 
 @Composable
@@ -30,6 +31,8 @@ fun NavGraph(navController: NavHostController) {
         addSendMessageScreen(navController, this)
 
         addCheckListScreen(navController, this)
+
+        addParametersScreen(navController, this)
 
         addSearchScreen(navController, this)
     }
@@ -65,8 +68,8 @@ private fun addHomeScreen(
             navigateToCheckList = { query ->
                 navController.navigate(NavRoute.CheckList.withArgs(query))
             },
-            navigateToSearch = { query ->
-                navController.navigate(NavRoute.Search.withArgs(query))
+            navigateToParameters = { query ->
+                navController.navigate(NavRoute.Parameters.withArgs(query))
             },
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) }
@@ -155,7 +158,27 @@ private fun addCheckListScreen(
         val args = navBackStackEntry.arguments
 
         CheckListScreen(
-            query = args?.getString(NavRoute.CheckList.query),
+            popBackStack = { navController.popBackStack() }
+        ) { popUpToLogin(navController) }
+    }
+}
+private fun addParametersScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.Parameters.withArgsFormat(NavRoute.Parameters.query),
+        arguments = listOf(
+            navArgument(NavRoute.Parameters.query) {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
+    ) { navBackStackEntry ->
+
+        val args = navBackStackEntry.arguments
+
+        ParametersScreen(
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) }
         )

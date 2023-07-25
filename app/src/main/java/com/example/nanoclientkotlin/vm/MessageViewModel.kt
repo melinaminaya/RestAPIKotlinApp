@@ -40,32 +40,30 @@ open class MessageViewModel (
     private val gson = Gson()
     private val mapper = ObjectMapper()
 
-
-        init {
-//            getGames()
-        }
     // Function to fetch messages
     suspend fun fetchMessages() {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0, false, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0,
+            false, null, null)
 //        sendMessageAndWait("messageList")
         // Replace with your logic to fetch messages from a data source
-        val fetchedMessages: List<DbMessage> = fetchDataFromDataSource()
+        val fetchedMessages: List<DbMessage>? = fetchDataFromDataSource()
         // Filter out messages that already exist in the current list
-        val newMessages = fetchedMessages.filter { message ->
+        val newMessages = fetchedMessages?.filter { message ->
             _messages.value?.none { it.code == message.code } ?: true
         }
         // Append the new messages to the existing list
-        _messages.value = _messages.value.orEmpty() + newMessages
+        _messages.value = _messages.value.orEmpty() + (newMessages ?: emptyList())
 
     }
     suspend fun fetchOutboxMessages() {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0, true, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0,
+            true, null, null)
 
-        val fetchedMessages: List<DbMessage> = fetchDataFromDataSourceOutbox()
-        val newMessages = fetchedMessages.filter { message ->
+        val fetchedMessages: List<DbMessage>? = fetchDataFromDataSourceOutbox()
+        val newMessages = fetchedMessages?.filter { message ->
             _outboxMessages.value?.none { it.code == message.code } ?: true
         }
-        _outboxMessages.value = _outboxMessages.value.orEmpty() + newMessages
+        _outboxMessages.value = (_outboxMessages.value.orEmpty()) + (newMessages ?: emptyList())
 
     }
 
@@ -100,10 +98,9 @@ open class MessageViewModel (
     }
 
     // Dummy functions for demonstration purposes
-    private suspend fun fetchDataFromDataSource(): List<DbMessage> {
+    private suspend fun fetchDataFromDataSource(): List<DbMessage>? {
         delay(500)
           val  valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_INBOX)
-
 
         val jsonOnLaunched = gson.toJson(valueOnLaunched)
         val dateFormat = SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.ENGLISH)
@@ -112,7 +109,7 @@ open class MessageViewModel (
 
         return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<DbMessage>>() {})
     }
-    private suspend fun fetchDataFromDataSourceOutbox(): List<DbMessage> {
+    private suspend fun fetchDataFromDataSourceOutbox(): List<DbMessage>? {
         delay(500)
         val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX)
 
@@ -125,16 +122,19 @@ open class MessageViewModel (
     }
 
     private fun deleteMessageFromDataSource(message: DbMessage) {
-        senderAccess.sendRequest("messageDelete", message.code, null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_DELETE,
+            message.code, null, null, null)
     }
 
     private fun markMessageAsReadInDataSource(message: DbMessage) {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_SET_AS_READ, message.code, null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_SET_AS_READ,
+            message.code, null, null, null)
     }
 
     suspend fun sendMessageAndWait( message: String): Unit = withContext(Dispatchers.IO) {
         val senderAccess = MessageSenderAccess()
-        return@withContext senderAccess.sendRequest(message, null, null, null)
+        return@withContext senderAccess.sendRequest(message, null,
+            null, null, null)
     }
 
 

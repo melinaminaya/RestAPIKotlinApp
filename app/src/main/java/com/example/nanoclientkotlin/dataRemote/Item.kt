@@ -1,7 +1,8 @@
-package com.example.nanoclientkotlin
+package com.example.nanoclientkotlin.dataRemote
 
 
 import androidx.annotation.StringRes
+import com.example.nanoclientkotlin.R
 
 /**
  * A data class to represent the information presented in the dog card

@@ -32,7 +32,8 @@ open class CurrentDateViewModel: ViewModel() {
 
 
     suspend fun fetchCurrentDate() {
-        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_CURRENT_DATE, null, null, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_GET_CURRENT_DATE, null,
+            null, null, null)
 
         val fetchedMessages: String = fetchDataFromDataSource()
         _currentDate.value = fetchedMessages

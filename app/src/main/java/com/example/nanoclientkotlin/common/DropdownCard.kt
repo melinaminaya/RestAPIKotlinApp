@@ -3,6 +3,7 @@ package com.example.nanoclientkotlin.common
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ fun DropdownCard(title: String,content: @Composable () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(16.dp)
             .clickable { expanded.value = !expanded.value }
     ) {
         Column(
@@ -43,7 +45,10 @@ fun DropdownCard(title: String,content: @Composable () -> Unit) {
                 .padding(16.dp)
                 .animateContentSize()
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,

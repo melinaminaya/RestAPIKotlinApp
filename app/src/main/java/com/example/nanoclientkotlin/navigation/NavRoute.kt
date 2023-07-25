@@ -19,6 +19,9 @@ sealed class NavRoute(val path: String) {
     object CheckList: NavRoute("checkList") {
         const val query = "query"
     }
+    object Parameters: NavRoute("parameters") {
+        const val query = "query"
+    }
 
     // build navigation path (for screen navigation)
     fun withArgs(vararg args: String): String {
