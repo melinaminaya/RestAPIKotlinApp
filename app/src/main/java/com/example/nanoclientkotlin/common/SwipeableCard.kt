@@ -22,6 +22,7 @@ import com.example.nanoclientkotlin.R
 @Composable
 fun RedBackground(
     degrees: Float,
+    onMessageDelete:() ->Unit
 ) {
     Box(
         modifier = Modifier
@@ -36,10 +37,11 @@ fun RedBackground(
     ) {
 
         Icon(
-            modifier = Modifier.rotate(degrees = degrees),
+            modifier = Modifier.rotate(degrees = degrees)
+                .clickable { onMessageDelete() },
             imageVector = Icons.Filled.Delete,
             contentDescription = stringResource(id = R.string.delete_icon),
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }

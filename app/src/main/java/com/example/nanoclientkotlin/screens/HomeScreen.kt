@@ -6,7 +6,6 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +46,6 @@ import com.example.nanoclientkotlin.common.ButtonTicker
 import com.example.nanoclientkotlin.common.CustomAlert
 import com.example.nanoclientkotlin.common.DefaultButton
 import com.example.nanoclientkotlin.common.ToggleCard
-import com.example.nanoclientkotlin.common.ToggleSwitch
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.vm.ResetDatabaseViewModel
 import fi.iki.elonen.NanoHTTPD
@@ -181,8 +177,9 @@ fun HomeScreen(
                                     val thread = Thread {
                                         try {
                                             NanoWebsocketClient.connect()
-                                            NanoWebsocketClient.sendMessageFromClient()
+                                            Thread.sleep(2000)
                                             Log.i(TAG, "NanoWebSocket Started")
+                                            NanoWebsocketClient.sendMessageFromClient()
                                         } catch (e: Exception) {
                                             e.printStackTrace()
                                         }

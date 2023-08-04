@@ -101,5 +101,11 @@ dependencies {
     //LiveData
     implementation 'androidx.compose.runtime:runtime-livedata:1.4.3'
 
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-service:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-process:2.6.1"
+
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.20.0"
+
 
 }

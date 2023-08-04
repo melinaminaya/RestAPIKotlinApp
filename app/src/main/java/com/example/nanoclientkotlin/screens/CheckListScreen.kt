@@ -460,7 +460,7 @@ fun PositionLastCard(content: LastPosition?){
         )
 
     }else{
-        LoadingIcon()
+        LoadingIcon(25)
     }
 }
 @Composable
@@ -473,6 +473,6 @@ fun PositionCountCard(content: String?){
         )
 
     }else{
-        LoadingIcon()
+        LoadingIcon(25)
     }
 }

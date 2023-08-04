@@ -14,6 +14,7 @@ import com.example.nanoclientkotlin.screens.InboxScreen
 import com.example.nanoclientkotlin.screens.LoginScreen
 import com.example.nanoclientkotlin.screens.ParametersScreen
 import com.example.nanoclientkotlin.screens.SendMessageScreen
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -126,19 +127,11 @@ private fun addSendMessageScreen(
         val senderAccess = MessageSenderAccess()
 
         SendMessageScreen(
-            query = args?.getString(NavRoute.SendMessage.query),
             navigateToInbox = { id, showDetails ->
                 navController.navigate(NavRoute.Inbox.withArgs(id.toString(), showDetails.toString()))
             },
-            popBackStack = { navController.popBackStack() },
-            popUpToLogin = { popUpToLogin(navController) },
-            onSendMessage = {message ->
-                // Handle sending the message
-                senderAccess.sendMessageToServer(message = message)
-                // e.g., call an API or perform any desired action
-                println("Sending message: $message")
-            }
-        )
+            popBackStack = { navController.popBackStack() }
+        ) { popUpToLogin(navController) }
     }
 }
 private fun addCheckListScreen(
