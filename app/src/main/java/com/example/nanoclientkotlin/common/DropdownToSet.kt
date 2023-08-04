@@ -88,7 +88,7 @@ fun DropDownToSet(
             }
         }
     } else {
-        LoadingIcon()
+        LoadingIcon(size = 25)
     }
 
 

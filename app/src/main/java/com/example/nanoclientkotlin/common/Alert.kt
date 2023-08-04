@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 @Composable
 fun Alert(
     onDismissRequest: () -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    title: String,
+    content: (@Composable () -> Unit),
 ){
 
     //  val dialogState = remember { AlertDialogState() }
@@ -17,11 +19,9 @@ fun Alert(
         onDismissRequest = onDismissRequest,
         // state = dialogState,
         title = {
-            Text(text = "Modal Title")
+            Text(text = title)
         },
-        text = {
-            Text(text = "Modal Content")
-        },
+        text = {content()},
         confirmButton = {
             Button(
                 onClick = onClick

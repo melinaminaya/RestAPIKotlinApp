@@ -1,27 +1,15 @@
 package com.example.nanoclientkotlin.screens
 
-import android.os.Build
+import android.net.Uri
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,45 +24,52 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.NanoClientKotlinTheme
 import com.example.nanoclientkotlin.NanoWebsocketClient.TAG
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.vm.FilePickerViewModel
 import com.example.nanoclientkotlin.vm.FormListViewModel
-import com.example.nanoclientkotlin.vm.MessageViewModel
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SendMessageScreen(
-    query : (String?),
-    onSendMessage: (DbMessage) -> Unit,
     navigateToInbox: (Int, Boolean) -> Unit,
     popBackStack: () -> Unit,
     popUpToLogin: () -> Unit,
     ) {
     val viewModel: FormListViewModel = viewModel()
-    val messageText= remember { mutableStateOf(" ") }
-//    val mascaras = listOf("Mensagem Livre","Mask 1", "Mask 2", "Mask 3")
-    val mascaras by viewModel.formList.observeAsState(emptyList())
-    var expanded by remember { mutableStateOf(false) }
-    var selectedMascara by remember { mutableStateOf(mascaras.firstOrNull()) }
+    val senderAccess = MessageSenderAccess()
+    var viewModelFilePicker:FilePickerViewModel = viewModel()
+    val selectedFileString by viewModelFilePicker.fileProcessedString.observeAsState()
+    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
     LaunchedEffect(Unit) {
         viewModel.fetchMessages()
     }
+    LaunchedEffect(selectedFileString) {
+        selectedFileUri = selectedFileString
+    }
+    val messageText= remember { mutableStateOf("") }
+    val mascaras by viewModel.formList.observeAsState(emptyList())
+    val selectedMascara: String = if (mascaras != null) {
+        mascaras.firstOrNull().toString()
+    }else{
+        "Mensagem Livre"
+    }
+val context = LocalContext.current
+
+
+    val coroutineScope = rememberCoroutineScope()
+
 
     Scaffold(
         topBar = {
@@ -100,95 +94,42 @@ fun SendMessageScreen(
                 .padding(contentPadding)
         ) {
 
-            Box(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .height(60.dp)
-                    .padding(horizontal = 10.dp)
-                    .background(Color.LightGray, shape = RoundedCornerShape(4.dp)),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Row (verticalAlignment = Alignment.CenterVertically){
-                    Text(
-                        text = selectedMascara?.code?.toString() ?: "Mensagem Livre",
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
-                    IconButton(
-                        onClick = { expanded = !expanded },
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .background(Color.LightGray),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "Toggle Dropdown Menu"
-                        )
-                    }
-                }
-            }
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    mascaras?.let { mascarasList ->
-                        if (mascarasList.isEmpty()) {
-                            DropdownMenuItem(
-                                text = { Text(text = "No options available") },
-                                onClick = { expanded = false }
-                            )
-                        } else {
-                            mascarasList.forEach { mascara ->
-                                DropdownMenuItem(
-                                    text = { Text(mascara.code.toString()) },
-                                    onClick = {
-                                        selectedMascara = mascara
-                                        expanded = false
-                                        messageText.value = mascara.code.toString()
-                                    }
-                                )
-                            }
-                        }
-                    } ?: run {
-                        DropdownMenuItem(
-                            text = { Text(text = "No options available") },
-                            onClick = { expanded = false }
-                        )
-                    }
-                }
-
-
+           MascaraDropdownMenu(mascaras = mascaras,
+               selectedMascara = selectedMascara, onMascaraSelected = {mascara ->
+                   messageText.value = mascara.code.toString()
+               })
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
-                value = messageText.value,
-                onValueChange = { messageText.value = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                label = { Text("Message") },
-                textStyle = TextStyle(fontSize = 18.sp)
+            // Separate composable for the TextField
+            MessageTextField(
+                messageText = messageText,
+                onMessageTextChanged = { messageText.value = it }
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { onSendMessage(messageOnPattern(messageText.value))
-                            navigateToInbox(1, true)
-                          },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Text("Send")
-            }
-
+           FilePicker(
+               selectedFileStringPicker = {
+                   selectedFileUri = it
+               },
+               onSendMessage = {
+                   coroutineScope.launch(Dispatchers.IO) {
+                       val dbMessageProcessed = messageOnPattern(messageText.value, selectedFileUri)
+//                       onSendMessage(dbMessageProcessed)
+                       try {
+                           senderAccess.sendMessageToServer(message = dbMessageProcessed, context = context, selectedFileUri)
+                           // e.g., call an API or perform any desired action
+                           println("Sending message: $dbMessageProcessed")
+                       } catch (e: Exception) {
+                           // Handle any exceptions that might occur during the suspend function call
+                           // e.g., connection error, timeout, etc.
+                           Log.e(TAG, "Failed to send message: $e")
+                           e.printStackTrace()
+                       }
+                   }
+               },
+               navigateToInbox = navigateToInbox
+           )
         }
     }
-
 }
 
 
@@ -201,46 +142,10 @@ private fun DefaultPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SendMessageScreen(
-                onSendMessage = {},
-                query = "sendMessage",
                 navigateToInbox = { _,_ -> },
-                popBackStack = {},
-                popUpToLogin = {}
-            )
+                popBackStack = {}
+            ) {}
         }
     }
 }
-fun messageOnPattern(value: String): DbMessage {
 
-    return DbMessage(
-        // Set the properties of the DbMessage based on the input
-        code = null,
-        isForward = false,
-        msgStatusNum = 1 , //TO_SEND = 1
-        subtype = 0, // It can be BINARY == 1 as well
-        formCode = 0, //FILTER_DISABLED
-        subject = "" ,
-        body = value.replace("\n", "\\"),
-        createdTime = null,
-        sendReceivedTime = null,
-        deliveryTime = null,
-        gmn = null ,
-        isOutOfBandMessage = false ,
-        outOfBandFileName = null,
-        outOfBandNumMsgStatus = null,
-        sourceAddress ="" ,
-        destAddress = "",
-        lastStatusTime = null,
-        msgPriority = 1 , //NORMAL_PRIORITY
-        replyGmn = null,
-        posLatitude = null,
-        posLongitude = null ,
-        positionTime = null,
-        posSpeed = null,
-        positionHeading = null,
-        positionAging = null,
-        transmissionChannel = 16, // ANY_AVAIL_NETWORK
-        transmittedChannel = null,
-        transmissionType = 0, //DEFAULT_TRANS , if serialized SERIAL_TRANS
-    )
-}

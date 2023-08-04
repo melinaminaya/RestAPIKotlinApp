@@ -7,7 +7,7 @@ package com.example.nanoclientkotlin.consts
  *
  * @author rhobison.pereira
  */
-object AmcuipValuesActionIds {
+object ActionValues {
     /*
     * <b>S->I</b><br>
     * Uma nova mensagem foi recebida.<br>
@@ -18,7 +18,7 @@ object AmcuipValuesActionIds {
     */
     /**
      *
-     * Esta acao foi substituida pela acao [AmcuipValuesActionIds.MESSAGE_STATUS] e
+     * Esta acao foi substituida pela acao [ActionValues.MESSAGE_STATUS] e
      * sera removida em vers�es futuras.
      */
     @Deprecated("")
@@ -42,7 +42,7 @@ object AmcuipValuesActionIds {
     * <b>Param4:</b> Nao utilizado.<br>
     */
     /**
-     * Esta acao foi substituida pela acao [AmcuipValuesActionIds.MESSAGE_STATUS] e
+     * Esta acao foi substituida pela acao [ActionValues.MESSAGE_STATUS] e
      * sera removida em vers�es futuras.
      */
     @Deprecated("")
@@ -311,7 +311,7 @@ object AmcuipValuesActionIds {
      */
     const val IGNITION_STATUS = 0x18
 
-    /** Valores possiveis para o parametro Param2 da acao [AmcuipValuesActionIds.RELOAD_PARAMETER_FROM_DB]. */
+    /** Valores possiveis para o parametro Param2 da acao [ActionValues.RELOAD_PARAMETER_FROM_DB]. */
     object AmcuipValuesRealoadParamFromDbParam2 {
         /** Parametro exclusivo do servico de comunicacao.  */
         const val SERVICE = 0
@@ -324,7 +324,7 @@ object AmcuipValuesActionIds {
     }
 
     /**
-     * Operac�es possiveis de serem executadas na acao [AmcuipValuesActionIds.BAPTISM_ACTION].
+     * Operac�es possiveis de serem executadas na acao [ActionValues.BAPTISM_ACTION].
      */
     object AmcuipValuesBaptismActionParam1 {
         /** Inicia o processo de batismo.  */
@@ -337,7 +337,7 @@ object AmcuipValuesActionIds {
         const val UNDO_BAPTISM = 2
     }
 
-    /** Status possiveis retornados pelo Param1 de Acao [AmcuipValuesActionIds.BAPTISM_STATUS].  */
+    /** Status possiveis retornados pelo Param1 de Acao [ActionValues.BAPTISM_STATUS].  */
     object AmcuipValuesBaptismStatusParam1 {
         /** A Uc ainda nao foi batizada.  */
         const val NOT_BAPTIZED = 0
@@ -392,7 +392,7 @@ object AmcuipValuesActionIds {
     }
 
     /**
-     * Operac�es possiveis de serem executadas na acao [AmcuipValuesActionIds.ACTIVATION_ACTION].
+     * Operac�es possiveis de serem executadas na acao [ActionValues.ACTIVATION_ACTION].
      */
     object AmcuipValuesActivationActionParam1 {
         /** Inicia o processo de ativacao.  */
@@ -402,7 +402,7 @@ object AmcuipValuesActionIds {
         const val CANCEL_ACTIVATION = 1
     }
 
-    /** Status possiveis retornados pelo Param1 da acao [AmcuipValuesActionIds.ACTIVATION_STATUS].  */
+    /** Status possiveis retornados pelo Param1 da acao [ActionValues.ACTIVATION_STATUS].  */
     object AmcuipValuesActivationStatusParam1 {
         /** A Uc ainda nao foi ativada.  */
         const val NOT_ACTIVATED = 0
@@ -420,7 +420,7 @@ object AmcuipValuesActionIds {
         const val INVALID_ACTIVATION_PASSOWRD = 4
     }
 
-    /** Status posiveis retornados pelo Param1 da acao [AmcuipValuesActionIds.FILE_OPERATION_STATUS].  */
+    /** Status posiveis retornados pelo Param1 da acao [ActionValues.FILE_OPERATION_STATUS].  */
     object AmcuipValuesFileOperationStatusParam1 {
         /** O arquivo foi transferido com sucesso.  */
         const val SUCCESS = 0
@@ -429,7 +429,7 @@ object AmcuipValuesActionIds {
         const val ERROR = 1
     }
 
-    /** Status posiveis retornados pelo Param1 da acao [AmcuipValuesActionIds.IGNITION_STATUS].  */
+    /** Status posiveis retornados pelo Param1 da acao [ActionValues.IGNITION_STATUS].  */
     object AmcuipValuesIgnitionStatusParam1 {
         /** A ignicao esta desligada.  */
         const val OFF = 0
@@ -438,7 +438,7 @@ object AmcuipValuesActionIds {
         const val ON = 1
     }
 
-    /** Status posiveis retornados pelo Param1 da acao [AmcuipValuesActionIds.FILE_OPERATION_ACTION].  */
+    /** Status posiveis retornados pelo Param1 da acao [ActionValues.FILE_OPERATION_ACTION].  */
     object AmcuipValuesFileOperationActionParam1 {
         /** Indica que os arquivos deverao ser copiados.  */
         const val COPY = 0
@@ -450,7 +450,7 @@ object AmcuipValuesActionIds {
         const val DELETE = 2
     }
 
-    /** Status posiveis retornados pelo Param2 da acao [AmcuipValuesActionIds.FILE_OPERATION_ACTION].  */
+    /** Status posiveis retornados pelo Param2 da acao [ActionValues.FILE_OPERATION_ACTION].  */
     object AmcuipValuesFileOperationActionParam2 {
         /** Indica que os arquivos deverao ser copiados.  */
         const val NO_COMPRESSION = 0

@@ -50,7 +50,7 @@ fun ButtonTicker(
 //    val viewModel: MessageViewModel = viewModel()
 //    val checkList by viewModel.checkList.observeAsState(emptyList())
     val count = ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_COUNT).toString()).toString()
-    val badgeText = remember { mutableStateOf(if (count != "null") count else "") }
+    val badgeText = remember { mutableStateOf(if (count != "null" ) count else "") }
     val propertyChangeListener = PropertyChangeListener { event ->
         // Update the property value state when the event is triggered
         if (event.propertyName == ConstsCommSvc.REQ_MESSAGE_COUNT) {
@@ -97,7 +97,7 @@ fun ButtonTicker(
             }
         }
 
-        if (badgeText.value.isNotEmpty()) {
+        if (badgeText.value.isNotEmpty() && badgeText.value != "0") {
             Box(
                 modifier = Modifier
                     .padding(top = 8.dp, end = 8.dp)

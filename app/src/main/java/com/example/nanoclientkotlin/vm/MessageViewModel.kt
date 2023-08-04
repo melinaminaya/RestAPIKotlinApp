@@ -1,5 +1,7 @@
 package com.example.nanoclientkotlin.vm
 
+import android.content.ContentResolver
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nanoclientkotlin.MessageSenderAccess
@@ -11,11 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.util.StdDateFormat
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,8 +24,6 @@ import java.util.Date
 import java.util.Locale
 
 open class MessageViewModel (
-//    private val getGamesUseCase: GetGamesUseCase,
-//    private val getGameByIdUseCase: GetGameByIdUseCase
 ): ViewModel() {
 
     private val _messages = MutableLiveData<List<DbMessage>>()
@@ -39,6 +35,15 @@ open class MessageViewModel (
     private val senderAccess = MessageSenderAccess()
     private val gson = Gson()
     private val mapper = ObjectMapper()
+
+    private val _contentResolver = MutableLiveData<ContentResolver>()
+    val contentResolverLiveData: LiveData<ContentResolver> = _contentResolver
+
+    // Function to set the contentResolver in the ViewModel
+    fun setContentResolver(contentResolver: ContentResolver) {
+        _contentResolver.value = contentResolver
+    }
+
 
     // Function to fetch messages
     suspend fun fetchMessages() {
@@ -90,14 +95,6 @@ open class MessageViewModel (
             _messages.value = currentMessages
         }
     }
-
-    // Function to confirm message read
-    fun confirmMessageRead() {
-        // Replace with your logic to confirm the message read
-        // For example, you can show a toast or perform any other action
-    }
-
-    // Dummy functions for demonstration purposes
     private suspend fun fetchDataFromDataSource(): List<DbMessage>? {
         delay(500)
           val  valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_INBOX)
