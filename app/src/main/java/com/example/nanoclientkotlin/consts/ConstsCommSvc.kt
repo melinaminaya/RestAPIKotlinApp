@@ -1,11 +1,17 @@
 package com.example.nanoclientkotlin.consts
 
+/**
+ * Classe de constantes a serem empregadas na comunicação via integração NanoWebsocket e Http.
+ * Refere-se aos endpoints e demais configurações.
+ * @author Melina Minaya
+ */
 class ConstsCommSvc {
 
 
     companion object {
         /**
-         * Intent utilizado para inicializar o serviço. A inicialização consiste em criar arquivos necessários ao funcionamento do serviço.
+         * Intent utilizado para inicializar o serviço.
+         * A inicialização consiste em criar arquivos necessários ao funcionamento do serviço.
          */
         // private static final String INTENT_SVC_INIT = "br.com.autotrac.jATMobileCommSvc.Init";
         const val INTENT_SVC_INITIALIZE = "br.com.autotrac.jATMobileCommSvc.Initialize"
@@ -30,20 +36,120 @@ class ConstsCommSvc {
 
         //Lista da Integração referente à requisições
 
+        /**
+         * Endpoint de envio de mensagens para o servidor.
+         */
+        const val SEND_MESSAGE = "SEND_MESSAGE"
+        const val SEND_FILE_MESSAGE = "SEND_FILE_MESSAGE"
+
         const val REQ_MESSAGE_LIST = "REQ_MESSAGE_LIST"
-        const val REQ_MESSAGE_LIST_INBOX = "REQ_MESSAGE_LIST"
+        const val REQ_MESSAGE_LIST_INBOX = "REQ_MESSAGE_LIST_INBOX"
         const val REQ_MESSAGE_LIST_OUTBOX = "REQ_MESSAGE_LIST_OUTBOX"
+
+        /**
+         * Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
+         * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
+         * Neste caso o parâmetro isForward deve ser true e msgStatusNum deve ser [ActionValues.MessageStatusValues.TO_SEND].
+         * Ele deve ser preferido ao invés do método messageList(long, boolean, int) por questão de performance.
+         * Este método é muitas vezes mais rápido do que o método messageList(long, boolean, int).
+         * @param1: (isForward) - indica se as mensagens de envio ou retorno devem ser filtradas.
+         * Se true indica que as mensagens de envio serão filtradas. Se false as mensagens de retorno serão filtradas.
+         * @param2: (msgStatusNum) - é número do status a ser filtrado.
+         * @see ActionValues.MessageStatusValues
+         */
         const val REQ_MESSAGE_COUNT = "REQ_MESSAGE_COUNT"
+
+        /**
+         * Apaga uma mensagem (ou todas as mensagens) do banco de dados do serviço.
+         * @param1: (msgCode) - é o código da mensagem a ser apagada.
+         * Atenção: Se o código da mensagem for 0, todas as mensagens serão apagadas!
+         */
         const val REQ_MESSAGE_DELETE = "REQ_MESSAGE_DELETE"
+
+        /**
+         * Marca uma mensagem com o status de "lida".
+         * O status da mensagem será configurado para [ActionValues.MessageStatusValues.READ] e
+         * se a mensagem exigir confirmação de leitura, a confirmação será gerada e enviada ao servidor.
+         * @param1: (msgCode) - código da mensage que deve ser marcada como lida.
+         */
         const val REQ_MESSAGE_SET_AS_READ = "REQ_MESSAGE_SET_AS_READ"
+
+        /**
+         * Configura a geração do log em arquivo para o serviço.
+         * Este método configura a geração de log para o serviço de comunicação (não para a API).
+         * @param1: (enable) - boolean informa se o log deve ser ativado/desativado.
+         * @param2: (maxFileCount) - é a quantidade máxima de arquivos de logs a serem gerados.
+         * Quando a quantidade máxima é atingida, o arquivo mais antigo é sobrescrito.
+         * @param3: (maxFileSize) - é o tamanho máximo de cada arquivo de log gerado. Ex.: 3*1024*1024 (3MB).
+         */
         const val REQ_CONFIG_SERVICE_LOG = "REQ_CONFIG_SERVICE_LOG"
+
+        //TODO: Check FILE_OPERATION_STATUS and ACTION
+        /**
+         * Copia os arquivos para o diretório especificado.
+         * Parameters:
+         * @param1: (files) - indica quais arquivos devem ser envolvidos na operação.
+         * Este parâmetro é um mapa de bits. Mais de um arquivo pode ser especificado utilizando o operador OU bit a bit ("|").
+         * @see ActionValues.FileOperationFiles
+         * @param2: (options) - opções a serem utilizadas na operação.
+         * @see ActionValues.FileOperationOptions
+         * @param3: (destination) - no caso da opção ActionValues.FileOperationOptions.COPY_FILES,
+         * é o diretório de destino para os arquivos.
+         * @param4: (timeoutMs) - indica quanto tempo, em ms, que o método deve aguardar até o fim da operação.
+         * Se este parâmetro for diferente de 0, o método só retornará quando a operação for concluída ou o timeout expirar.
+         * Se este parâmetro for 0, o método retorna imediatamente e o usuário deve aguardar o evento
+         * McuibConsts.McuibValuesActionIds.FILE_OPERATION_STATUS para determinar o status da operação.
+         * Se o timeout se esgotar antes do fim da operação, uma exceção é gerada, mas mesmo assim, quando a operação for completada,
+         * o evento McuibConsts.McuibValuesActionIds.FILE_OPERATION_STATUS será gerado.
+         */
         const val REQ_FILE_OPERATION = "REQ_FILE_OPERATION"
+
+        /**
+         * Lista os formulários ou grupos de formulários de acordo com o filtro especificado
+         * (Este método só terá aplicabilidade para produtos que possuem comunicação celular).
+         * @param1: (groupOnly) - se for true, indica que a consulta deve ser realizada nos grupos de formulário.
+         * Neste caso, apenas o parâmetro formGroupCode é considerado.
+         * Se for false, a consulta será realizada nos formulários.
+         * @param2: (formGroupCode) - indica qual grupo de formulário deve ser filtrado.
+         * Somente os formulários pertencentes a este grupo serão retornados.
+         * Se este parâmetro for igual a 0, o filtro será desabilitado.
+         * @param3: (formType) - é o tipo de formulário a ser filtrado.
+         * Somente os formulários do tipo especificado serão retornados.
+         * @see ActionValues.FormTypeValues
+         */
         const val REQ_FORM_LIST = "REQ_FORM_LIST"
         const val REQ_GET_CHECKLIST = "REQ_GET_CHECKLIST"
+        const val REQ_CELL_SIGNAL = "REQ_CELL_SIGNAL"
+        const val REQ_WIFI_SIGNAL = "REQ_WIFI_SIGNAL"
         const val REQ_GET_CURRENT_DATE = "REQ_GET_CURRENT_DATE"
         const val REQ_GET_MCT_PARAMETERS = "REQ_GET_MCT_PARAMETERS"
+
+        /**
+         * Retorna informações detalhadas da posição mais recente disponível.
+         * @param1: (posSourceType) - é a fonte da posição cujos dados devem ser retornados.
+         * @see ActionValues.PositionSourceType
+         */
         const val REQ_GET_POSITION_LAST = "REQ_GET_POSITION_LAST"
+
+        /**
+         * Contabiliza a quantidade de posições do histórico do banco de dados de acordo com o filtro especificado.
+         * Este método pode ser usado, por exemplo, para contabilizar a quantidade de posições a enviar.
+         * Neste caso o parâmetro msgStatusNum deve ser [ActionValues.MessageStatusValues.TO_SEND].
+         * Ele deve ser preferido ao invés do método positionHistoryList(long, int) por questão de performance.
+         * Este método é muitas vezes mais rápido do que o método positionHistoryList(long, int).
+         * @param1: (msgStatusNum) - é número do status a ser filtrado.
+         * @see ActionValues.MessageStatusValues
+         * */
         const val REQ_POSITION_HISTORY_COUNT = "REQ_POSITION_HISTORY_COUNT"
+
+        /**
+         * Lista todas as posições do histórico de acordo com o filtro especificado.
+         * @param1: (posCode) - é o código da posição a ser retornada. Se este parâmetro for igual a 0, ele será ignorado.
+         * Se for diferente de 0, os demais filtros serão ignorados e somente a mensagem com o código especificado será retornada.
+         * @param2: (msgStatusNum) - é número do status a ser filtrado.
+         * @see ActionValues.MessageStatusValues
+         * Este parâmetro só é considerado se @param2 (posCode) for igual a 0.
+         * */
         const val REQ_POSITION_HISTORY_LIST = "REQ_POSITION_HISTORY_LIST"
         const val REQ_RESET_DATABASE = "REQ_RESET_DATABASE"
 
@@ -56,7 +162,12 @@ class ConstsCommSvc {
 
         /**
          * SSID da rede WiFi utilizada para se conectar ao dispositivo de comunicação alternativa.
-         * O SSID (Service Set Identifier) é o nome da rede WiFi utilizada para se conectar ao dispositivo de comunicação alternativo.(O SSID só pode ser configurado para produtos que possuem comunicação exclusiva satélite).
+         * O SSID (Service Set Identifier) é o nome da rede WiFi utilizada para se conectar ao dispositivo de comunicação alternativo.
+         * (O SSID só pode ser configurado para produtos que possuem comunicação exclusiva satélite).
+         * @see ParameterValues.CmuSubtypeValues.MOBILE_SATELLITE
+         * Para sistemas que utilizam puramente o dispositivo de comunicação alternativa,
+         * se for configurado um SSID, a associação com o dispositivo ocorrerá automaticamente em seguida.
+         * Caso o SSID fornecido seja vazio ("") e o sistema já esteja associado a um dispositivo de comunicação alternativa, a associação será desfeita.
          */
         const val GET_PARAM_WIFI_SSID = "GET_PARAM_WIFI_SSID"
         const val SET_PARAM_WIFI_SSID = "SET_PARAM_WIFI_SSID"
@@ -68,8 +179,9 @@ class ConstsCommSvc {
         const val GET_PARAM_ACCOUNT_NUMBER = "GET_PARAM_ACCOUNT_NUMBER"
 
         /**
-         * Intervalo, em segundos, entre comunicações com o dispositivo de comunicação alternativo. Este intervalo é o intervalo entre verificações de novas mensagens junto ao dispositivo de comunicação alternativo.
-        O intervalo recomendado é 10 segundos.
+         * Intervalo, em segundos, entre comunicações com o dispositivo de comunicação alternativo.
+         * Este intervalo é o intervalo entre verificações de novas mensagens junto ao dispositivo de comunicação alternativo.
+         * O intervalo recomendado é 10 segundos.
          */
         const val GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S = "GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S"
         const val SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S = "SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S"
@@ -108,11 +220,11 @@ class ConstsCommSvc {
 
         /**
          * Tipo de comunicação (meio físico) a ser utilizado com o dispositivo externo.
-         * @see ParameterValues.RS232 e outros.
-         *
+         * @see ParameterValues.ExternalDeviceCommunicationTypeValues
          * Alterar para 2 (ancoragem) para realizar o batismo.
          */
         const val GET_PARAM_EXT_DEV_COMM_TYPE = "GET_PARAM_EXT_DEV_COMM_TYPE"
+
         const val SET_PARAM_EXT_DEV_COMM_TYPE = "SET_PARAM_EXT_DEV_COMM_TYPE"
 
         /**
@@ -189,19 +301,32 @@ class ConstsCommSvc {
         const val GET_PARAM_LAST_SAT_CONNECTION_STATUS = "GET_PARAM_LAST_SAT_CONNECTION_STATUS"
 
         /**
-         * Indica se o uso da VPN pelo serviço de comunicação é permitido ou não. O valor 1 desabilita o uso da VPN pelo serviço de comunicação e o valor 0 habilita. Esta opção deve ser utilizada quando operações envolvendo o uso simultâneo do HotSpot WiFi e da conexão celular. Logo que possível o uso da VPN deve ser habilitado (configurando o valor deste parâmetro como 0), caso seja desejável o seu uso.
+         * Indica se o uso da VPN pelo serviço de comunicação é permitido ou não.
+         * O valor 1 desabilita o uso da VPN pelo serviço de comunicação e o valor 0 habilita.
+         * Esta opção deve ser utilizada quando operações envolvendo o uso simultâneo do HotSpot WiFi e da conexão celular.
+         * Logo que possível o uso da VPN deve ser habilitado (configurando o valor deste parâmetro como 0), caso seja desejável o seu uso.
          */
         const val GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION = "GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION"
         const val SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION = "SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION"
 
         /**
-         * Indica se o uso do WiFi pelo serviço de comunicação é permitido ou não. O valor 1 desabilita o uso do WiFi pelo serviço de comunicação e o valor 0 habilita. Esta opção deve ser utilizada quando a aplicação do cliente precisa fazer uso da rede WiFi e a unidade está batizada com um dispositivo de comunicação satelital utilizando a rede WiFi. Logo que a aplicação finalizar o uso do WiFi, este parâmetro deve ser reconfigurado para o valor 0.
+         * Indica se o uso do WiFi pelo serviço de comunicação é permitido ou não.
+         * O valor 1 desabilita o uso do WiFi pelo serviço de comunicação e o valor 0 habilita.
+         * Esta opção deve ser utilizada quando a aplicação do cliente precisa fazer uso da rede WiFi
+         * e a unidade está batizada com um dispositivo de comunicação satelital utilizando a rede WiFi.
+         * Logo que a aplicação finalizar o uso do WiFi, este parâmetro deve ser reconfigurado para o valor 0.
          */
         const val GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION = "GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION"
         const val SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION = "SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION"
 
         /**
          * Diretório base onde os arquivos de mensagens longas (Out Of Band) serão armazenados.
+         * Os arquivos enviados estarão armazenados dentro de um subdiretório chamado "Sent" (PARAM_OUT_OF_BAND_MSG_PATH/Sent/).
+         * Os arquivos baixados estarão armazenados dentro de um subdiretório chamado "Received" (PARAM_OUT_OF_BAND_MSG_PATH/Received/).
+         * Para cada mensagem haverá ainda um subdiretório dentro deste, cujo nome será o código da mensagem no banco de dados onde todos os arquivos referentes à mensagem estarão armazenados.
+         * Ex.: "PARAM_OUT_OF_BAND_MSG_PATH/Received/00055/".
+         * Este parâmetro só deve conter o diretório base, os subdiretórios (Sent, Received, etc.) serão criados automaticamente.
+         * ATENÇÃO: É importante que este diretório esteja acessível por qualquer aplicação (não dependa de permissão específica para seu acesso).
          */
         const val GET_PARAM_OUT_OF_BAND_MSG_PATH = "GET_PARAM_OUT_OF_BAND_MSG_PATH"
         const val SET_PARAM_OUT_OF_BAND_MSG_PATH = "SET_PARAM_OUT_OF_BAND_MSG_PATH"
@@ -232,8 +357,10 @@ class ConstsCommSvc {
         const val GET_PARAM_SERVICE_VERSION = "GET_PARAM_SERVICE_VERSION"
 
         /**
-         * Tempo de espera, em segundos, para que uma mensagem seja enviada pela rede celular antes de tentar enviar pela rede satelital (Este parâmetro só terá aplicabilidade para produtos que possuem comunicação celular).
-        Obs.: Só é permitido configurar valores entre 10 e 30 segundos. O valor recomendado é de 30 segundos.
+         * Tempo de espera, em segundos, para que uma mensagem seja enviada pela rede celular antes de tentar enviar pela rede satelital
+         * (Este parâmetro só terá aplicabilidade para produtos que possuem comunicação celular).
+         * Obs.: Só é permitido configurar valores entre 10 e 30 segundos.
+         * O valor recomendado é de 30 segundos.
          */
         const val GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG = "GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG"
         const val SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG = "SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG"
@@ -339,7 +466,7 @@ class ConstsCommSvc {
             GET_PARAM_WIFI_SERIAL_DEV_FIRMWARE_VERSION
         )
 
-        val requestsList = listOf(
+        val requestsListForObservables = setOf(
             REQ_MESSAGE_LIST,
             REQ_MESSAGE_LIST_INBOX,
             REQ_MESSAGE_LIST_OUTBOX,
@@ -350,14 +477,54 @@ class ConstsCommSvc {
             REQ_FILE_OPERATION,
             REQ_FORM_LIST,
             REQ_GET_CHECKLIST,
+            REQ_CELL_SIGNAL,
+            REQ_WIFI_SIGNAL,
             REQ_GET_CURRENT_DATE,
             REQ_GET_MCT_PARAMETERS,
             REQ_GET_POSITION_LAST,
             REQ_POSITION_HISTORY_COUNT,
             REQ_POSITION_HISTORY_LIST,
             REQ_RESET_DATABASE,
-        )
-
+        ).toList()
+        val requestsList = setOf(
+            REQ_MESSAGE_LIST,
+            REQ_MESSAGE_COUNT,
+            REQ_MESSAGE_DELETE,
+            REQ_MESSAGE_SET_AS_READ,
+            REQ_CONFIG_SERVICE_LOG,
+            REQ_FILE_OPERATION,
+            REQ_FORM_LIST,
+            REQ_GET_CHECKLIST,
+            REQ_CELL_SIGNAL,
+            REQ_WIFI_SIGNAL,
+            REQ_GET_CURRENT_DATE,
+            REQ_GET_MCT_PARAMETERS,
+            REQ_GET_POSITION_LAST,
+            REQ_POSITION_HISTORY_COUNT,
+            REQ_POSITION_HISTORY_LIST,
+            REQ_RESET_DATABASE,
+        ).toList()
+        val listOfFilteredRequests = setOf(
+            REQ_MESSAGE_COUNT,
+            REQ_MESSAGE_LIST,
+            REQ_MESSAGE_DELETE,
+            REQ_MESSAGE_SET_AS_READ,
+            REQ_CONFIG_SERVICE_LOG,
+            REQ_FILE_OPERATION,
+            REQ_FORM_LIST,
+            REQ_GET_POSITION_LAST,
+            REQ_POSITION_HISTORY_COUNT,
+            REQ_POSITION_HISTORY_LIST,
+            SET_PARAM_EXT_DEV_COMM_TYPE,
+            SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S,
+            SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION,
+            SET_PARAM_OUT_OF_BAND_MSG_PATH,
+            SET_PARAM_WIFI_SSID,
+            SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION,
+            SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG,
+            SEND_MESSAGE,
+            SEND_FILE_MESSAGE
+        ).toList()
 
     }
 }

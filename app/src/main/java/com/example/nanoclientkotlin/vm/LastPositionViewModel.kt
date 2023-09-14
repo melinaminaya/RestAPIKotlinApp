@@ -107,11 +107,13 @@ open class LastPositionViewModel: ViewModel() {
     }
 
     /**
-     * @param param1: posCode - position code to be returned. If it is 0, it will be ignored.
-     * If different from 0, other filters will be ignored and only message with the specific code will be returned.
+     * @param1: posCode - é o código da posição a ser retornada.
+     * Se este parâmetro for igual a 0, ele será ignorado.
+     * Se for diferente de 0, os demais filtros serão ignorados e somente a mensagem com o código especificado será retornada.
      *
-     *@param param2: msgStatusNum - integer status of message to be filtered. MsgStatusNum as applied above.
-         This parameter will only be considered if posCode is == 0.
+     *@param2: msgStatusNum - é número do status a ser filtrado.
+     *@see ActionValues.MessageStatusValues
+     * Este parâmetro só é considerado se posCode for igual a 0.
      */
     suspend fun fetchPositionHistoryList() {
 

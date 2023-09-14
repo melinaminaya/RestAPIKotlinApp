@@ -1,6 +1,8 @@
 package com.example.nanoclientkotlin.screens
 
+import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -66,7 +68,17 @@ fun SendMessageScreen(
         "Mensagem Livre"
     }
 val context = LocalContext.current
-
+    fun getFilePathFromUri(uri: Uri): String? {
+        var filePath: String? = null
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, null, null, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            filePath = cursor.getString(columnIndex)
+            cursor.close()
+        }
+        return filePath
+    }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -114,6 +126,7 @@ val context = LocalContext.current
                    coroutineScope.launch(Dispatchers.IO) {
                        val dbMessageProcessed = messageOnPattern(messageText.value, selectedFileUri)
 //                       onSendMessage(dbMessageProcessed)
+//                       val filePath = getFilePathFromUri(selectedFileUri!!)
                        try {
                            senderAccess.sendMessageToServer(message = dbMessageProcessed, context = context, selectedFileUri)
                            // e.g., call an API or perform any desired action
@@ -130,6 +143,7 @@ val context = LocalContext.current
            )
         }
     }
+
 }
 
 

@@ -407,7 +407,11 @@ fun CheckListCard(content: List<CheckList>?){
         content.forEach { item ->
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Cellular Status and Signal: ${item.cellularStatus} - ${item.cellularSignalLevel}",
+                text = "Cellular Status: ${item.cellularStatus}",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Cellular Signal: ${item.cellularSignalLevel}%",
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
@@ -416,6 +420,10 @@ fun CheckListCard(content: List<CheckList>?){
             )
             Text(
                 text = "Wifi Status: ${item.wifiStatus} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Wifi Signal: ${item.wifiSignal}%",
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(

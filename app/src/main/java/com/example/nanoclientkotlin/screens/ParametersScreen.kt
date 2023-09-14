@@ -1,23 +1,17 @@
 package com.example.nanoclientkotlin.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -30,12 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -159,7 +150,8 @@ fun ParametersScreen(
             item {
                 DropdownCard(title = "Batismo") {
                     Column {
-                        ModelRow(title = "Status: ",
+                        ModelRow(
+                            title = "Status: ",
                             status = ParameterHandler.convertIsBaptized(parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED]))
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -202,30 +194,36 @@ fun ParametersScreen(
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
-                        ModelRow(title = "Versão de Firmware:",
+                        ModelRow(
+                            title = "Versão de Firmware:",
                             status = parameterValues[ConstsCommSvc.GET_PARAM_ALT_COMM_FIRMWARE_VERSION])
 
                         Spacer(modifier = Modifier.height(4.dp))
-                        ModelRow(title = "Endereço do dispositivo de comunicação alternativo:",
+                        ModelRow(
+                            title = "Endereço do dispositivo de comunicação alternativo:",
                             status =parameterValues[ConstsCommSvc.GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS] )
                     }
                 }
             }
             item {
                 DropdownCard(title = "Conexão Celular") {
-                    ModelRow(title ="Ip Local de Conexão Celular:" ,
+                    ModelRow(
+                        title ="Ip Local de Conexão Celular:" ,
                        status =parameterValues[ConstsCommSvc.GET_PARAM_CELL_IP_ADDRESS] )
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Sinal Celular:",
+                    ModelRow(
+                        title = "Sinal Celular:",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_HAS_CELLULAR_SIGNAL] )
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Última mensagem/posição trocada na rede celular: ",
+                    ModelRow(
+                        title = "Última mensagem/posição trocada na rede celular: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_LAST_CELL_COMM_TIME])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Último status da conexão via rede celular:  ",
+                    ModelRow(
+                        title = "Último status da conexão via rede celular:  ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_LAST_CELL_CONNECTION_STATUS])
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -244,29 +242,35 @@ fun ParametersScreen(
             }
             item {
                 DropdownCard(title = "Conexão Satelital") {
-                    ModelRow(title = "Sinal do MCT: ",
+                    ModelRow(
+                        title = "Sinal do MCT: ",
                         status = ParameterHandler.convertMctSignal(parameterValues[ConstsCommSvc.GET_PARAM_HAS_SATELLITE_SIGNAL]))
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Última mensagem/posição trocada na rede satelital: ",
+                    ModelRow(
+                        title = "Última mensagem/posição trocada na rede satelital: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_LAST_SAT_COMM_TIME])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Último status da conexão via rede satelital: ",
+                    ModelRow(
+                        title = "Último status da conexão via rede satelital: ",
                         status = ParameterHandler.convertConnectionTypes(parameterValues[ConstsCommSvc.GET_PARAM_LAST_SAT_CONNECTION_STATUS]))
                 }
             }
             item {
                 DropdownCard(title = "Diretórios") {
-                    ModelRow(title = "Diretório de Logs do Cliente:  ",
+                    ModelRow(
+                        title = "Diretório de Logs do Cliente:  ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_CLIENT_LOGS_DIRECTORY])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Status de envio de log: ",
+                    ModelRow(
+                        title = "Status de envio de log: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_FTP_LOGS_STATUS])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Diretório de arquivos de mensagens longas: ",
+                    ModelRow(
+                        title = "Diretório de arquivos de mensagens longas: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_OUT_OF_BAND_MSG_PATH] )
                     CustomTextFieldWithButton(
                         title = "Diretório de arquivos de mensagens longas: ",
@@ -284,11 +288,13 @@ fun ParametersScreen(
             item {
 
                 DropdownCard(title = "Identificação do aparelho móvel") {
-                    ModelRow(title = "Modelo do Aparelho Móvel: ",
+                    ModelRow(
+                        title = "Modelo do Aparelho Móvel: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_COMM_UNIT_DEVICE_TYPE])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Canal de comunicação atual: ",
+                    ModelRow(
+                        title = "Canal de comunicação atual: ",
                         status = ParameterHandler.convertCommMode(parameterValues[ConstsCommSvc.GET_PARAM_CURRENT_COMM_MODE]))
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -308,63 +314,77 @@ fun ParametersScreen(
 
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Número da UC: ",
+                    ModelRow(
+                        title = "Número da UC: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_UC_ADDRESS])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Status da UC Móvel: ",
+                    ModelRow(
+                        title = "Status da UC Móvel: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_UC_STATUS])
                     
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Subtipo da UC Móvel: ",
+                    ModelRow(
+                        title = "Subtipo da UC Móvel: ",
                         status = ParameterHandler.convertUcSubtype(parameterValues[ConstsCommSvc.GET_PARAM_UC_SUBTYPE]))
                 }
             }
             item {
                 DropdownCard(title = "Software/Hardware") {
-                    ModelRow(title = "Status de Atualização de Software: ",
+                    ModelRow(
+                        title = "Status de Atualização de Software: ",
                         status = ParameterHandler.convertUpdateRequests(parameterValues[ConstsCommSvc.GET_PARAM_HAS_UPDATE_PENDING]))
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Firware de Conversores Homologados: " ,
+                    ModelRow(
+                        title = "Firware de Conversores Homologados: " ,
                         status = parameterValues[ConstsCommSvc.GET_PARAM_HOM_WIFI_SERIAL_DEV_FW_VERSIONLIST])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title ="Controle de Wifi, GPRS, GPS e Modo Avião (Habilitados): " ,
+                    ModelRow(
+                        title ="Controle de Wifi, GPRS, GPS e Modo Avião (Habilitados): " ,
                         status = ParameterHandler.getFormattedRadioOptions(parameterValues[ConstsCommSvc.GET_PARAM_HW_CONTROL_DISABLE]?.toLong()))
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title ="ICCID do SimCard1: " ,
+                    ModelRow(
+                        title ="ICCID do SimCard1: " ,
                         status = parameterValues[ConstsCommSvc.GET_PARAM_ICCID1])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title ="Número Serial: " ,
+                    ModelRow(
+                        title ="Número Serial: " ,
                         status = parameterValues[ConstsCommSvc.GET_PARAM_IMEI1])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Provedor de SimCard: " ,
+                    ModelRow(
+                        title = "Provedor de SimCard: " ,
                         status = parameterValues[ConstsCommSvc.GET_PARAM_PHONE_PROVIDER_NAME] )
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Versão do Serviço: ",
+                    ModelRow(
+                        title = "Versão do Serviço: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_SERVICE_VERSION])
                     
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Versão da Interface do Usuário: ",
+                    ModelRow(
+                        title = "Versão da Interface do Usuário: ",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_USER_INTERFACE_VERSION])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Serial do Conversor WIFI:",
+                    ModelRow(
+                        title = "Serial do Conversor WIFI:",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_WIFI_CONVERTER_SERIAL_NUMBER])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Versão do Firmware do Conversor WIFI",
+                    ModelRow(
+                        title = "Versão do Firmware do Conversor WIFI",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_WIFI_SERIAL_DEV_FIRMWARE_VERSION])
                 }
             }
             item {
                 DropdownCard(title = "Relatório de Dispositivo Externo") {
-                    ModelRow(title = "Status da ignição:" ,
+                    ModelRow(
+                        title = "Status da ignição:" ,
                         status = ParameterHandler.convertIgnition(parameterValues[ConstsCommSvc.GET_PARAM_IGNITION_STATUS]))
                 }
             }
@@ -395,7 +415,8 @@ fun ParametersScreen(
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
-                        ModelRow(title = "Status da Conexão da VPN",
+                        ModelRow(
+                            title = "Status da Conexão da VPN",
                             status = ParameterHandler.convertVPNConnectionStatus(ConstsCommSvc.GET_PARAM_VPN_CONNECTION_STATUS) ?: "N/A" )
 
 
@@ -424,24 +445,28 @@ fun ParametersScreen(
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
-                        ModelRow(title ="IP da rede WIFI:" ,
+                        ModelRow(
+                            title ="IP da rede WIFI:" ,
                             status = parameterValues[ConstsCommSvc.GET_PARAM_WIFI_IP_ADDRESS])
                     }
                 }
             }
             item {
                 DropdownCard(title = "Lista de Apps permitidos") {
-                    ModelRow(title = "",
+                    ModelRow(
+                        title = "",
                         status = parameterValues[ConstsCommSvc.GET_PARAM_PROXY_APPS_ON_WHITE_LIST])
                 }
             }
             item {
                 DropdownCard(title = "Servidor (AMH)") {
-                    ModelRow(title = "Endereço primário do servidor: " ,
+                    ModelRow(
+                        title = "Endereço primário do servidor: " ,
                         status = parameterValues[ConstsCommSvc.GET_PARAM_SERVER_IP1])
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    ModelRow(title = "Porta primária do servidor: " ,
+                    ModelRow(
+                        title = "Porta primária do servidor: " ,
                         status = parameterValues[ConstsCommSvc.GET_PARAM_SERVER_PORT1])
                 }
             }

@@ -48,7 +48,7 @@ import java.lang.Exception
 fun FilePicker(
     onSendMessage: () ->Unit,
     selectedFileStringPicker: (Uri?) -> Unit,
-    navigateToInbox: (Int, Boolean) -> Unit,
+    navigateToInbox: ((Int, Boolean) -> Unit)?,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -144,7 +144,9 @@ fun FilePicker(
                         } else {
                             onSendMessage()
                         }
-                        navigateToInbox(1, true)
+                        if (navigateToInbox != null) {
+                            navigateToInbox(1, true)
+                        }
                     }catch (e:Exception){
                         Toast.makeText(context, "Failed to Send", Toast.LENGTH_LONG).show()
                     }finally {
@@ -213,21 +215,6 @@ suspend fun messageOnPattern(value: String, selectedFileString: Uri?): DbMessage
             transmissionChannel = 16, // ANY_AVAIL_NETWORK
             transmittedChannel = null,
             transmissionType = 0, //DEFAULT_TRANS , if serialized SERIAL_TRANS
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CustomSnackBar(
-    message:String,
-){
-    val scaffoldState:BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-    LaunchedEffect(Unit) {
-        scaffoldState.snackbarHostState.showSnackbar(
-            message = message,
-            actionLabel = "Undo",
-            duration = SnackbarDuration.Long
         )
     }
 }

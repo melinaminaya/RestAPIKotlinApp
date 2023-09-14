@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.screens.CheckListScreen
 import com.example.nanoclientkotlin.screens.HomeScreen
+import com.example.nanoclientkotlin.screens.HttpTestScreen
 import com.example.nanoclientkotlin.screens.InboxScreen
 import com.example.nanoclientkotlin.screens.LoginScreen
 import com.example.nanoclientkotlin.screens.ParametersScreen
@@ -34,6 +35,8 @@ fun NavGraph(navController: NavHostController) {
         addCheckListScreen(navController, this)
 
         addParametersScreen(navController, this)
+
+        addHttpTestScreen(navController, this)
 
         addSearchScreen(navController, this)
     }
@@ -71,6 +74,9 @@ private fun addHomeScreen(
             },
             navigateToParameters = { query ->
                 navController.navigate(NavRoute.Parameters.withArgs(query))
+            },
+            navigateToHttpTest = { query ->
+                navController.navigate(NavRoute.HttpTest.withArgs(query))
             },
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) }
@@ -172,6 +178,28 @@ private fun addParametersScreen(
         val args = navBackStackEntry.arguments
 
         ParametersScreen(
+            popBackStack = { navController.popBackStack() },
+            popUpToLogin = { popUpToLogin(navController) }
+        )
+    }
+}
+private fun addHttpTestScreen(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder
+) {
+    navGraphBuilder.composable(
+        route = NavRoute.HttpTest.withArgsFormat(NavRoute.HttpTest.query),
+        arguments = listOf(
+            navArgument(NavRoute.HttpTest.query) {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
+    ) { navBackStackEntry ->
+
+        val args = navBackStackEntry.arguments
+
+        HttpTestScreen(
             popBackStack = { navController.popBackStack() },
             popUpToLogin = { popUpToLogin(navController) }
         )
