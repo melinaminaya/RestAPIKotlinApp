@@ -4,16 +4,21 @@ import android.content.Context
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
-import com.example.nanoclientkotlin.NanoWebsocketClient.TAG
 import com.example.nanoclientkotlin.consts.ActionValues
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
+import com.example.nanoclientkotlin.dataRemote.ChunkObject
 import com.example.nanoclientkotlin.dataRemote.DbMessage
-import com.example.nanoclientkotlin.dataRemote.ParseData
+import com.example.nanoclientkotlin.dataRemote.RequestObject
+import com.example.nanoclientkotlin.dataRemote.SendObject
+import com.example.nanoclientkotlin.handlers.ParseOnMessage
+import com.example.nanoclientkotlin.handlers.ParseResult
 import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.JsonSyntaxException
 import fi.iki.elonen.NanoHTTPD
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -24,185 +29,84 @@ import okhttp3.WebSocketListener
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 
-object NanoWebsocketClient{
-    private const val serverUrl = "http://127.0.0.1:8081" // Replace with your NanoHTTPD WebSocket server URL
+object NanoWebsocketClient {
+    private const val serverUrl =
+        "http://127.0.0.1:8081" // Replace with your NanoHTTPD WebSocket server URL
     private var webSocketClient: WebSocket? = null
-    private val gson:Gson = Gson()
+    val gson: Gson = Gson()
     const val TAG = "NanoWebsocket"
     private const val MAX_RETRIES = 5
     private const val RETRY_DELAY_MS: Long = 5000 // 1 second
     private val client = OkHttpClient()
     const val packageName = "com.example.nanoclientkotlin"
+
     // Declare the observable subject
-    private val webSocketConnectionSubject: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
-    private var currentMsgCode: String? = null
+    private val webSocketConnectionSubject: BehaviorSubject<Boolean> =
+        BehaviorSubject.createDefault(false)
+    var currentMsgCode: String? = null
 
     var connectionDisposable: Disposable? = null
-
-    private val retrofit: Retrofit by lazy {
-        Retrofit.Builder()
-            .baseUrl(serverUrl)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-    private val webSocketApi: WebSocketApi by lazy {
-        retrofit.create(WebSocketApi::class.java)
-    }
+    val messageSenderAccess = MessageSenderAccess()
+    var responseListener:String = ""
 
     fun connect() {
         CoroutineScope(Dispatchers.IO).launch {
-        val authorizationToken = requestAuthorizationToken()
-        if (authorizationToken != null) {
-            val request = Request.Builder()
-                .url(serverUrl)
-                //.addHeader("Authorization", "Bearer $jwtToken") // Add the JWT token as an Authorization header
-                .addHeader(
-                    "authorization",
-                    authorizationToken
-                ) // Add the JWT token as an Authorization header
-                .build()
+            val authorizationToken = requestAuthorizationToken()
+            if (authorizationToken != null) {
+                val request = Request.Builder()
+                    .url(serverUrl)
+                    //.addHeader("Authorization", "Bearer $jwtToken") // Add the JWT token as an Authorization header
+                    .addHeader(
+                        "authorization",
+                        authorizationToken
+                    ) // Add the JWT token as an Authorization header
+                    .build()
 
 //            webSocketClient = webSocketApi.listenForMessages(request.url.toString())
 //        }
 
-            webSocketClient = client.newWebSocket(request, object : WebSocketListener() {
-                override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
-                    println("WebSocket connected")
-                    webSocketConnectionSubject.onNext(true)
-                    startSendingRequests()
-                }
-
-                override fun onMessage(webSocket: WebSocket, text: String) {
-
-                    try {
-                        val jsonElement = JsonParser.parseString(text)
-                        if (jsonElement.isJsonObject) {
-                            val notification =
-                                gson.fromJson(text, ReceivedRequestResponse::class.java)
-                            when (notification.param1) {
-                                "notification" -> {
-                                    Log.d(TAG, "Received notification: $notification")
-                                    sendMessage(NanoHTTPD.Response.Status.OK.toString())
-                                    //Thread.sleep(500)
-                                    //sendMessageList("messageList")
-                                    // requestServer("messageList")
-                                }
-
-                                "request" -> {
-                                    val objectReq = notification.param4
-                                    when (notification.param2) {
-                                        ConstsCommSvc.REQ_MESSAGE_LIST -> {
-                                            val param3Json = notification.param3.toString()
-                                            val filterList = ParseData.parseMessageList(param3Json)
-                                            Log.d(TAG, "$filterList")
-                                            when (filterList.param2) {
-                                                true -> ObservableUtil.attachProperty(
-                                                    ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX,
-                                                    objectReq
-                                                ) // equal fetchOutboxMessages
-                                                false -> ObservableUtil.attachProperty(
-                                                    ConstsCommSvc.REQ_MESSAGE_LIST_INBOX,
-                                                    objectReq
-                                                )
-                                            }
-                                        }
-
-                                        ConstsCommSvc.REQ_MESSAGE_COUNT, ConstsCommSvc.REQ_FORM_LIST,
-                                        ConstsCommSvc.REQ_GET_CHECKLIST, ConstsCommSvc.REQ_GET_CURRENT_DATE,
-                                        ConstsCommSvc.REQ_GET_MCT_PARAMETERS, ConstsCommSvc.REQ_GET_POSITION_LAST,
-                                        ConstsCommSvc.REQ_POSITION_HISTORY_COUNT, ConstsCommSvc.REQ_POSITION_HISTORY_LIST,
-                                        ConstsCommSvc.REQ_RESET_DATABASE, ConstsCommSvc.REQ_MESSAGE_DELETE,
-                                        ConstsCommSvc.REQ_MESSAGE_SET_AS_READ, ConstsCommSvc.REQ_CONFIG_SERVICE_LOG,
-                                        ConstsCommSvc.REQ_FILE_OPERATION
-                                        -> {
-                                            ObservableUtil.attachProperty(
-                                                notification.param2,
-                                                objectReq
-                                            )
-                                        }
-                                    }
-                                    sendMessage(NanoHTTPD.Response.Status.OK.toString())
-                                    Log.d(TAG, "Received ${notification.param2}: $notification")
-                                }
-
-                                "parameters" -> {
-                                    val objectReq = notification.param3
-                                    when (notification.param2) {
-                                        in ConstsCommSvc.parametersList.filter { it.startsWith("GET") } -> {
-                                            ObservableUtil.attachProperty(
-                                                notification.param2!!,
-                                                objectReq
-                                            )
-                                        }
-
-                                        in ConstsCommSvc.parametersList.filter { it.startsWith("SET") } -> {
-                                            //TODO: TO BE IMPLEMENTED
-
-                                        }
-                                    }
-                                    sendMessage(NanoHTTPD.Response.Status.OK.toString())
-                                    Log.d(TAG, "Received ${notification.param2}: $notification")
-                                }
-
-                                "messageSent" -> {
-                                    currentMsgCode = notification.param2
-                                    Log.d(TAG, "Received Sent Confirmation: $notification")
-                                    sendMessage(NanoHTTPD.Response.Status.OK.toString())
-                                }
-
-                                else -> {
-                                    // Handle case when notification.param1 is null
-                                    Log.d(TAG, "Received message: $text")
-                                }
-                            }
-                        }
-                    } catch (e: JsonSyntaxException) {
-                        //e.printStackTrace()
-                        Log.d(TAG, "Received JsonException: $text")
+                webSocketClient = client.newWebSocket(request, object : WebSocketListener() {
+                    override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
+                        println("WebSocket connected")
+                        webSocketConnectionSubject.onNext(true)
                     }
 
-                }
+                    override fun onMessage(webSocket: WebSocket, text: String) {
+                        val parseMessage = ParseOnMessage()
+                        val response = parseMessage.parseMessage(text)
+                        if (response == ParseResult.Ok) {
+                           sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                        }else{
+                            sendMessage(NanoHTTPD.Response.Status.INTERNAL_ERROR.toString())
+                        }
+                        responseListener = text
+                    }
 
-                override fun onFailure(
-                    webSocket: WebSocket,
-                    t: Throwable,
-                    response: okhttp3.Response?
-                ) {
-                    Log.d(TAG, "WebSocket connection failed: ${t.message}")
-                    webSocketConnectionSubject.onNext(false)
-                    // Retry connection on failure
+                    override fun onFailure(
+                        webSocket: WebSocket,
+                        t: Throwable,
+                        response: okhttp3.Response?,
+                    ) {
+                        Log.d(TAG, "WebSocket connection failed: ${t.message}")
+                        webSocketConnectionSubject.onNext(false)
+                        // Retry connection on failure
 //                    retryConnection()
-                }
+                        responseListener = t.toString()
+                    }
 
-                override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                    Log.d(TAG, "WebSocket connection closed: $reason")
-                    webSocketConnectionSubject.onNext(false)
-                    connectionDisposable!!.dispose()
-                }
-
-
-            })
-
+                    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                        Log.d(TAG, "WebSocket connection closed: $reason")
+                        webSocketConnectionSubject.onNext(false)
+                        connectionDisposable!!.dispose()
+                        responseListener = code.toString()
+                    }
+                })
+            }
         }
-        }
-
     }
 
     fun retryConnection() {
@@ -230,7 +134,8 @@ object NanoWebsocketClient{
     fun sendMessageFromClient() {
         //val textMessage = "Hello, server!"
         val notificationSubscription =
-            SendObject("notification",
+            SendObject(
+                "notification",
                 listOf(
                     ActionValues.MESSAGE_STATUS, ActionValues.BAPTISM_STATUS,
                     ActionValues.COMMUNICATION_MODE_CHANGED, ActionValues.DATE_TIME_CHANGED,
@@ -238,7 +143,9 @@ object NanoWebsocketClient{
                     ActionValues.IGNITION_STATUS, ActionValues.MCT_M0_M9_PARAMS_UPDATED,
                     ActionValues.NETWORK_CONNECTION_STATUS, ActionValues.READY_TO_UPDATE_SOFTWARE,
                     ActionValues.SATELLITE_SIGNAL_CHANGED, ActionValues.SIGN_ON_STATUS,
-                    ActionValues.SYSTEM_RESOURCE_REQ_STATUS))
+                    ActionValues.SYSTEM_RESOURCE_REQ_STATUS
+                )
+            )
 
         val objectJson = gson.toJson(notificationSubscription)
         webSocketClient!!.send(objectJson)
@@ -259,15 +166,19 @@ object NanoWebsocketClient{
 
     suspend fun sendDbMessage(message: DbMessage, fileUri: Uri?, context: Context) {
         val maxChunkSize = 8192
+//        val maxChunkSize = 1024
         val messageJson = gson.toJson(message, DbMessage::class.java)
         val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
         try {
             if(fileUri != null){
                 coroutineScope.launch{
                     val inputStream = context.contentResolver.openInputStream(fileUri)
+                    val fileSize = inputStream?.available() ?: 0 // Get the total file size
+                    val totalChunks = (fileSize + maxChunkSize - 1) / maxChunkSize // Calculate total chunks
+
                     val reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
                     var chunkNumber = 0
+
                     while (true) {
                         // Read the file data into a ByteArray buffer
                         val buffer = ByteArray(maxChunkSize)
@@ -284,13 +195,13 @@ object NanoWebsocketClient{
                         // Create the ChunkObject for the current chunk
                         val chunkObject = ChunkObject(
                             message = messageJson,
-                            totalChunks = 0, // Placeholder value, will be updated later
+                            totalChunks = totalChunks, // Placeholder value, will be updated later
                             chunkNumber = chunkNumber,
                             data = chunkData
                         )
 
                         // Send the chunk over the WebSocket
-                        val myObject = SendObject("messageSend", chunkObject)
+                        val myObject = SendObject(ConstsCommSvc.SEND_FILE_MESSAGE, chunkObject)
                         val response = gson.toJson(myObject)
                         if (webSocketClient != null) {
                             webSocketClient!!.send(response)
@@ -301,15 +212,15 @@ object NanoWebsocketClient{
 
 
                     }
-                // Signal the end of the file transmission with a special end marker
+                    // Signal the end of the file transmission with a special end marker
                     val endMarkerObject = ChunkObject(
                         message= messageJson,
-                        totalChunks = chunkNumber, // Set the totalChunks to the final chunk number (including the end marker)
-                        chunkNumber = chunkNumber, // Use a special value to indicate the end marker
+                        totalChunks = totalChunks, // Set the totalChunks to the final chunk number (including the end marker)
+                        chunkNumber = totalChunks, // Use a special value to indicate the end marker
                         data = "" // Empty data for the end marker
                     )
 
-                    val myObject = SendObject("messageSend", endMarkerObject)
+                    val myObject = SendObject(ConstsCommSvc.SEND_FILE_MESSAGE, endMarkerObject)
                     val response = gson.toJson(myObject)
                     if (webSocketClient != null) {
                         webSocketClient!!.send(response)
@@ -326,7 +237,7 @@ object NanoWebsocketClient{
                     data = ""
                 )
 
-                val myObject = SendObject("messageSend", messageToSend)
+                val myObject = SendObject(ConstsCommSvc.SEND_MESSAGE, messageToSend)
                 val response = gson.toJson(myObject)
                 if (webSocketClient != null) {
                     webSocketClient!!.send(response)
@@ -366,6 +277,11 @@ object NanoWebsocketClient{
     /**
      * startSendingRequests could be used outside of NanoWebsocketClient because it
      * carries websocket inside, but not its functions.
+     *
+     * REQ_MESSAGE_COUNT: Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
+     * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
+     * @param1:Boolean: True para mensagens de saída, False para mensagens de entrada (caixa de entrada).
+     * @param2:Int: número do status a ser filtrado.
      */
     fun startSendingRequests() {
         val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -397,7 +313,7 @@ object NanoWebsocketClient{
         val request = Request.Builder()
             .url("$serverUrl/auth") // Replace with your server's endpoint URL
             .addHeader("User-Agent", System.getProperty("http.agent")!!)
-            .addHeader("Package-Name", packageName )
+            .addHeader("Package-Name", packageName)
             .build()
         var response: Response? = null
         var retryCount = 0
@@ -422,7 +338,7 @@ object NanoWebsocketClient{
                         return null
                     }
                 }
-            }catch (e:IOException){
+            } catch (e: IOException) {
                 if (retryCount < MAX_RETRIES) {
                     retryCount++
                     e.printStackTrace()
@@ -432,7 +348,7 @@ object NanoWebsocketClient{
                     return null
                 }
 
-            }catch (e: InterruptedException) {
+            } catch (e: InterruptedException) {
                 // Interrupted while waiting, return null or throw an exception
                 return null
             } finally {
@@ -442,69 +358,27 @@ object NanoWebsocketClient{
         }
         return null
     }
-}
+    fun isWebSocketConnected(): Boolean {
+        return webSocketClient?.send("Ping") ?: false
+    }
 
+}
 
 
 class MessageSenderAccess {
     suspend fun sendMessageToServer(message: DbMessage, context: Context, fileUri: Uri?) {
         NanoWebsocketClient.getInstance().sendDbMessage(message, fileUri, context)
     }
-    fun sendRequest(param: String, param1: Any?, param2: Any?, param3: Any?, param4: Any?){
-        NanoWebsocketClient.getInstance().sendMessageRequest(param, param1, param2, param3 , param4)
+
+    fun sendRequest(param: String, param1: Any?, param2: Any?, param3: Any?, param4: Any?) {
+        NanoWebsocketClient.getInstance().sendMessageRequest(param, param1, param2, param3, param4)
 
     }
-
-}
-data class SendObject(val param1: String?, val param2: Any?)
-data class ReceivedRequestResponse(val param1: String?, val param2: String?, val param3: Any?, val param4:Any?)
-data class RequestObject(val param1: Any?, val param2: Any?, val param3:Any?, val param4: Any?)
-data class ChunkObject(
-    val message: String,
-    val totalChunks: Int,
-    val chunkNumber: Int,
-    val data: String // Use String to represent the chunk data
-)
-
-
-class NanoHTTPClient {
-    private val gson = Gson()
-    fun sendGetRequest(url: String, objectGet: Any): String {
-        val jsonToEncode = gson.toJson(objectGet)
-        val encodedMessage = URLEncoder.encode(jsonToEncode, "UTF-8")
-        val urlWithMessage = "$url?message=$encodedMessage"
-
-        val connection = URL(urlWithMessage).openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-
-
-        val responseCode = connection.responseCode
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            val reader = BufferedReader(InputStreamReader(connection.inputStream))
-            val response = StringBuilder()
-            var line: String?
-            try {
-                while (reader.readLine().also { line = it } != null) {
-                    response.append(line)
-                }
-            }catch (e: Exception){
-                e.printStackTrace()
-            }
-            reader.close()
-            val responseData = response.toString()
-            // Process the response data as needed
-            Log.d(TAG, "Response from GET: $responseData" )
-            return response.toString()
-        }
-
-        return ""
+    suspend fun sendMessageToServerHttp(message: DbMessage, context: Context, fileUri: Uri?): String {
+        NanoWebsocketClient.getInstance().sendDbMessage(message, fileUri, context)
+        Thread.sleep(1000)
+        return ObservableUtil.getValue(ConstsCommSvc.SEND_FILE_MESSAGE).toString()
     }
-}
 
-interface WebSocketApi {
-    @GET("/")
-    fun connect(): Call<ResponseBody>
 
-    @GET
-    fun listenForMessages(toString: String): WebSocket
 }

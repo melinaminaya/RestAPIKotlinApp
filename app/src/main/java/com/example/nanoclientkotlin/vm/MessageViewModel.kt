@@ -95,7 +95,7 @@ open class MessageViewModel (
             _messages.value = currentMessages
         }
     }
-    private suspend fun fetchDataFromDataSource(): List<DbMessage>? {
+    suspend fun fetchDataFromDataSource(): List<DbMessage>? {
         delay(500)
           val  valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_INBOX)
 

@@ -1,6 +1,5 @@
 package com.example.nanoclientkotlin.handlers
 
-import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.consts.ParameterValues
 import java.math.BigInteger
 
@@ -82,17 +81,17 @@ class ParameterHandler {
                 is Int -> {
                     return value.let { intValue ->
                         when (intValue) {
-                            ParameterValues.RS232 -> "serial RS232"
-                            ParameterValues.SOCKET -> "socket, com acesso direto à rede (sem NetworkAccess)"
-                            ParameterValues.SOCKET_WIFI_HOTSPOT -> "socket, com acesso à rede via HotSpot WiFi"
-                            ParameterValues.RS232_AND_SOCKET -> "serial RS232 ou socket, com acesso direto\n" +
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232 -> "serial RS232"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.SOCKET -> "socket, com acesso direto à rede (sem NetworkAccess)"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_HOTSPOT -> "socket, com acesso à rede via HotSpot WiFi"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET -> "serial RS232 ou socket, com acesso direto\n" +
                                     "à rede (sem NetworkAccess) de acordo com a demanda"
 
-                            ParameterValues.RS232_AND_SOCKET_WIFI_HOTSPOT -> "serial RS232 ou socket, com acesso à\n" +
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_HOTSPOT -> "serial RS232 ou socket, com acesso à\n" +
                                     " rede via HotSpot WiFi de acordo com a demanda"
 
-                            ParameterValues.SOCKET_WIFI_CLIENT -> "socket, com acesso à rede via Cliente WiFi"
-                            ParameterValues.RS232_AND_SOCKET_WIFI_CLIENT -> "serial RS232 ou socket, com acesso à\n" +
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_CLIENT -> "socket, com acesso à rede via Cliente WiFi"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_CLIENT -> "serial RS232 ou socket, com acesso à\n" +
                                     "rede via Cliente WiFi de acordo com a demanda"
                             else -> null
                         }
@@ -101,17 +100,17 @@ class ParameterHandler {
                 is String -> {
                     return value.toIntOrNull().let { intValue ->
                         when (intValue) {
-                            ParameterValues.RS232 -> "serial RS232"
-                            ParameterValues.SOCKET -> "socket, com acesso direto à rede (sem NetworkAccess)"
-                            ParameterValues.SOCKET_WIFI_HOTSPOT -> "socket, com acesso à rede via HotSpot WiFi"
-                            ParameterValues.RS232_AND_SOCKET -> "serial RS232 ou socket, com acesso direto\n" +
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232 -> "serial RS232"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.SOCKET -> "socket, com acesso direto à rede (sem NetworkAccess)"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_HOTSPOT -> "socket, com acesso à rede via HotSpot WiFi"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET -> "serial RS232 ou socket, com acesso direto\n" +
                                     "à rede (sem NetworkAccess) de acordo com a demanda"
 
-                            ParameterValues.RS232_AND_SOCKET_WIFI_HOTSPOT -> "serial RS232 ou socket, com acesso à\n" +
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_HOTSPOT -> "serial RS232 ou socket, com acesso à\n" +
                                     " rede via HotSpot WiFi de acordo com a demanda"
 
-                            ParameterValues.SOCKET_WIFI_CLIENT -> "socket, com acesso à rede via Cliente WiFi"
-                            ParameterValues.RS232_AND_SOCKET_WIFI_CLIENT -> "serial RS232 ou socket, com acesso à\n" +
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_CLIENT -> "socket, com acesso à rede via Cliente WiFi"
+                            ParameterValues.ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_CLIENT -> "serial RS232 ou socket, com acesso à\n" +
                                     "rede via Cliente WiFi de acordo com a demanda"
                             else -> null
                         }
@@ -194,9 +193,9 @@ class ParameterHandler {
         fun convertUcSubtype(value: String?): String? {
             return value?.toIntOrNull()?.let { intValue ->
                 when (intValue) {
-                    ParameterValues.MOBILE-> "Celular"
-                    ParameterValues.MOBILE_SATELLITE -> "Satelital"
-                    ParameterValues.PRIME_MOBILE -> "Prime Mobile"
+                    ParameterValues.CmuSubtypeValues.MOBILE-> "Celular"
+                    ParameterValues.CmuSubtypeValues.MOBILE_SATELLITE -> "Satelital"
+                    ParameterValues.CmuSubtypeValues.PRIME_MOBILE -> "Prime Mobile"
                     else -> null
                 }
             }

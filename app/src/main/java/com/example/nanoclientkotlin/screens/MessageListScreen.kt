@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
@@ -35,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,7 +46,6 @@ import com.example.nanoclientkotlin.dataRemote.DbMessage
 import com.example.nanoclientkotlin.vm.MessageViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -69,33 +66,33 @@ fun MessageListScreen() {
         messagesList.value = messagesState
     }
     val coroutineScope = rememberCoroutineScope()
-        Box {
-            if (messagesList.value.isEmpty()) {
-                // Show the loading icon here
-                Column(verticalArrangement = Arrangement.Center) {
-                    LoadingIcon(100)
-                }
-            } else {
-                MessageListComposable(
-                    messages = messagesList.value,
-                    onMessageDelete = { message ->
-                        viewModel.deleteMessage(message)
-                    },
-                    onMessageClick = { message ->
-                        showDialog.value = true
-                        clickedMessage.value = message
-                    },
-                    onDialogDismiss = {
-                        showDialog.value = false
-                    },
-                    onRefresh = {
-                       coroutineScope.launch {
-                           viewModel.fetchMessages()
-                       }
-                    }
-                )
+    Box {
+        if (messagesList.value.isEmpty()) {
+            // Show the loading icon here
+            Column(verticalArrangement = Arrangement.Center) {
+                LoadingIcon(100)
             }
+        } else {
+            MessageListComposable(
+                messages = messagesList.value,
+                onMessageDelete = { message ->
+                    viewModel.deleteMessage(message)
+                },
+                onMessageClick = { message ->
+                    showDialog.value = true
+                    clickedMessage.value = message
+                },
+                onDialogDismiss = {
+                    showDialog.value = false
+                },
+                onRefresh = {
+                   coroutineScope.launch {
+                       viewModel.fetchMessages()
+                   }
+                }
+            )
         }
+    }
 
     if (showDialog.value) {
         Alert(

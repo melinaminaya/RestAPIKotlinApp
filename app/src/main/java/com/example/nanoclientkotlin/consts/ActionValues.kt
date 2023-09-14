@@ -239,6 +239,7 @@ object ActionValues {
      */
     const val RELOAD_PARAMETER_FROM_DB = 0x13
 
+    //TODO: implement
     /**
      * **I->S**<br></br>
      * Ac�es relacionadas a operac�es com arquivos.<br></br>
@@ -263,7 +264,7 @@ object ActionValues {
      *
      */
     const val FILE_OPERATION_ACTION = 0x14
-
+    //TODO: implement
     /**
      * **S->I**<br></br>
      * Indica o status de uma operacao com arquivos iniciada anteriormente. <br></br>
@@ -275,20 +276,95 @@ object ActionValues {
     const val FILE_OPERATION_STATUS = 0x15
 
     /**
-     * **S->I**<br></br>
      * Indica o status de uma mensagem no banco de dados. Esta acao pode ser utilizada quando uma nova mensagem
      * for recebida ou quando uma mensagem que foi postada para envio acabou de ser enviada, alEm de outros
-     * status. Uma mensagem nao lida tera o status [AmcuipValuesMessageStatus.NOT_READ]. Uma mensagem
-     * que foi enviada tera o status [AmcuipValuesMessageStatus.SENT]. <br></br>
-     * **Param1:** C�digo da mensagem no banco de dados.<br></br>
+     * status. Uma mensagem nao lida tera o status [MessageStatusValues.NOT_READ]. Uma mensagem
+     * que foi enviada tera o status [MessageStatusValues.SENT].
+     * **Param1:** Codigo da mensagem no banco de dados.
      * **Param2:** Status da mensagem. Este campo deve ser utilizado para distinguir entre os diferentes status
-     * de uma mensagem. Ver [AmcuipValuesMessageStatus]. Este campo deve ser tratado como um inteiro de
-     * 32bits com sinal (signed int).<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * de uma mensagem. Ver [MessageStatusValues]. Este campo deve ser tratado como um inteiro de
+     * 32bits com sinal (signed int).
+     * **Param3:** Nao utilizado.
+     * **Param4:** Nao utilizado.
      */
     const val MESSAGE_STATUS = 0x16
 
+    /** Valores válidos para status de mensagens. */
+    object MessageStatusValues {
+        /** Nenhum status associado.  */
+        const val NONE = 0
+
+        /** A enviar. **Valido sómente para mensagens de Envio.**  */
+        const val TO_SEND = 1
+
+        /** Enviada. **Valido sómente para mensagens de Envio.**  */
+        const val SENT = 2
+
+        /** Mensagem recebida nao lida. **Valido somente para mensagens de retorno.**  */
+        const val NOT_READ = 3
+
+        /** Mensagem recebida lida. **Valido somente para mensagens de retorno.**  */
+        const val READ = 4
+
+        /** Nao processada. **Valido sómente para mensagens de Envio.**  */
+        const val NOT_PROCESSED = 5
+
+        /**
+         * Transmitida. Acontece quando uma mensagem ja foi transmitida pela rede satelital.
+         * Depois que ha a confirmacao de entrega pelo servidor, ela E marcada como enviada.
+         * **Valido sómente para mensagens de Envio.**
+         */
+        const val TRANSMITTED = 6
+
+        /**
+         * Mensagem longa (Out Of Band) recebida nao processada (seus arquivos ainda nao foram baixados).
+         * Sera processada e marcada como [AmcuipValuesMessageStatus.NOT_READ]
+         * quando os arquivos forem baixados do servidor.
+         * **Valido sómente para mensagens de Retorno.**
+         */
+        const val NOT_READ_OUT_OF_BAND = 7
+
+        /**
+         * Em transmissao. A mensagem esta em transmissao pela rede satelital, seu envio esta em
+         * progresso, a mensagem ainda nao foi completamente transmitida pelo dispositivo.
+         * Quando a mensagem for transmitida, ela sera marcada como [AmcuipValuesMessageStatus.TRANSMITTED].
+         * **Valido sómente para mensagens de Envio.**
+         */
+        const val TRANSMITTING = 8
+        // Status acima de 1000 serao tratados como status informativos.
+        /**
+         * Sinaliza que uma mensagem do tipo Serial esta bloqueando a fila de mensagens por ser muito grande para a
+         * rede satelital.
+         * Uma mensagem do tipo Serial E muito grande para ser enviada via satElite, mas pode ser enviada
+         * via celular (quando configurada para poder ser enviada por qualquer rede disopnivel), porEm nao
+         * ha rede celular disponivel no momento para envio. Neste caso, a mensagem bloqueara a fila de
+         * envio atE que haja rede celular disponivel.<br></br>
+         * **Este status E apenas informativo, nao sera gravado no banco de dados.**
+         */
+        const val SERIAL_MESSAGE_TOO_BIG_WAITING = 1000
+
+        /**
+         * Sinaliza que uma mensagem do tipo Serial esta bloqueando a fila de mensagens por que o tipo de rede
+         * escolhido para o envio da mensagem nao esta disponivel.<br></br>
+         * Uma mensagem do tipo Serial possui o tipo de canal de transmissao igual a 'Cellular', mas no momento
+         * nao ha rede celular disponivel para o envio da mensagem. A mensagem só sera enviada quando a rede celular
+         * estiver disponivel.<br></br>
+         * **Este status E apenas informativo, nao sera gravado no banco de dados.**
+         */
+        const val SERIAL_MESSAGE_CELL_NET_UNAVAILABLE = 1001
+
+        /** Mensagem duplicada/descartada.  */
+        const val MESSAGE_DUPLICATE = -5514
+
+        /** Mensagem muito grande para ser transmitida para o receptor. **Valido sómente para mensagens de Envio.**  */
+        const val MESSAGE_TOO_BIG = -5531
+
+        /** Mensagem OutOfBand: Arquivo nao encontrado.  */
+        const val OUT_OF_BAND_FILE_NOT_FOUND = -5561
+
+        /** Erro desconhecido.  */
+        const val UNKNOWN_ERROR = -5599
+    }
     /**
      * **S->I**<br></br>
      * Indica o status de requisicao de algum recurso do sistema. Esta acao pode ser utilizada para informar
@@ -484,5 +560,50 @@ object ActionValues {
 
         /** Recurso nao disponivel.  */
         const val NOT_AVAILABLE = 3
+    }
+    object FileOperationFiles{
+        /** Arquivo de log do serviço.*/
+        const val SVC_LOG = 1
+        /**Arquivo de log da API.*/
+        const val API_LOG = 4
+        /** Arquivo do banco de dados do serviço.*/
+        const val SVC_DATABASE = 2
+    }
+    object FileOperationOptions{
+        /** Os arquivos devem ser copiados.*/
+        const val COPY_FILES = 1
+        /** Nenhuma opção selecionada.*/
+        const val NO_OPTIONS = 0
+        /** Os arquivos devem ser compactados no destino com compressão zip.*/
+        const val ZIP_COMPRESSION = 2
+    }
+    object FormTypeValues{
+        /** Filtro desabilitado*/
+        const val FILTER_DISABLED = 0
+
+        /** Binário; da UC fixa para a UC móvel */
+        const val FIXED_TO_MOBILE_BINARY = 4
+
+        /**Texto; da UC fixa para a UC móvel. */
+        const val FIXED_TO_MOBILE_TXT = 1
+
+        /** Binário; da UC móvel para a UC fixa;*/
+        const val MOBILE_TO_FIXED_BINARY = 8
+
+        /** Texto; da UC móvel para a UC fixa; */
+        const val MOBILE_TO_FIXED_TXT = 2
+
+        /** Binário; envio e recebimento tanto por UC móvel quanto por fixa; */
+        const val SEND_RECEIVE_BINARY = 12
+
+        /** Texto; envio e recebimento tanto por UC móvel quanto por fixa; */
+        const val	SEND_RECEIVE_TXT = 3
+
+    }
+    object PositionSourceType {
+        /** Posição do Gps interno.*/
+        const val GPS = 0
+        /** Posição do Mct.*/
+        const val MCT = 1
     }
 }

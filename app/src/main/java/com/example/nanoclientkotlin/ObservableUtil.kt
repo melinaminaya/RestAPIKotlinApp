@@ -15,7 +15,7 @@ object ObservableUtil {
         ConstsCommSvc.parametersList.forEach { parameter ->
             parameterMap[parameter] = null
         }
-        ConstsCommSvc.requestsList.forEach { parameter ->
+        ConstsCommSvc.requestsListForObservables.forEach { parameter ->
             parameterMap[parameter] = null
         }
     }

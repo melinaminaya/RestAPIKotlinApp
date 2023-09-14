@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.ObservableUtil
+import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.dataRemote.DbMessage
 import com.example.nanoclientkotlin.dataRemote.FormList
 import com.fasterxml.jackson.core.type.TypeReference
@@ -23,7 +24,7 @@ open class FormListViewModel (
     private val mapper = ObjectMapper()
 
     fun fetchMessages() {
-        senderAccess.sendRequest("formList", false, 0, 1, null)
+        senderAccess.sendRequest(ConstsCommSvc.REQ_FORM_LIST, false, 0, 1, null)
 //        sendMessageAndWait("messageList")
         // Replace with your logic to fetch messages from a data source
         val fetchedMessages: List<FormList>? = fetchDataFromDataSource()

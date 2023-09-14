@@ -22,6 +22,9 @@ sealed class NavRoute(val path: String) {
     object Parameters: NavRoute("parameters") {
         const val query = "query"
     }
+    object HttpTest: NavRoute("httpTest") {
+        const val query = "query"
+    }
 
     // build navigation path (for screen navigation)
     fun withArgs(vararg args: String): String {

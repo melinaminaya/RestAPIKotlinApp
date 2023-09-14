@@ -22,6 +22,11 @@ open class CheckListViewModel: ViewModel() {
 
     private val _checkList = MutableLiveData<List<CheckList>>()
     val checkList: MutableLiveData<List<CheckList>> get() = _checkList
+    private val _cellSignal = MutableLiveData<String>()
+    val cellSignal: MutableLiveData<String> get() = _cellSignal
+    private val _wifiSignal = MutableLiveData<String>()
+    val wifiSignal: MutableLiveData<String> get() = _wifiSignal
+
     private val senderAccess = MessageSenderAccess()
     private var gson = Gson()
     private val mapper = ObjectMapper()
@@ -58,6 +63,28 @@ open class CheckListViewModel: ViewModel() {
     fun sendFileOperation(files: Int, options: Int, destination: String, timeoutMS: Int){
         senderAccess.sendRequest(ConstsCommSvc.REQ_CONFIG_SERVICE_LOG,
             files, options, destination, timeoutMS)
+    }
+
+    /**
+     * Example calls for fetching CellSignal and WifiSignal values from the Requests
+     */
+    suspend fun fetchCellSignal(){
+        senderAccess.sendRequest(ConstsCommSvc.REQ_CELL_SIGNAL, null, null, null, null)
+
+        val fetchedMessages: String = fetchDataFromDataSourceCellSignal()
+        _cellSignal.value = fetchedMessages
+    }
+    private suspend fun fetchDataFromDataSourceCellSignal(): String {
+        delay(500)
+        val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_CELL_SIGNAL)
+
+        val jsonOnLaunched = gson.toJson(valueOnLaunched)
+
+        mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
+
+        return mapper.readValue(
+            jsonOnLaunched,
+            object : TypeReference<String>() {})
     }
 }
 

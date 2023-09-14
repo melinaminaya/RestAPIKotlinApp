@@ -10,6 +10,7 @@ import java.util.Locale
 data class CheckList(
 
     @JsonProperty("WiFiStatus") val wifiStatus: Any?,
+    @JsonProperty("WiFiSignal") val wifiSignal: Any?,
     @JsonProperty("CellularStatus") val cellularStatus:Any?,
     @JsonProperty("CellularSignalLevel") var cellularSignalLevel: Any?,
     @JsonProperty("HasSatelliteSignal") val hasSatelliteSignal: String?,

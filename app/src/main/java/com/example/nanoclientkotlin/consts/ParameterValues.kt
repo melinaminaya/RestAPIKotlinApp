@@ -47,44 +47,6 @@ class ParameterValues {
             /** O canal satelital está sendo utilizado.  */
             const val COMM_MODE_SATELLITE = 2
 
-        /**
-         * Valores possíveis para os tipos de comunicação (meio físico) a ser
-         * utilizado com o dispositivo externo.
-         * */
-            /** Utilizar comunicação via interface serial RS232.  */
-            const val RS232 = 0
-
-            /** Utilizar comunicação via socket, com acesso direto à rede (sem NetworkAccess).  */
-            const val SOCKET = 1
-
-            /** Utilizar comunicação via socket, com acesso à rede via HotSpot WiFi.  */
-            const val SOCKET_WIFI_HOTSPOT = 2
-
-            /**
-             * Utilizar comunicação via interface serial RS232 ou comunicação via socket, com acesso direto
-             * à rede (sem NetworkAccess) de acordo com a demanda (quando um falhar o outro será utilizado).
-             */
-            const val RS232_AND_SOCKET = 3
-
-            /**
-             * Utilizar comunicação via interface serial RS232 ou comunicação via socket, com acesso à
-             * rede via HotSpot WiFi de acordo com a demanda (quando um falhar o outro será utilizado).
-             */
-            const val RS232_AND_SOCKET_WIFI_HOTSPOT = 4
-
-            /** Utilizar comunicação via socket, com acesso à rede via Cliente WiFi.  */
-            const val SOCKET_WIFI_CLIENT = 5
-
-            /**
-             * Utilizar comunicação via interface serial RS232 ou comunicação via socket, com acesso à
-             * rede via Cliente WiFi de acordo com a demanda (quando um falhar o outro será utilizado).
-             */
-            const val RS232_AND_SOCKET_WIFI_CLIENT = 6
-
-        val listExtDevCommType = listOf(
-            RS232, SOCKET, SOCKET_WIFI_HOTSPOT, RS232_AND_SOCKET,
-            RS232_AND_SOCKET_WIFI_HOTSPOT, SOCKET_WIFI_CLIENT
-            )
 
         /**
          * Valores possíveis para o parâmetro PARAM_SOFTWARE_UPD_STATUS.
@@ -155,18 +117,7 @@ class ParameterValues {
         const val STATUS_ENABLED_VPN = 0
         const val STATUS_DISABLED_VPN = 1
 
-        /**
-         * Valores possíveis para o parâmetro:
-         * @see ConstsCommSvc.GET_PARAM_UC_SUBTYPE
-         * */
-            /** Produto com comunicação exclusiva via satélite.  */
-            const val MOBILE_SATELLITE = -1
 
-            /** UC com comunicação celular.  */
-            const val MOBILE = 10
-
-            /** Uc com comunicação celular e satélite.  */
-            const val PRIME_MOBILE = 11
 
         /**
          * Desabilita o uso da rede WiFi. (=0 habilita o uso, =1 desabilita o uso. Aplicações externas podem utilizar o
@@ -174,6 +125,15 @@ class ParameterValues {
          */
         const val ENABLE_WIFI = 0
         const val DISABLE_WIFI = 1
+
+        val listExtDevCommType = listOf(
+            ExternalDeviceCommunicationTypeValues.RS232,
+            ExternalDeviceCommunicationTypeValues.SOCKET,
+            ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_HOTSPOT,
+            ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET,
+            ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_HOTSPOT,
+            ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_CLIENT
+        )
     }
 
 
@@ -186,4 +146,56 @@ class ParameterValues {
         /** Os arquivos devem ser copiados.*/
         const val COPY_FILES = 1
     }
+    /**
+     * Valores possíveis para os tipos de comunicação (meio físico) a ser
+     * utilizado com o dispositivo externo.
+     * */
+    object ExternalDeviceCommunicationTypeValues {
+        /** Utilizar comunicação via interface serial RS232.  */
+        const val RS232 = 0
+
+        /** Utilizar comunicação via socket, com acesso direto à rede (sem NetworkAccess).  */
+        const val SOCKET = 1
+
+        /** Utilizar comunicação via socket, com acesso à rede via HotSpot WiFi.  */
+        const val SOCKET_WIFI_HOTSPOT = 2
+
+        /**
+         * Utilizar comunicação via interface serial RS232 ou comunicação via socket, com acesso direto
+         * à rede (sem NetworkAccess) de acordo com a demanda (quando um falhar o outro será utilizado).
+         */
+        const val RS232_AND_SOCKET = 3
+
+        /**
+         * Utilizar comunicação via interface serial RS232 ou comunicação via socket, com acesso à
+         * rede via HotSpot WiFi de acordo com a demanda (quando um falhar o outro será utilizado).
+         */
+        const val RS232_AND_SOCKET_WIFI_HOTSPOT = 4
+
+        /** Utilizar comunicação via socket, com acesso à rede via Cliente WiFi.  */
+        const val SOCKET_WIFI_CLIENT = 5
+
+        /**
+         * Utilizar comunicação via interface serial RS232 ou comunicação via socket, com acesso à
+         * rede via Cliente WiFi de acordo com a demanda (quando um falhar o outro será utilizado).
+         */
+        const val RS232_AND_SOCKET_WIFI_CLIENT = 6
+    }
+    /**
+     * Valores possíveis para o parâmetro:
+     * @see ConstsCommSvc.GET_PARAM_UC_SUBTYPE
+     * @see ConstsCommSvc.SET_PARAM_WIFI_SSID
+     * */
+    object CmuSubtypeValues {
+
+        /** Produto com comunicação exclusiva via satélite.  */
+        const val MOBILE_SATELLITE = -1
+
+        /** UC com comunicação celular.  */
+        const val MOBILE = 10
+
+        /** Uc com comunicação celular e satélite.  */
+        const val PRIME_MOBILE = 11
+    }
+
 }

@@ -50,8 +50,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Reconnect to the WebSocket when the app resumes
-        NanoWebsocketClient.connect()
+        /**
+         * This method is called when the app is resumed
+         * In order to reconnect to the WebSocket when the app resumes
+         */
+//        NanoWebsocketClient.connect()
     }
 }
 
