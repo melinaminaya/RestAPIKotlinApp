@@ -32,6 +32,10 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
+/**
+ * Cliente WebSocket baseado em OKHttpClient e Retrofit.
+ * @author Melina Minaya.
+ */
 
 object NanoWebsocketClient {
     private const val serverUrl =
@@ -50,9 +54,11 @@ object NanoWebsocketClient {
     var currentMsgCode: String? = null
 
     var connectionDisposable: Disposable? = null
-    val messageSenderAccess = MessageSenderAccess()
     var responseListener:String = ""
 
+    /**
+     * Método para conexão do WebSocket Cliente ao Servidor.
+     */
     fun connect() {
         CoroutineScope(Dispatchers.IO).launch {
             val authorizationToken = requestAuthorizationToken()
@@ -65,9 +71,6 @@ object NanoWebsocketClient {
                         authorizationToken
                     ) // Add the JWT token as an Authorization header
                     .build()
-
-//            webSocketClient = webSocketApi.listenForMessages(request.url.toString())
-//        }
 
                 webSocketClient = client.newWebSocket(request, object : WebSocketListener() {
                     override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
@@ -109,6 +112,9 @@ object NanoWebsocketClient {
         }
     }
 
+    /**
+     * Método para tentativa de reconexão ao Servidor.
+     */
     fun retryConnection() {
         var retries = 0
 
@@ -131,6 +137,9 @@ object NanoWebsocketClient {
 
     }
 
+    /**
+     * Envia a lista de endpoint de notificações que desejam ser escutadas.
+     */
     fun sendMessageFromClient() {
         //val textMessage = "Hello, server!"
         val notificationSubscription =
@@ -275,8 +284,7 @@ object NanoWebsocketClient {
     }
 
     /**
-     * startSendingRequests could be used outside of NanoWebsocketClient because it
-     * carries websocket inside, but not its functions.
+     * Método fixo de requesição de mensagens a cada período de tempo.
      *
      * REQ_MESSAGE_COUNT: Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
      * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
@@ -296,19 +304,18 @@ object NanoWebsocketClient {
         }
     }
 
-    //    fun requestServer(param: String){
-//        val httpClient = NanoHTTPClient()
-//        //isForward == false (mensagens de retorno)
-//        val objectMessageList = MessageList(param, 0, false, msgStatusNum = 3 )
-//        val response = httpClient.sendGetRequest(serverUrl, objectMessageList)
-//        Log.i(TAG,"Request GET for $param: $response")
-//    }
     fun disconnect() {
         webSocketClient?.close(1000, "Client disconnecting")
     }
-    private fun requestAuthorizationToken(): String? {
+
+    /**
+     * Requisição de autenticação do WebSocket e reusado no HTTP.
+     */
+    fun requestAuthorizationToken(): String? {
         val client = OkHttpClient.Builder()
             .readTimeout(30, TimeUnit.SECONDS) // Increase the timeout duration as needed
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
             .build()
         val request = Request.Builder()
             .url("$serverUrl/auth") // Replace with your server's endpoint URL
@@ -365,20 +372,3 @@ object NanoWebsocketClient {
 }
 
 
-class MessageSenderAccess {
-    suspend fun sendMessageToServer(message: DbMessage, context: Context, fileUri: Uri?) {
-        NanoWebsocketClient.getInstance().sendDbMessage(message, fileUri, context)
-    }
-
-    fun sendRequest(param: String, param1: Any?, param2: Any?, param3: Any?, param4: Any?) {
-        NanoWebsocketClient.getInstance().sendMessageRequest(param, param1, param2, param3, param4)
-
-    }
-    suspend fun sendMessageToServerHttp(message: DbMessage, context: Context, fileUri: Uri?): String {
-        NanoWebsocketClient.getInstance().sendDbMessage(message, fileUri, context)
-        Thread.sleep(1000)
-        return ObservableUtil.getValue(ConstsCommSvc.SEND_FILE_MESSAGE).toString()
-    }
-
-
-}

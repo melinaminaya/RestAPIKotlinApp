@@ -3,20 +3,14 @@ package com.example.nanoclientkotlin.vm
 import android.R.attr
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.ObservableUtil
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
-import com.example.nanoclientkotlin.dataRemote.CheckList
-import com.example.nanoclientkotlin.dataRemote.FormList
+import com.example.nanoclientkotlin.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.delay
-import java.nio.charset.StandardCharsets
 
 
 open class ResetDatabaseViewModel: ViewModel() {

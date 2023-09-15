@@ -477,34 +477,32 @@ fun filterSelectionBox(
                 }
 
                 /**
-                 * Endpoint não incluído por questões de falha em resposta do servidor.
-                 * TODO: Verificar implemenatação de particionamento de arquivos para envio.
+                 * Endpoint com envio via websocket.
                  */
-//                ConstsCommSvc.SEND_FILE_MESSAGE ->{
-//                    TextField(
-//                        value = param1,
-//                        onValueChange = {
-//                                onParamsChanged(it, param2, param3, param4)
-//                        },
-//                        label = { Text("Param1: (Message) ") },
-//                        singleLine = true,
-//                        placeholder ={
-//                            Text(text = "Corpo da mensagem.",
-//                                color = androidx.compose.ui.graphics.Color.Gray,
-//                                fontSize = 12.sp)
-//                        }
-//                    )
-//                    FilePicker(
-//                        selectedFileStringPicker = {
-//                            selectedFileUri = it
-//                            onParamsChanged(param1, param2, param3, selectedFileUri.toString())
-//                        },
-//                        onSendMessage = {
-//                            onParamsChanged(param1, param2, param3, selectedFileUri.toString())
-//                        },
-//                        navigateToInbox = null
-//                    )
-//                }
+                ConstsCommSvc.SEND_FILE_MESSAGE ->{
+                    TextField(
+                        value = param1,
+                        onValueChange = {
+                                onParamsChanged(it, param2, param3, param4)
+                        },
+                        label = { Text("Param1: (Message) ") },
+                        singleLine = true,
+                        placeholder ={
+                            Text(text = "Corpo da mensagem.",
+                                color = androidx.compose.ui.graphics.Color.Gray,
+                                fontSize = 12.sp)
+                        }
+                    )
+                    FilePicker(
+                        buttonSend = false,
+                        selectedFileStringPicker = {
+                            selectedFileUri = it
+                            onParamsChanged(param1, param2, param3, selectedFileUri.toString())
+                        },
+                        onSendMessage = {},
+                        navigateToInbox = null
+                    )
+                }
 
                 else -> {
                     TextField(

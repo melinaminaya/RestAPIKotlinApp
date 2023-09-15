@@ -43,9 +43,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-
+/**
+ * Composable de seleção de arquivos.
+ * @author Melina Minaya
+ */
 @Composable
 fun FilePicker(
+    buttonSend: Boolean,
     onSendMessage: () ->Unit,
     selectedFileStringPicker: (Uri?) -> Unit,
     navigateToInbox: ((Int, Boolean) -> Unit)?,
@@ -129,43 +133,45 @@ fun FilePicker(
                 contentDescription = "Attach File"
             )
         }
-        Button(
-            onClick = {
-                coroutineScope.launch {
-                    loadingScreen = true
+        if(buttonSend) {
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        loadingScreen = true
 //                    fileProcessedDeferred.await() // Wait for the file processing to complete
-                    try {
-                        if (selectedFileUri != null) {
-                            if (fileProcessed) {
-                                onSendMessage()
+                        try {
+                            if (selectedFileUri != null) {
+                                if (fileProcessed) {
+                                    onSendMessage()
+                                } else {
+                                    fileProcessedDeferred.await()
+                                }
                             } else {
-                                fileProcessedDeferred.await()
+                                onSendMessage()
                             }
-                        } else {
-                            onSendMessage()
+                            if (navigateToInbox != null) {
+                                navigateToInbox(1, true)
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Failed to Send", Toast.LENGTH_LONG).show()
+                        } finally {
+                            loadingScreen = false
                         }
-                        if (navigateToInbox != null) {
-                            navigateToInbox(1, true)
-                        }
-                    }catch (e:Exception){
-                        Toast.makeText(context, "Failed to Send", Toast.LENGTH_LONG).show()
-                    }finally {
-                        loadingScreen = false
-                    }
-                    
-                }
 
-            },
-            modifier = Modifier
+                    }
+
+                },
+                modifier = Modifier
 //                    .align(Alignment.End)
-                .padding(horizontal = 16.dp)
-        ) {
-            if (loadingScreen) {
-                // Show the circular progress indicator while loading is true
-                LoadingIcon(25)
-            } else {
-                // Show the "Enviar" button text when loading is false
-                Text("Enviar")
+                    .padding(horizontal = 16.dp)
+            ) {
+                if (loadingScreen) {
+                    // Show the circular progress indicator while loading is true
+                    LoadingIcon(25)
+                } else {
+                    // Show the "Enviar" button text when loading is false
+                    Text("Enviar")
+                }
             }
         }
     }

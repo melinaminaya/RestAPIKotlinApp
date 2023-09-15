@@ -61,11 +61,10 @@ fun HttpTestScreen(
     val viewModel: HttpTestViewModel = viewModel()
     val requestResponse by viewModel.responseRequest.observeAsState(initial = "")
 
-    //TODO: Incluir endpoint de envio de arquivo ao servidor após tratamento de particionamento no envio.
     val listOfOptions = ConstsCommSvc.requestsList + ConstsCommSvc.parametersList +
             listOf(
                 ConstsCommSvc.SEND_MESSAGE ,
-//                ConstsCommSvc.SEND_FILE_MESSAGE
+                ConstsCommSvc.SEND_FILE_MESSAGE
             )
 
 
