@@ -33,15 +33,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.NanoClientKotlinTheme
 import com.example.nanoclientkotlin.NanoWebsocketClient.TAG
+import com.example.nanoclientkotlin.handlers.MessageSenderAccess
 import com.example.nanoclientkotlin.vm.FilePickerViewModel
 import com.example.nanoclientkotlin.vm.FormListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+/**
+ * Tela de envio de mensagens.
+ * @author Melina Minaya
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SendMessageScreen(
@@ -122,6 +125,7 @@ val context = LocalContext.current
                selectedFileStringPicker = {
                    selectedFileUri = it
                },
+               buttonSend = true,
                onSendMessage = {
                    coroutineScope.launch(Dispatchers.IO) {
                        val dbMessageProcessed = messageOnPattern(messageText.value, selectedFileUri)

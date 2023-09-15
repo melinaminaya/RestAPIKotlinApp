@@ -2,10 +2,9 @@ package com.example.nanoclientkotlin.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nanoclientkotlin.MessageSenderAccess
 import com.example.nanoclientkotlin.ObservableUtil
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
-import com.example.nanoclientkotlin.dataRemote.ConfigServiceLogModel
+import com.example.nanoclientkotlin.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper

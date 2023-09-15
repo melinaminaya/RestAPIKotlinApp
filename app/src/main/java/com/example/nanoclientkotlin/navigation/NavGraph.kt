@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.nanoclientkotlin.MessageSenderAccess
+import com.example.nanoclientkotlin.handlers.MessageSenderAccess
 import com.example.nanoclientkotlin.screens.CheckListScreen
 import com.example.nanoclientkotlin.screens.HomeScreen
 import com.example.nanoclientkotlin.screens.HttpTestScreen
@@ -15,7 +15,6 @@ import com.example.nanoclientkotlin.screens.InboxScreen
 import com.example.nanoclientkotlin.screens.LoginScreen
 import com.example.nanoclientkotlin.screens.ParametersScreen
 import com.example.nanoclientkotlin.screens.SendMessageScreen
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 @Composable
 fun NavGraph(navController: NavHostController) {

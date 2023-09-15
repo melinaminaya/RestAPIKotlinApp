@@ -28,6 +28,9 @@ class ConstsCommSvc {
         /** Package do serviço.  */
         const val INTENT_SVC_PACKAGE_NAME = "br.com.autotrac.jatmobilecommsvc"
 
+        /** Classe do serviço.  */
+        const val SERVICE_CLASSNAME = "br.com.autotrac.service.ATMobileCommSvc"
+
         /** Ação se precisa de knox.  */
         const val INTENT_ACTION_NEED_KNOX = "need_knox"
 

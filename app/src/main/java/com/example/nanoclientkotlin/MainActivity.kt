@@ -25,7 +25,11 @@ import com.example.nanoclientkotlin.dataRemote.Item
 import com.example.nanoclientkotlin.navigation.NavGraph
 import com.example.nanoclientkotlin.vm.MessageViewModel
 
-
+/**
+ * Classe mãe de inicialização do app teste.
+ * Para mais informações sobre a integração, leia [README.md].
+ * @author Melina Minaya
+ */
 class MainActivity : ComponentActivity() {
     private val viewModel: MessageViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,13 +50,15 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         // Close the connection
         NanoWebsocketClient.disconnect()
+        // Close the HTTP client
+        NanoHttpClient.client.dispatcher.cancelAll()
     }
 
     override fun onResume() {
         super.onResume()
         /**
-         * This method is called when the app is resumed
-         * In order to reconnect to the WebSocket when the app resumes
+         * Esse método é utilizado para reconectar ao servidor
+         * quando o app é fechado e reiniciado.
          */
 //        NanoWebsocketClient.connect()
     }
@@ -72,57 +78,6 @@ fun NanoPreview() {
             NanoApp()
         }
 
-    }
-}
-/**
- * Composable that displays a list item containing a item icon and their information.
- *
- * @param item contains the data that populates the list item
- * @param modifier modifiers to set to this composable
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Item(
-    item: Item,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Card(modifier = modifier, onClick = onClick) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_small))
-        ) {
-            ItemInformation(item.name, item.description)
-        }
-    }
-}
-
-
-/**
- * Composable that displays a item's name and description.
- *
- * @param itemName is the resource ID for the string of the item's name
- * @param itemDescription is the Int that represents the item's description
- * @param modifier modifiers to set to this composable
- */
-@Composable
-fun ItemInformation(
-    @StringRes itemName: Int,
-//    itemAge: Int,
-    @StringRes itemDescription: Int,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(itemName),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_small))
-        )
-        Text(
-            text = stringResource(R.string.item_description_1, itemDescription),
-            style = MaterialTheme.typography.bodyLarge
-        )
     }
 }
 
