@@ -81,7 +81,7 @@ object ActionValues {
     /**
      * **I->S**<br></br>
      * Ac�es relacionadas ao processo de batismo.<br></br>
-     * **Param1:** Acao a ser executada. Ver [AmcuipValuesBaptismActionParam1]<br></br>
+     * **Param1:** Acao a ser executada. Ver [ValuesBaptismActionParam1]<br></br>
      * **Param2:** Nao utilizado.<br></br>
      * **Param3:** Nao utilizado.<br></br>
      * **Param4:** Nao utilizado.<br></br>
@@ -89,17 +89,16 @@ object ActionValues {
     const val BAPTISM_ACTION = 0x06
 
     /**
-     * **S->I**<br></br>
-     * Indica o status do processo de batismo.<br></br>
-     * **Param1:** Status do processo de batismo. Ver [AmcuipValuesBaptismStatusParam1]<br></br>
-     * **Param2:** Depende de Param1.<br></br>
-     * Se [AmcuipValuesBaptismStatusParam1.BAPTIZED],
-     * [AmcuipValuesBaptismStatusParam1.WAITING_CONFIRMATION],
-     * [AmcuipValuesBaptismStatusParam1.MCT_ADDR_RESPONSE] ou
-     * [AmcuipValuesBaptismStatusParam1.MCT_NOT_AUTORIZED], Param2 sera o n�mero do Mct.
-     * Se [AmcuipValuesBaptismStatusParam1.NOT_BAPTIZED],
-     * [AmcuipValuesBaptismStatusParam1.IN_BAPTISM_PROCESS],
-     * [AmcuipValuesBaptismStatusParam1.BAPTISM_TIMED_OUT], Param2 nao E utilizado.<br></br>
+     * Indica o status do processo de batismo.
+     * @param Param1: Status do processo de batismo. Ver [ValuesBaptismStatusParam1]<br></br>
+     * @param Param2: Depende de Param1.<br></br>
+     * Se [ValuesBaptismStatusParam1.BAPTIZED],
+     * [ValuesBaptismStatusParam1.WAITING_CONFIRMATION],
+     * [ValuesBaptismStatusParam1.MCT_ADDR_RESPONSE] ou
+     * [ValuesBaptismStatusParam1.MCT_NOT_AUTORIZED], Param2 sera o n�mero do Mct.
+     * Se [ValuesBaptismStatusParam1.NOT_BAPTIZED],
+     * [ValuesBaptismStatusParam1.IN_BAPTISM_PROCESS],
+     * [ValuesBaptismStatusParam1.BAPTISM_TIMED_OUT], Param2 nao E utilizado.<br></br>
      * **Param3:** Nao utilizado.<br></br>
      * **Param4:** Nao utilizado.<br></br>
      */
@@ -402,7 +401,7 @@ object ActionValues {
     /**
      * Operac�es possiveis de serem executadas na acao [ActionValues.BAPTISM_ACTION].
      */
-    object AmcuipValuesBaptismActionParam1 {
+    object ValuesBaptismActionParam1 {
         /** Inicia o processo de batismo.  */
         const val DO_BAPTISM = 0
 
@@ -414,7 +413,7 @@ object ActionValues {
     }
 
     /** Status possiveis retornados pelo Param1 de Acao [ActionValues.BAPTISM_STATUS].  */
-    object AmcuipValuesBaptismStatusParam1 {
+    object ValuesBaptismStatusParam1 {
         /** A Uc ainda nao foi batizada.  */
         const val NOT_BAPTIZED = 0
 

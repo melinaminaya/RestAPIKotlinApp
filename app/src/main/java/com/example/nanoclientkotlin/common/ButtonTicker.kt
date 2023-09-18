@@ -18,8 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,12 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nanoclientkotlin.NanoWebsocketClient
-import com.example.nanoclientkotlin.ObservableUtil
-import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.vm.AppViewModel
 import com.example.nanoclientkotlin.vm.HttpTestViewModel
-import java.beans.PropertyChangeListener
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,19 +46,12 @@ fun ButtonTicker(
     onClick: () -> Unit,
 
     ) {
-//    val viewModel: MessageViewModel = viewModel()
-//    val checkList by viewModel.checkList.observeAsState(emptyList())
-    //TODO: Modify the counter to viewModel instead of adding PropertyChangeListener
-    val count = ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_COUNT).toString()).toString()
-    val badgeText = remember { mutableStateOf(if (count != "null" ) count else "") }
-    val propertyChangeListener = PropertyChangeListener { event ->
-        // Update the property value state when the event is triggered
-        if (event.propertyName == ConstsCommSvc.REQ_MESSAGE_COUNT) {
-            badgeText.value = ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_COUNT).toString()).toString()
-        }
-    }
+
+    val httpTestViewModel:HttpTestViewModel = viewModel()
+    val count by httpTestViewModel.reqMessageCount.observeAsState("")
+    val messagesCount = rememberSaveable{ mutableStateOf(count) }
     val appViewModel:AppViewModel = AppViewModel()
-    val httpTestViewModel = HttpTestViewModel()
+
     val isApiOn = appViewModel.isApiOn
     LaunchedEffect(Unit) {
       if (isApiOn) {
@@ -65,7 +59,10 @@ fun ButtonTicker(
       } else{
         httpTestViewModel.messageCountHttp()
       }
-        ObservableUtil.addPropertyChangeListener(propertyChangeListener)
+    }
+    LaunchedEffect(count){
+        messagesCount.value = count
+
     }
 
 
@@ -104,7 +101,7 @@ fun ButtonTicker(
             }
         }
 
-        if (badgeText.value.isNotEmpty() && badgeText.value != "0") {
+        if (messagesCount.value.isNotEmpty() && messagesCount.value != "0") {
             Box(
                 modifier = Modifier
                     .padding(top = 8.dp, end = 8.dp)
@@ -113,7 +110,7 @@ fun ButtonTicker(
 
                 ) {
                 Text(
-                    text = badgeText.value,
+                    text = messagesCount.value,
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,

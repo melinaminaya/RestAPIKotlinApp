@@ -11,10 +11,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nanoclientkotlin.common.Alert
+import com.example.nanoclientkotlin.common.MessageListComposable
 import com.example.nanoclientkotlin.dataRemote.DbMessage
 import com.example.nanoclientkotlin.vm.MessageViewModel
 import kotlinx.coroutines.launch
@@ -26,17 +28,20 @@ fun OutboxScreen() {
     val viewModel: MessageViewModel = viewModel()
     val showDialog = remember { mutableStateOf(false) }
     val messagesState by viewModel.outboxMessages.observeAsState(emptyList())
+    val messagesList = rememberSaveable{ mutableStateOf(messagesState) }
     var clickedMessage = remember { mutableStateOf<DbMessage?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.fetchOutboxMessages()
     }
-
+    LaunchedEffect(messagesState){
+        messagesList.value = messagesState
+    }
     MessageListComposable(
-        messages = messagesState,
+        messages = messagesList.value,
         onMessageDelete = { message ->
-            viewModel.deleteMessage(message)
+            viewModel.deleteMessageOutbox(message)
         },
         onMessageClick = { message ->
             showDialog.value = true

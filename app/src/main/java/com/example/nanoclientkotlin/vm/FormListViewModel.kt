@@ -30,8 +30,8 @@ open class FormListViewModel (
         _formList.value = fetchedMessages
     }
     private fun fetchDataFromDataSource(): List<FormList>? {
-        val valueOnLaunched = ObservableUtil.getValue("formList")
-        if (valueOnLaunched != null) {
+        val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_FORM_LIST)
+        if (valueOnLaunched != null  && valueOnLaunched != "[]") {
             val jsonOnLaunched = gson.toJson(valueOnLaunched)
             mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
 //        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
@@ -43,9 +43,10 @@ open class FormListViewModel (
 //
 //        mapper.registerModule(simpleModule)
 
+
             return mapper.readValue(
                 jsonOnLaunched,
-                object : TypeReference<MutableList<FormList>>() {})
+                object : TypeReference<List<FormList>>() {})
         }else{
             return null
         }

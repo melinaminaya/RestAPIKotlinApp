@@ -44,6 +44,22 @@ class ConstsCommSvc {
          */
         const val SEND_MESSAGE = "SEND_MESSAGE"
         const val SEND_FILE_MESSAGE = "SEND_FILE_MESSAGE"
+        const val SEND_FILE_CHUNK = "SEND_FILE_CHUNK"
+
+        /**
+         * Resposta do Servidor será um objeto do tipo [ReceivedRequestResponse].
+         *
+         * @param param1: Pode ser notificação, requisição, parametro,
+         * [SEND_MESSAGE] para resposta referente ao envio de mensagem ou
+         * [SEND_FILE_MESSAGE] para resposta referente ao envio de arquivo.
+         * @see com.example.nanoclientkotlin.dataRemote.ReceivedRequestResponse
+         * @see SEND_MESSAGE
+         * @see SEND_FILE_MESSAGE
+         *
+         */
+        const val NOTIFICATION = "NOTIFICATION"
+        const val REQUEST = "REQUEST"
+        const val PARAMETER = "PARAMETER"
 
         const val REQ_MESSAGE_LIST = "REQ_MESSAGE_LIST"
         const val REQ_MESSAGE_LIST_INBOX = "REQ_MESSAGE_LIST_INBOX"

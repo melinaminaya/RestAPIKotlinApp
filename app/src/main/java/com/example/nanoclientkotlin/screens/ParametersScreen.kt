@@ -88,6 +88,9 @@ fun ParametersScreen(
     var timeoutSendCellMsg by rememberSaveable {
         mutableStateOf( parameterValues[ConstsCommSvc.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG] )
     }
+    var isBaptizedValue by rememberSaveable {
+        mutableStateOf( parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED] )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchParameters()
@@ -122,6 +125,9 @@ fun ParametersScreen(
         timeoutSendCellMsg =
             parameterValues[ConstsCommSvc.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]
     }
+    LaunchedEffect(parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED]) {
+        isBaptizedValue = parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED]
+    }
 
     Scaffold(
         topBar = {
@@ -152,7 +158,7 @@ fun ParametersScreen(
                     Column {
                         ModelRow(
                             title = "Status: ",
-                            status = ParameterHandler.convertIsBaptized(parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED]))
+                            status = ParameterHandler.convertIsBaptized(isBaptizedValue))
 
                         Spacer(modifier = Modifier.height(4.dp))
 //                        BaptismView(wifiSSIDText, enabled, focusRequester, viewModel)
