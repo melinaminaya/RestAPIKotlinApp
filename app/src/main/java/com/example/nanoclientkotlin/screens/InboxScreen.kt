@@ -1,15 +1,12 @@
 package com.example.nanoclientkotlin.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,22 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nanoclientkotlin.NanoClientKotlinTheme
-import com.example.nanoclientkotlin.ObservableUtil
-import com.example.nanoclientkotlin.ObservableUtil.addPropertyChangeListener
-import com.google.gson.Gson
-import java.beans.PropertyChangeListener
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-
-import com.example.nanoclientkotlin.dataRemote.DbMessage
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,18 +86,6 @@ fun InboxScreen(
 
         }
     }
-//        Column(
-//            modifier = Modifier.padding(it),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//
-//            Spacer(modifier = Modifier.height(5.dp))
-//            Text("Details: $showDetails", fontSize = 20.sp)
-//
-//                MessageListScreen()
-//
-//        }
-//    }
 }
 
 @Preview(showBackground = true)

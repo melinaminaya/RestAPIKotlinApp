@@ -38,6 +38,8 @@ class ParameterHandler {
                     ParameterValues.IN_BAPTISM_PROCESS -> "Processo de batismo em execução."
                     ParameterValues.WAITING_CONFIRMATION -> "Aguardando confirmação do batismo."
                     ParameterValues.CONSULT_ALT_COMM_DEVICE_ADDR -> "Consulta número de dispositivo de comunicação alternativo."
+                    ParameterValues.MCT_NOT_AUTHORIZED -> "MCT não autorizado a se comunicar."
+                    ParameterValues.BAPTISM_TIMED_OUT -> "Houve timeout no processo de batismo."
                     else -> null
                 }
             }

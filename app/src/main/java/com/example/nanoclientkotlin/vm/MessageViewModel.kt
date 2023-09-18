@@ -82,6 +82,14 @@ open class MessageViewModel (
         _messages.value = currentMessages
     }
 
+    fun deleteMessageOutbox(message: DbMessage) {
+        // Replace with your logic to delete the message from a data source
+        deleteMessageFromDataSource(message)
+        // Remove the message from the list of messages
+        val currentMessages = _outboxMessages.value.orEmpty().toMutableList()
+        currentMessages.remove(message)
+        _outboxMessages.value = currentMessages
+    }
     // Function to mark a message as read
     fun markMessageAsRead(message: DbMessage) {
         // Replace with your logic to mark the message as read in a data source

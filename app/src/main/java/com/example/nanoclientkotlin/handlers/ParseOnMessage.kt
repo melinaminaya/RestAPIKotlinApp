@@ -32,12 +32,20 @@ class ParseOnMessage {
             val param1 = notification.param1 ?:  return ParseResult.Error("param1 is null") // Exit if param1 is null
 
             when (param1) {
-                "notification" -> {
-                    Log.d(Companion.TAG, "Received notification: $notification")
+                ConstsCommSvc.NOTIFICATION -> {
+                    //TODO: Tratar recebimento de notificação, conforme cliente necessita.
+//                    val notificationType = notification.param2 ?: return ParseResult.Error("param2 is null") // Exit if param2 is null
+//                    if(notificationType.toDouble().toInt() == ActionValues.MessageStatusValues.NOT_READ) {
+//                        ObservableUtil.attachProperty(
+//                            NotificationConsts.COUNT_NOT_READ
+//
+//                        )
+//                    }
+                    Log.d(Companion.TAG, "Received response relative to notification: $notification")
                     return ParseResult.Ok
                 }
 
-                "request" -> {
+                ConstsCommSvc.REQUEST -> {
                     val objectReq = notification.param4 ?: return ParseResult.Error("param4 is null") // Exit if param4 is null
                     when (notification.param2) {
                         ConstsCommSvc.REQ_MESSAGE_LIST -> {
@@ -76,7 +84,7 @@ class ParseOnMessage {
                     return ParseResult.Ok
                 }
 
-                "parameters" -> {
+                ConstsCommSvc.PARAMETER -> {
                     val objectReq = notification.param3 ?: return ParseResult.Error("param3 is null")
                     when (notification.param2) {
                         in ConstsCommSvc.parametersList.filter { it.startsWith("GET") } -> {

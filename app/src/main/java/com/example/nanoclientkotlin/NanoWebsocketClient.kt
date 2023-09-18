@@ -139,20 +139,22 @@ object NanoWebsocketClient {
 
     /**
      * Envia a lista de endpoint de notificações que desejam ser escutadas.
+     * TODO: FORM_RECEIVED
      */
     fun sendMessageFromClient() {
         //val textMessage = "Hello, server!"
         val notificationSubscription =
             SendObject(
-                "notification",
+                ConstsCommSvc.NOTIFICATION,
                 listOf(
                     ActionValues.MESSAGE_STATUS, ActionValues.BAPTISM_STATUS,
                     ActionValues.COMMUNICATION_MODE_CHANGED, ActionValues.DATE_TIME_CHANGED,
                     ActionValues.FILE_OPERATION_STATUS, ActionValues.FORM_DELETED,
+                    ActionValues.FORM_RECEIVED,
                     ActionValues.IGNITION_STATUS, ActionValues.MCT_M0_M9_PARAMS_UPDATED,
                     ActionValues.NETWORK_CONNECTION_STATUS, ActionValues.READY_TO_UPDATE_SOFTWARE,
                     ActionValues.SATELLITE_SIGNAL_CHANGED, ActionValues.SIGN_ON_STATUS,
-                    ActionValues.SYSTEM_RESOURCE_REQ_STATUS
+                    ActionValues.SYSTEM_RESOURCE_REQ_STATUS, ActionValues.UPDATE_SERVER_PARAMETER
                 )
             )
 
@@ -310,6 +312,8 @@ object NanoWebsocketClient {
 
     /**
      * Requisição de autenticação do WebSocket e reusado no HTTP.
+     * Insere package name da sua aplicação para ser reconhecido pelo Servidor.
+     * Insere linguagem de prefência para respostas do Servidor.
      */
     fun requestAuthorizationToken(): String? {
         val client = OkHttpClient.Builder()
@@ -317,10 +321,14 @@ object NanoWebsocketClient {
             .writeTimeout(30, TimeUnit.SECONDS)
             .connectTimeout(30, TimeUnit.SECONDS)
             .build()
+
+        //Add en-US if you would like the server to respond in English
+        val preferredLanguage = "pt-BR"
         val request = Request.Builder()
             .url("$serverUrl/auth") // Replace with your server's endpoint URL
             .addHeader("User-Agent", System.getProperty("http.agent")!!)
             .addHeader("Package-Name", packageName)
+            .addHeader("Accept-Language", preferredLanguage)
             .build()
         var response: Response? = null
         var retryCount = 0

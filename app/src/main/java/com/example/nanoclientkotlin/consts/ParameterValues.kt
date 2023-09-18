@@ -22,6 +22,13 @@ class ParameterValues {
             /** Apenas consulta o número do dispositivo de comunicação alternativo.  */
             const val CONSULT_ALT_COMM_DEVICE_ADDR = 4
 
+            /** O Mct conectado nao esta autorizado a se comunicar.
+             * A Uc está batizada com outro Mct. */
+            const val MCT_NOT_AUTHORIZED = 5
+
+            /** Houve timeout no processo de batismo. */
+            const val  BAPTISM_TIMED_OUT = 6
+
         /** Tipos possíveis de conexão. */
             /** Conexão física no estado desconectado.  */
             const val PHYSICAL_DISCONNECTED = 0
