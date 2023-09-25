@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nanoclientkotlin.common.Alert
 import com.example.nanoclientkotlin.common.MessageListComposable
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.example.nanoclientkotlin.vm.MessageViewModel
 import kotlinx.coroutines.launch
 
@@ -29,7 +29,7 @@ fun OutboxScreen() {
     val showDialog = remember { mutableStateOf(false) }
     val messagesState by viewModel.outboxMessages.observeAsState(emptyList())
     val messagesList = rememberSaveable{ mutableStateOf(messagesState) }
-    var clickedMessage = remember { mutableStateOf<DbMessage?>(null) }
+    var clickedMessage = remember { mutableStateOf<IntegrationMessage?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {

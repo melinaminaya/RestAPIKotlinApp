@@ -1,8 +1,6 @@
 package com.example.nanoclientkotlin.screens
 
 import android.net.Uri
-import android.util.Base64
-import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -19,15 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nanoclientkotlin.NanoWebsocketClient
 import com.example.nanoclientkotlin.common.DropdownCard
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
-import com.example.nanoclientkotlin.dataRemote.ChunkObject
-import com.example.nanoclientkotlin.dataRemote.DbMessage
-import com.example.nanoclientkotlin.dataRemote.RequestObject
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Filtro de seleção de requisições da tela HttpTest.
@@ -499,8 +491,9 @@ fun filterSelectionBox(
                             selectedFileUri = it
                             onParamsChanged(param1, param2, param3, selectedFileUri.toString())
                         },
-                        onSendMessage = {},
-                        navigateToInbox = null
+                        onSendMessage = {""},
+                        navigateToInbox = null,
+                        snackbarHost = null
                     )
                 }
 

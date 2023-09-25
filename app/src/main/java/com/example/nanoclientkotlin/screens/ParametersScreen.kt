@@ -1,5 +1,6 @@
 package com.example.nanoclientkotlin.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,15 +31,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.nanoclientkotlin.ObservableUtil
 import com.example.nanoclientkotlin.common.CustomTextFieldWithButton
 import com.example.nanoclientkotlin.common.DropDownToSet
 import com.example.nanoclientkotlin.common.DropdownCard
 import com.example.nanoclientkotlin.common.ModelRow
 import com.example.nanoclientkotlin.common.SwitchParameter
+import com.example.nanoclientkotlin.consts.ActionValues
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.consts.ParameterValues
 import com.example.nanoclientkotlin.handlers.ParameterHandler
 import com.example.nanoclientkotlin.vm.ParametersViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,11 +96,36 @@ fun ParametersScreen(
     var isBaptizedValue by rememberSaveable {
         mutableStateOf( parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED] )
     }
+   var baptismStarted by rememberSaveable { mutableStateOf(false) }
+//    val isBaptizedValueState by viewModel.isBaptizedValue.observeAsState(initial = isBaptizedValue)
+//    val baptismStatusState by viewModel.observeBaptismStatus().collectAsState(initial = "")
+    var baptismStatus by remember{ mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.fetchParameters()
         if (enabled) {
             focusRequester.requestFocus()
+        }
+        launch(Dispatchers.IO) {
+            while (baptismStarted) {
+                val valueBaptism =
+                    ObservableUtil.getValue(ActionValues.BAPTISM_STATUS_OBSERVABLE).toString()
+                val newBaptism = ParameterHandler.convertIsBaptized(
+                    valueBaptism
+                )
+
+                if (newBaptism == "Batizada") {
+                    launch(Dispatchers.Main) {
+                        baptismStatus = newBaptism
+                    }
+                    baptismStarted = false
+                } else {
+                    launch(Dispatchers.Main) {
+                        baptismStatus = newBaptism!!
+                    }
+//                Log.d("BAPTISM_STATUS", "BAPTISM_STATUS no launchEffectUnit: $newBaptism")
+                }
+            }
         }
     }
     // Update wifiSSIDText when paramWifiSSID changes
@@ -126,7 +156,11 @@ fun ParametersScreen(
             parameterValues[ConstsCommSvc.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]
     }
     LaunchedEffect(parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED]) {
-        isBaptizedValue = parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED]
+        isBaptizedValue = ParameterHandler.convertIsBaptized( parameterValues[ConstsCommSvc.GET_PARAM_IS_BAPTIZED])
+        if(isBaptizedValue != null) {
+            baptismStatus = isBaptizedValue as String
+        }
+        Log.d("BAPTISM_STATUS", "BAPTISM_STATUS no PARAM: $baptismStatus")
     }
 
     Scaffold(
@@ -158,7 +192,8 @@ fun ParametersScreen(
                     Column {
                         ModelRow(
                             title = "Status: ",
-                            status = ParameterHandler.convertIsBaptized(isBaptizedValue))
+                            status = baptismStatus
+                        )
 
                         Spacer(modifier = Modifier.height(4.dp))
 //                        BaptismView(wifiSSIDText, enabled, focusRequester, viewModel)
@@ -171,6 +206,7 @@ fun ParametersScreen(
                                     ConstsCommSvc.SET_PARAM_WIFI_SSID,
                                     wifiSSIDText ?: ""
                                 )
+                                baptismStarted = true
                             }
                         )
                     }

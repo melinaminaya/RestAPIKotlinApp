@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +36,9 @@ fun MessageTextField(
     var sizeInKB by remember(messageText) {
         mutableStateOf(calculateSizeInKB(messageText.value))
     }
-
+    LaunchedEffect(messageText.value) {
+        sizeInKB = calculateSizeInKB(messageText.value)
+    }
     Box {
         TextField(
             value = messageText.value,
@@ -46,10 +50,13 @@ fun MessageTextField(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
+                .heightIn(min= 120.dp)
+                .wrapContentHeight()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             label = { Text("Message") },
-            textStyle = TextStyle(fontSize = 18.sp)
+            textStyle = TextStyle(fontSize = 18.sp),
+            singleLine = false,
+            maxLines = Int.MAX_VALUE,
         )
 
         // Character count and size in KB text

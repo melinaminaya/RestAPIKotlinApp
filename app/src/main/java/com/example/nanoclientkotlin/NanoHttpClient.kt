@@ -6,7 +6,7 @@ import android.util.Base64
 import android.util.Log
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.dataRemote.ChunkObject
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.example.nanoclientkotlin.dataRemote.ReceivedRequestResponse
 import com.example.nanoclientkotlin.dataRemote.RequestObject
 import com.example.nanoclientkotlin.dataRemote.SendObject
@@ -52,7 +52,9 @@ object NanoHttpClient {
     var webSocket:WebSocket? = null
     val maxChunkSize = 8192
 
-
+//    init{
+//        SSLSetup.customSSLContext.init(null, arrayOf(SSLSetup.trustAllCertificatesTrustManager), null)
+//    }
 
     /**
      * Método para envio de todas as requisições, menos a de mensagens longas [ConstsCommSvc.SEND_FILE_MESSAGE].
@@ -77,6 +79,8 @@ object NanoHttpClient {
                 .readTimeout(30, TimeUnit.SECONDS) // Set your custom timeout here
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS)
+//                .sslSocketFactory(SSLSetup.customSSLContext.socketFactory, SSLSetup.trustAllCertificatesTrustManager)
+//                .hostnameVerifier { _, _ -> true } // Bypass hostname verification for self-signed certificates
                 .build()
 
             // Create a new request using the additional URL
@@ -135,7 +139,7 @@ object NanoHttpClient {
      */
     suspend fun sendFileChunksHttp(
         endpoint: String,
-        message: DbMessage,
+        message: IntegrationMessage,
         maxChunkSize: Int,
         fileUri: Uri,
         context: Context
@@ -215,8 +219,8 @@ object NanoHttpClient {
      * TODO: Reduzir o método do websocket para ser reutilizado.
      * @see NanoWebsocketClient.sendDbMessage
      */
-    private fun sendFileMessage(message: DbMessage, fileUri: Uri?, context: Context) {
-        val messageJson = NanoWebsocketClient.gson.toJson(message, DbMessage::class.java)
+    private fun sendFileMessage(message: IntegrationMessage, fileUri: Uri?, context: Context) {
+        val messageJson = NanoWebsocketClient.gson.toJson(message, IntegrationMessage::class.java)
         val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         try {
             if(fileUri != null){

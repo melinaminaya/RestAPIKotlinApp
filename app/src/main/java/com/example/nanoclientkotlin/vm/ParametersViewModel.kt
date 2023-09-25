@@ -1,17 +1,20 @@
 package com.example.nanoclientkotlin.vm
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nanoclientkotlin.ObservableUtil
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
+import com.example.nanoclientkotlin.dataRemote.ReceivedRequestResponse
 import com.example.nanoclientkotlin.handlers.MessageSenderAccess
+import com.example.nanoclientkotlin.handlers.ParseOnMessage
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 
-open class ParametersViewModel: ViewModel() {
+class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
 
     private val senderAccess = MessageSenderAccess()
     private var gson = Gson()
@@ -21,12 +24,16 @@ open class ParametersViewModel: ViewModel() {
     private val parameterListGet = ConstsCommSvc.parametersList.filter { it.startsWith("GET") }
     private val parameterLiveDataMap = HashMap<String, MutableLiveData<String>>()
 
+    private val _isBaptizedValue = MutableLiveData<String>("") // Initialize with default value
+    val isBaptizedValue: MutableLiveData<String> = _isBaptizedValue
+    private val parseOnMessage = ParseOnMessage()
 
     init {
         // Create MutableLiveData objects for each parameter and add them to the map
         for (parameter in parameterListGet) {
             parameterLiveDataMap[parameter] = MutableLiveData()
         }
+        parseOnMessage.setNotificationListener(this)
     }
 
     fun getParameterLiveData(parameter: String): MutableLiveData<String>? {
@@ -67,5 +74,13 @@ open class ParametersViewModel: ViewModel() {
         val parameterLiveData = parameterLiveDataMap[param]
         parameterLiveData?.value = value
 
+    }
+//    fun updateIsBaptizedValue(newValue: String) {
+//        _isBaptizedValue.value = newValue
+//    }
+
+    override fun onNotificationReceived(notification: ReceivedRequestResponse) {
+        _isBaptizedValue.value = notification.param3.toString()
+        Log.d("ONNOTIFICATION", "onNotificationReceived BAPTISM_STATUS: ${isBaptizedValue.value}")
     }
 }

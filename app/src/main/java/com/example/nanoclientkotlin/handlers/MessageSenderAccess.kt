@@ -3,14 +3,14 @@ package com.example.nanoclientkotlin.handlers
 import android.content.Context
 import android.net.Uri
 import com.example.nanoclientkotlin.NanoWebsocketClient
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 
 /**
  * Classe para acessar externamente o Websocket Client.
  * @author Melina Minaya
  */
 class MessageSenderAccess {
-    suspend fun sendMessageToServer(message: DbMessage, context: Context, fileUri: Uri?) {
+    suspend fun sendMessageToServer(message: IntegrationMessage, context: Context, fileUri: Uri?) {
         NanoWebsocketClient.getInstance().sendDbMessage(message, fileUri, context)
     }
 

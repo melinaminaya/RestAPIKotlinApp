@@ -3,13 +3,13 @@ package com.example.nanoclientkotlin.handlers
 import android.util.Log
 import com.example.nanoclientkotlin.NanoWebsocketClient
 import com.example.nanoclientkotlin.ObservableUtil
+import com.example.nanoclientkotlin.consts.ActionValues
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.dataRemote.ParseData
 import com.example.nanoclientkotlin.dataRemote.ReceivedRequestResponse
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import fi.iki.elonen.NanoHTTPD
 
 sealed class ParseResult {
     object Ok : ParseResult()
@@ -19,6 +19,17 @@ class ParseOnMessage {
     val gson = Gson()
     companion object {
         const val TAG = "ParseOnMessage"
+    }
+    // Define a callback interface
+    interface NotificationListener {
+        fun onNotificationReceived(notification: ReceivedRequestResponse)
+    }
+
+    private var notificationListener: NotificationListener? = null
+
+    // Setter for the listener
+    fun setNotificationListener(listener: NotificationListener) {
+        notificationListener = listener
     }
     fun parseMessage(message:String): ParseResult {
         try {
@@ -34,13 +45,11 @@ class ParseOnMessage {
             when (param1) {
                 ConstsCommSvc.NOTIFICATION -> {
                     //TODO: Tratar recebimento de notificação, conforme cliente necessita.
-//                    val notificationType = notification.param2 ?: return ParseResult.Error("param2 is null") // Exit if param2 is null
-//                    if(notificationType.toDouble().toInt() == ActionValues.MessageStatusValues.NOT_READ) {
-//                        ObservableUtil.attachProperty(
-//                            NotificationConsts.COUNT_NOT_READ
-//
-//                        )
-//                    }
+                   val notificationType = notification.param2 ?: return ParseResult.Error("param2 is null") // Exit if param2 is null
+                    if(notificationType.toString() == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
+//                        notificationListener?.onNotificationReceived(notification)
+                        ObservableUtil.attachProperty(ActionValues.BAPTISM_STATUS_OBSERVABLE, notification.param3)
+                    }
                     Log.d(Companion.TAG, "Received response relative to notification: $notification")
                     return ParseResult.Ok
                 }
@@ -105,7 +114,8 @@ class ParseOnMessage {
 
                 ConstsCommSvc.SEND_MESSAGE -> {
                     NanoWebsocketClient.currentMsgCode = notification.param2
-                    Log.d(Companion.TAG, "Received Sent Confirmation: $notification")
+                    ObservableUtil.attachProperty(ConstsCommSvc.SEND_MESSAGE, notification.param2)
+                    Log.d(Companion.TAG, "Received Sent Information: $notification")
                     return ParseResult.Ok
                 }
                 ConstsCommSvc.SEND_FILE_MESSAGE -> {

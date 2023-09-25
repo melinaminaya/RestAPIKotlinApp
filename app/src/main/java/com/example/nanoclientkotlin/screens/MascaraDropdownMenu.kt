@@ -21,13 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.nanoclientkotlin.dataRemote.FormList
+import com.example.nanoclientkotlin.dataRemote.IntegrationForm
 
 @Composable
 fun MascaraDropdownMenu(
-    mascaras: List<FormList>?,
+    mascaras: List<IntegrationForm>,
     selectedMascara: String,
-    onMascaraSelected: (FormList) -> Unit
+    onMascaraSelected: (IntegrationForm) -> Unit
 ) {
     val expanded = remember { mutableStateOf(false) }
 
@@ -42,7 +42,7 @@ fun MascaraDropdownMenu(
         Row(verticalAlignment = Alignment.CenterVertically) {
             // Display selected mascara or default text
             Text(
-                text = selectedMascara ,
+                text = selectedMascara  ,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             IconButton(
@@ -64,6 +64,12 @@ fun MascaraDropdownMenu(
         onDismissRequest = { expanded.value = false },
         modifier = Modifier.fillMaxWidth()
     ) {
+        DropdownMenuItem(
+            text = { Text("Mensagem Livre") },
+            onClick = {
+                expanded.value = false
+            }
+        )
         mascaras.let { mascarasList ->
             if (mascarasList?.isEmpty() == true) {
                 DropdownMenuItem(
