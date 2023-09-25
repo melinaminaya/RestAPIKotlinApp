@@ -1,11 +1,8 @@
 package com.example.nanoclientkotlin.consts
 /**
- * Identificadores das ac�es.
+ * Identificadores das ações de notificação.
  *
- * **S->I** significa envio no sentido Servico para Interface.
- * **I->S** significa envio no sentido Interface para Servico.
- *
- * @author rhobison.pereira
+ * @author Melina Minaya
  */
 object ActionValues {
     /*
@@ -27,7 +24,7 @@ object ActionValues {
     /**
      * **I->S**<br></br>
      * Existe uma mensagem a ser enviada.<br></br>
-     * **Param1:** C�digo da mensagem no banco de dados.<br></br>
+     * @param Param1: Código da mensagem no banco de dados.<br></br>
      * **Param2:** Nao utilizado.<br></br>
      * **Param3:** Nao utilizado.<br></br>
      * **Param4:** Nao utilizado.<br></br>
@@ -103,6 +100,7 @@ object ActionValues {
      * **Param4:** Nao utilizado.<br></br>
      */
     const val BAPTISM_STATUS = 0x07
+    const val BAPTISM_STATUS_OBSERVABLE = "BAPTISM_STATUS"
 
     /**
      * **S->I**<br></br>

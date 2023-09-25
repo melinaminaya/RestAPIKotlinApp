@@ -11,16 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.nanoclientkotlin.NanoWebsocketClient
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 
 @Composable
 fun MessageListComposable(
-    messages: List<DbMessage>,
-    onMessageDelete: (DbMessage) -> Unit,
-    onMessageClick: (DbMessage) -> Unit,
+    messages: List<IntegrationMessage>,
+    onMessageDelete: (IntegrationMessage) -> Unit,
+    onMessageClick: (IntegrationMessage) -> Unit,
     onDialogDismiss: () -> Unit,
     onRefresh:()->Unit,
 )

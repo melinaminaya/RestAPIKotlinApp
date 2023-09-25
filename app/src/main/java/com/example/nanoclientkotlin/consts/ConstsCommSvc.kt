@@ -175,7 +175,8 @@ class ConstsCommSvc {
         //Lista da Integração referente a parâmetros
 
         /**
-         *Indica se a UC possui algum dispositivo de comunicação alternativo associado. Quando a UC possui um dispositivo de comunicação alternativo associado a ela, diz-se que ele está batizado.
+         *Indica se a UC possui algum dispositivo de comunicação alternativo associado.
+         * Quando a UC possui um dispositivo de comunicação alternativo associado a ela, diz-se que ele está batizado.
          */
         const val GET_PARAM_IS_BAPTIZED = "GET_PARAM_IS_BAPTIZED"
 

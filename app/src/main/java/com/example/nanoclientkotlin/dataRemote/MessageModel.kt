@@ -6,7 +6,7 @@ import java.util.Date
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class DbMessage(
+data class IntegrationMessage(
 
     @JsonProperty("msgCode") val code: Long?,
     @JsonProperty("isForward") val isForward: Boolean,
@@ -15,6 +15,7 @@ data class DbMessage(
     @JsonProperty("formCode") val formCode: Long,
     @JsonProperty("subject") val subject:String?,
     @JsonProperty("body") val body:String?,
+    @JsonProperty("bodyBytes") val bodyBytes:ByteArray?,
     @JsonProperty("createdTime") var createdTime: Date?,
     @JsonProperty("sendReceivedTime") val sendReceivedTime: Date?,
     @JsonProperty("deliveryTime") val deliveryTime: Date?,
@@ -38,21 +39,22 @@ data class DbMessage(
     @JsonProperty("transmissionType") val transmissionType:Int,
 
     ) {
-//    override fun equals(other: Any?): Boolean {
-//        if (this === other) return true
-//        if (javaClass != other?.javaClass) return false
-//
-//        other as DbMessage
-//
-//        if (outOfBandFilename != null) {
-//            if (other.outOfBandFilename == null) return false
-//            if (!outOfBandFilename.contentEquals(other.outOfBandFilename)) return false
-//        } else if (other.outOfBandFilename != null) return false
-//
-//        return true
-//    }
-//
-//    override fun hashCode(): Int {
-//        return outOfBandFilename?.contentHashCode() ?: 0
-//    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as IntegrationMessage
+
+        if (bodyBytes != null) {
+            if (other.bodyBytes == null) return false
+            if (!bodyBytes.contentEquals(other.bodyBytes)) return false
+        } else if (other.bodyBytes != null) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+
+        return bodyBytes?.contentHashCode() ?: 0
+    }
 }

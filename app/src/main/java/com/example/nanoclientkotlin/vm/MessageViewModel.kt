@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nanoclientkotlin.ObservableUtil
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.example.nanoclientkotlin.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.type.TypeReference
@@ -26,11 +26,11 @@ import java.util.Locale
 open class MessageViewModel (
 ): ViewModel() {
 
-    private val _messages = MutableLiveData<List<DbMessage>>()
-    val messages: MutableLiveData<List<DbMessage>> get() = _messages
+    private val _messages = MutableLiveData<List<IntegrationMessage>>()
+    val messages: MutableLiveData<List<IntegrationMessage>> get() = _messages
 
-    private val _outboxMessages = MutableLiveData<List<DbMessage>>()
-    val outboxMessages: MutableLiveData<List<DbMessage>> get() = _outboxMessages
+    private val _outboxMessages = MutableLiveData<List<IntegrationMessage>>()
+    val outboxMessages: MutableLiveData<List<IntegrationMessage>> get() = _outboxMessages
 
     private val senderAccess = MessageSenderAccess()
     private val gson = Gson()
@@ -51,7 +51,7 @@ open class MessageViewModel (
             false, null, null)
 //        sendMessageAndWait("messageList")
         // Replace with your logic to fetch messages from a data source
-        val fetchedMessages: List<DbMessage>? = fetchDataFromDataSource()
+        val fetchedMessages: List<IntegrationMessage>? = fetchDataFromDataSource()
         // Filter out messages that already exist in the current list
         val newMessages = fetchedMessages?.filter { message ->
             _messages.value?.none { it.code == message.code } ?: true
@@ -64,7 +64,7 @@ open class MessageViewModel (
         senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_LIST, 0,
             true, null, null)
 
-        val fetchedMessages: List<DbMessage>? = fetchDataFromDataSourceOutbox()
+        val fetchedMessages: List<IntegrationMessage>? = fetchDataFromDataSourceOutbox()
         val newMessages = fetchedMessages?.filter { message ->
             _outboxMessages.value?.none { it.code == message.code } ?: true
         }
@@ -73,7 +73,7 @@ open class MessageViewModel (
     }
 
     // Function to delete a message
-    fun deleteMessage(message: DbMessage) {
+    fun deleteMessage(message: IntegrationMessage) {
         // Replace with your logic to delete the message from a data source
         deleteMessageFromDataSource(message)
         // Remove the message from the list of messages
@@ -82,7 +82,7 @@ open class MessageViewModel (
         _messages.value = currentMessages
     }
 
-    fun deleteMessageOutbox(message: DbMessage) {
+    fun deleteMessageOutbox(message: IntegrationMessage) {
         // Replace with your logic to delete the message from a data source
         deleteMessageFromDataSource(message)
         // Remove the message from the list of messages
@@ -91,7 +91,7 @@ open class MessageViewModel (
         _outboxMessages.value = currentMessages
     }
     // Function to mark a message as read
-    fun markMessageAsRead(message: DbMessage) {
+    fun markMessageAsRead(message: IntegrationMessage) {
         // Replace with your logic to mark the message as read in a data source
         markMessageAsReadInDataSource(message)
         // Update the message status
@@ -103,7 +103,7 @@ open class MessageViewModel (
             _messages.value = currentMessages
         }
     }
-    suspend fun fetchDataFromDataSource(): List<DbMessage>? {
+    suspend fun fetchDataFromDataSource(): List<IntegrationMessage>? {
         delay(500)
           val  valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_INBOX)
 
@@ -112,9 +112,9 @@ open class MessageViewModel (
         mapper.dateFormat = dateFormat
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
 
-        return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<DbMessage>>() {})
+        return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<IntegrationMessage>>() {})
     }
-    private suspend fun fetchDataFromDataSourceOutbox(): List<DbMessage>? {
+    private suspend fun fetchDataFromDataSourceOutbox(): List<IntegrationMessage>? {
         delay(500)
         val valueOnLaunched = ObservableUtil.getValue(ConstsCommSvc.REQ_MESSAGE_LIST_OUTBOX)
 
@@ -123,15 +123,15 @@ open class MessageViewModel (
         mapper.dateFormat = dateFormat
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
 
-        return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<DbMessage>>() {})
+        return mapper.readValue(jsonOnLaunched, object : TypeReference<MutableList<IntegrationMessage>>() {})
     }
 
-    private fun deleteMessageFromDataSource(message: DbMessage) {
+    private fun deleteMessageFromDataSource(message: IntegrationMessage) {
         senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_DELETE,
             message.code, null, null, null)
     }
 
-    private fun markMessageAsReadInDataSource(message: DbMessage) {
+    private fun markMessageAsReadInDataSource(message: IntegrationMessage) {
         senderAccess.sendRequest(ConstsCommSvc.REQ_MESSAGE_SET_AS_READ,
             message.code, null, null, null)
     }

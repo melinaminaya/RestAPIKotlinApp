@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nanoclientkotlin.common.Alert
 import com.example.nanoclientkotlin.common.LoadingIcon
 import com.example.nanoclientkotlin.common.MessageListComposable
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.example.nanoclientkotlin.vm.MessageViewModel
 import kotlinx.coroutines.launch
 
@@ -32,7 +32,7 @@ fun MessageListScreen() {
     val showDialog = remember { mutableStateOf(false) }
     val messagesState by viewModel.messages.observeAsState(emptyList())
     val messagesList = rememberSaveable{ mutableStateOf(messagesState) }
-    val clickedMessage = remember { mutableStateOf<DbMessage?>(null) }
+    val clickedMessage = remember { mutableStateOf<IntegrationMessage?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {

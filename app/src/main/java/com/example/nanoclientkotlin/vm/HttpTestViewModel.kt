@@ -2,14 +2,13 @@ package com.example.nanoclientkotlin.vm
 
 import android.content.Context
 import android.net.Uri
-import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nanoclientkotlin.NanoHttpClient
 import com.example.nanoclientkotlin.ObservableUtil
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.example.nanoclientkotlin.dataRemote.RequestObject
 import com.example.nanoclientkotlin.handlers.ParseOnMessage
 import com.example.nanoclientkotlin.handlers.ParseResult
@@ -25,8 +24,8 @@ open class HttpTestViewModel: ViewModel() {
     private val _reqMessageCount = MutableLiveData<String>()
     val reqMessageCount: MutableLiveData<String> get() = _reqMessageCount
 
-    private val _reqMessageList = MutableLiveData<List<DbMessage>>()
-    val reqMessageList: MutableLiveData<List<DbMessage>> get() = _reqMessageList
+    private val _reqMessageList = MutableLiveData<List<IntegrationMessage>>()
+    val reqMessageList: MutableLiveData<List<IntegrationMessage>> get() = _reqMessageList
 
     private val _responseReq = MutableLiveData<String>()
     val responseRequest: MutableLiveData<String> get() = _responseReq
@@ -76,7 +75,7 @@ open class HttpTestViewModel: ViewModel() {
                     messageOnPattern(
                         requestObject.param1.toString(),
                         null
-                    ), DbMessage::class.java
+                    ), IntegrationMessage::class.java
                 )
                 val newRequestObject: RequestObject = RequestObject(
                     param1 = messageParseResult,
@@ -102,7 +101,7 @@ open class HttpTestViewModel: ViewModel() {
                     messageOnPattern(
                         requestObject.param1.toString(),
                         Uri.parse(requestObject.param4.toString())
-                    ), DbMessage::class.java
+                    ), IntegrationMessage::class.java
                 )
                 val messageDbParsed = messageOnPattern(
                     requestObject.param1.toString(),

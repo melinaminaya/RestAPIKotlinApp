@@ -31,8 +31,14 @@ class ParameterHandler {
             return strRadioFormatted.toString()
         }
         fun convertIsBaptized(value: String?): String? {
-            return value?.toIntOrNull()?.let { intValue ->
-                when (intValue) {
+            if (value.isNullOrEmpty()) {
+                return null
+            }
+
+            return try {
+                val doubleValue = value.toDouble()
+
+                when (doubleValue.toInt()) {
                     ParameterValues.NOT_BAPTIZED -> "Não batizada."
                     ParameterValues.BAPTIZED -> "Batizada"
                     ParameterValues.IN_BAPTISM_PROCESS -> "Processo de batismo em execução."
@@ -42,7 +48,11 @@ class ParameterHandler {
                     ParameterValues.BAPTISM_TIMED_OUT -> "Houve timeout no processo de batismo."
                     else -> null
                 }
+            } catch (e: NumberFormatException) {
+                // If parsing as a double or converting to int fails, the input is not a valid number
+                null
             }
+
         }
         fun convertConnectionTypes(value: String?): String? {
             return value?.toIntOrNull()?.let { intValue ->

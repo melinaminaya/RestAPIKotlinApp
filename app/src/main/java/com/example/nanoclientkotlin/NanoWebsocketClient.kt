@@ -7,7 +7,7 @@ import android.util.Log
 import com.example.nanoclientkotlin.consts.ActionValues
 import com.example.nanoclientkotlin.consts.ConstsCommSvc
 import com.example.nanoclientkotlin.dataRemote.ChunkObject
-import com.example.nanoclientkotlin.dataRemote.DbMessage
+import com.example.nanoclientkotlin.dataRemote.IntegrationMessage
 import com.example.nanoclientkotlin.dataRemote.RequestObject
 import com.example.nanoclientkotlin.dataRemote.SendObject
 import com.example.nanoclientkotlin.handlers.ParseOnMessage
@@ -37,9 +37,10 @@ import java.util.concurrent.TimeUnit
  * @author Melina Minaya.
  */
 
-object NanoWebsocketClient {
+object NanoWebsocketClient{
     private const val serverUrl =
         "http://127.0.0.1:8081" // Replace with your NanoHTTPD WebSocket server URL
+//     private const val serverUrl = "https://127.0.0.1:8081"
     private var webSocketClient: WebSocket? = null
     val gson: Gson = Gson()
     const val TAG = "NanoWebsocket"
@@ -70,6 +71,8 @@ object NanoWebsocketClient {
                         "authorization",
                         authorizationToken
                     ) // Add the JWT token as an Authorization header
+                    .addHeader("user-agent", System.getProperty("http.agent")!!)
+                    .addHeader("package-name", packageName)
                     .build()
 
                 webSocketClient = client.newWebSocket(request, object : WebSocketListener() {
@@ -175,10 +178,10 @@ object NanoWebsocketClient {
         webSocketClient!!.send(message)
     }
 
-    suspend fun sendDbMessage(message: DbMessage, fileUri: Uri?, context: Context) {
+    suspend fun sendDbMessage(message: IntegrationMessage, fileUri: Uri?, context: Context) {
         val maxChunkSize = 8192
 //        val maxChunkSize = 1024
-        val messageJson = gson.toJson(message, DbMessage::class.java)
+        val messageJson = gson.toJson(message, IntegrationMessage::class.java)
         val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         try {
             if(fileUri != null){
@@ -326,9 +329,10 @@ object NanoWebsocketClient {
         val preferredLanguage = "pt-BR"
         val request = Request.Builder()
             .url("$serverUrl/auth") // Replace with your server's endpoint URL
-            .addHeader("User-Agent", System.getProperty("http.agent")!!)
-            .addHeader("Package-Name", packageName)
+            .addHeader("user-agent", System.getProperty("http.agent")!!)
+            .addHeader("package-name", packageName)
             .addHeader("Accept-Language", preferredLanguage)
+            .addHeader("password", "Autotrac@2023")
             .build()
         var response: Response? = null
         var retryCount = 0
@@ -340,6 +344,7 @@ object NanoWebsocketClient {
                     // Parse the response body to extract the authorization token
                     val tokenReceived = response.body?.string()
                     // val treatTokenReceived = tokenReceived!!.replace("\n", "")
+                    Log.d(TAG, "Received token: $tokenReceived")
                     return tokenReceived
                     //parseAuthorizationToken(responseBody)
                 } else {
