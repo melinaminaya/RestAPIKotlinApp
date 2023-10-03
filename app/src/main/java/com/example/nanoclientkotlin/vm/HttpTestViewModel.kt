@@ -74,7 +74,7 @@ open class HttpTestViewModel: ViewModel() {
                 val messageParseResult = gson.toJson(
                     messageOnPattern(
                         requestObject.param1.toString(),
-                        null
+                        null, null
                     ), IntegrationMessage::class.java
                 )
                 val newRequestObject: RequestObject = RequestObject(
@@ -100,12 +100,14 @@ open class HttpTestViewModel: ViewModel() {
                 val messageParseResult = gson.toJson(
                     messageOnPattern(
                         requestObject.param1.toString(),
-                        Uri.parse(requestObject.param4.toString())
+                        Uri.parse(requestObject.param4.toString()),
+                        requestObject.param3.toString()
                     ), IntegrationMessage::class.java
                 )
                 val messageDbParsed = messageOnPattern(
                     requestObject.param1.toString(),
-                    Uri.parse(requestObject.param4.toString())
+                    Uri.parse(requestObject.param4.toString()),
+                    requestObject.param3.toString()
                 )
 
 

@@ -1,251 +1,221 @@
 package com.example.nanoclientkotlin.consts
 /**
  * Identificadores das ações de notificação.
- *
  * @author Melina Minaya
  */
 object ActionValues {
-    /*
-    * <b>S->I</b><br>
-    * Uma nova mensagem foi recebida.<br>
-    * <b>Param1:</b> C�digo da mensagem no banco de dados.<br>
-    * <b>Param2:</b> Nao utilizado.<br>
-    * <b>Param3:</b> Nao utilizado.<br>
-    * <b>Param4:</b> Nao utilizado.<br>
-    */
+
     /**
      *
      * Esta acao foi substituida pela acao [ActionValues.MESSAGE_STATUS] e
-     * sera removida em vers�es futuras.
+     * sera removida em versões futuras.
+     *
      */
     @Deprecated("")
     val MESSAGE_RECEIVED = 0x00
 
     /**
-     * **I->S**<br></br>
-     * Existe uma mensagem a ser enviada.<br></br>
-     * @param Param1: Código da mensagem no banco de dados.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Existe uma mensagem a ser enviada.
+     * @param Param1: Codigo da mensagem no banco de dados.
+     * @param Param2: Nao utilizado.
+     * @param Param3: Nao utilizado.
+     * @param Param4: Nao utilizado.
      */
     const val MESSAGE_TO_SEND = 0x01
-    /*
-    * <b>S->I</b><br>
-    * Uma mensagem foi enviada/transmitida.<br>
-    * <b>Param1:</b> C�digo da mensagem no banco de dados.<br>
-    * <b>Param2:</b> Nao utilizado.<br>
-    * <b>Param3:</b> Nao utilizado.<br>
-    * <b>Param4:</b> Nao utilizado.<br>
-    */
+
     /**
      * Esta acao foi substituida pela acao [ActionValues.MESSAGE_STATUS] e
-     * sera removida em vers�es futuras.
+     * sera removida em versões futuras.
      */
     @Deprecated("")
     val MESSAGE_SENT = 0x02
 
     /**
-     * **S->I**<br></br>
-     * Um formulario foi recebido ou atualizado.<br></br>
-     * **Param1:** C�digo do formulario no banco de dados.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Um formulario foi recebido ou atualizado.
+     * @param Param1 Codigo do formulario no banco de dados.
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val FORM_RECEIVED = 0x03
 
     /**
-     * **S->I**<br></br>
-     * Um formulario foi removido.<br></br>
-     * **Param1:** C�digo do formulario no banco de dados.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Um formulario foi removido.
+     * @param Param1 Codigo do formulario no banco de dados.
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val FORM_DELETED = 0x04
 
     /**
-     * **S->I**<br></br>
-     * A unidade se conectou ao servidor AMH. Ver protocolo Aap.<br></br>
-     * **Param1:** Status do SignOn.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * A unidade se conectou ao servidor AMH. Ver protocolo Aap.
+     * @param Param1 Status do SignOn.
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val SIGN_ON_STATUS = 0x05
 
     /**
-     * **I->S**<br></br>
-     * Ac�es relacionadas ao processo de batismo.<br></br>
-     * **Param1:** Acao a ser executada. Ver [ValuesBaptismActionParam1]<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Acoes relacionadas ao processo de batismo.
+     * @param Param1 Acao a ser executada. Ver [ValuesBaptismActionParam1]
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val BAPTISM_ACTION = 0x06
 
     /**
      * Indica o status do processo de batismo.
-     * @param Param1: Status do processo de batismo. Ver [ValuesBaptismStatusParam1]<br></br>
-     * @param Param2: Depende de Param1.<br></br>
+     * @param Param1 Status do processo de batismo. Ver [ValuesBaptismStatusParam1]
+     * @param Param2 Depende de Param1.
      * Se [ValuesBaptismStatusParam1.BAPTIZED],
      * [ValuesBaptismStatusParam1.WAITING_CONFIRMATION],
      * [ValuesBaptismStatusParam1.MCT_ADDR_RESPONSE] ou
-     * [ValuesBaptismStatusParam1.MCT_NOT_AUTORIZED], Param2 sera o n�mero do Mct.
+     * [ValuesBaptismStatusParam1.MCT_NOT_AUTORIZED], Param2 sera o numero do Mct.
      * Se [ValuesBaptismStatusParam1.NOT_BAPTIZED],
      * [ValuesBaptismStatusParam1.IN_BAPTISM_PROCESS],
-     * [ValuesBaptismStatusParam1.BAPTISM_TIMED_OUT], Param2 nao E utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * [ValuesBaptismStatusParam1.BAPTISM_TIMED_OUT], Param2 nao utilizado.
+     * **Param3:** Nao utilizado.
+     * **Param4:** Nao utilizado.
      */
     const val BAPTISM_STATUS = 0x07
     const val BAPTISM_STATUS_OBSERVABLE = "BAPTISM_STATUS"
 
     /**
-     * **S->I**<br></br>
      * Os arquivos de atualizacao foram baixados e estao prontos para iniciar
-     * a atualizacao.<br></br>
-     * **Param1:** Nao utilizado.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Indica a versao de atualizacao disponivel contida no nome do versionList.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * a atualizacao.
+     * @param Param1 Nao utilizado.
+     * @param Param2 Nao utilizado.
+     * @param Param3 Indica a versao de atualizacao disponivel contida no nome do versionList.
+     * @param Param4 Nao utilizado.
      */
     const val READY_TO_UPDATE_SOFTWARE = 0x08
 
     /**
-     * **S->I**<br></br>
-     * Status das conex�es de rede.<br></br>
-     * **Param1:** Indica a rede. Ver [AmcuipValuesNetworkTypes]<br></br>
-     * **Param2:** Indica o status da conexao. Ver [AmcuipValuesConnectionStates].<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Status das conexoes de rede.
+     * @param Param1 Indica a rede. Ver [AmcuipValuesNetworkTypes]
+     * @param Param2 Indica o status da conexao. Ver [AmcuipValuesConnectionStates].
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val NETWORK_CONNECTION_STATUS = 0x09
 
     /**
-     * **S->I**<br></br>
-     * Mudanca no modo de comunicacao.<br></br>
-     * **Param1:** Modo atual de comunicacao. Ver [AmcuipValuesNetworkTypes]<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Mudanca no modo de comunicacao.
+     * @param Param1 Modo atual de comunicacao. Ver [AmcuipValuesNetworkTypes]
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val COMMUNICATION_MODE_CHANGED = 0x0A
 
     /**
-     * **S->I**<br></br>
-     * Mudanca no sinal do satElite.<br></br>
-     * **Param1:** Status do sinal<br></br>
-     * 0 � Sem sinal.<br></br>
-     * 1 � Com sinal.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Mudanca no sinal do satelite.
+     * @param Param1 Status do sinal.
+     * @return 0: Sem sinal.
+     *
+     * 1: Com sinal.
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val SATELLITE_SIGNAL_CHANGED = 0x0B
 
     /**
-     * **I->S**<br></br>
      * Indica que um parametro (propriedade) deve ser enviado ao servidor.
-     * Este parametro deve ser do tipo [AmcuipValuesParameterType.EXTERNAL]<br></br>
-     * **Param1:** N�mero do parametro a ser enviado.<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Pode conter o valor do parametro. Neste caso o valor do parametro sera atualizado
+     * Este parametro deve ser do tipo [AmcuipValuesParameterType.EXTERNAL]
+     * @param Param1 Numero do parametro a ser enviado.
+     * @param Param2 Nao utilizado.
+     * @param Param3 Pode conter o valor do parametro. Neste caso o valor do parametro sera atualizado
      * no banco de dados antes de ser enviado ao servidor. Se este parametro nao estiver presente, o
-     * valor corrente do parametro no banco de dados sera enviado ao servidor.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * valor corrente do parametro no banco de dados sera enviado ao servidor.
+     * @param Param4 Nao utilizado.
      */
     const val UPDATE_SERVER_PARAMETER = 0x0C
 
     /**
-     * **S->I**<br></br>
-     * Indica o status do processo de ativacao.<br></br>
-     * **Param1:** Status do processo de ativacao. Ver [AmcuipValuesActivationStatusParam1]<br></br>
-     * **Param2:** Depende de Param1.<br></br>
-     * Se ACTIVATED ou IN_ACTIVATION_PROCESS, Param2 E o n�mero da Uc.
-     * Se Param1 for qualquer outro valor, Param2 nao E utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Indica o status do processo de ativacao.
+     * @param Param1 Status do processo de ativacao. Ver [AmcuipValuesActivationStatusParam1]
+     * @param Param2 Depende de Param1.
+     * Se ACTIVATED ou IN_ACTIVATION_PROCESS, Param2 E o numero da Uc.
+     * Se Param1 for qualquer outro valor, Param2 nao E utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val ACTIVATION_STATUS = 0x0D
 
     /**
-     * **I->S**<br></br>
-     * Solicita que os parametros do Mct (M0..M9) sejam atualizados no banco de dados.<br></br>
-     * **Param1:** Indica o periodo, em segundos, em que a atualizacao deve acontecer.
-     * Ex.: se igual a 10*60, indica que a atualizacao deve ocorrer por 10 minutos.<br></br>
-     * **Param2:** Indica o intervalo, em segundos, entre cada atualizacao. Ex.: se
-     * igual a 60, indica que a atualizacao deve ocorrer a cada minuto.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Solicita que os parametros do Mct (M0..M9) sejam atualizados no banco de dados.
+     * @param Param1 Indica o periodo, em segundos, em que a atualizacao deve acontecer.
+     * Ex.: se igual a 10*60, indica que a atualizacao deve ocorrer por 10 minutos.
+     * @param Param2 Indica o intervalo, em segundos, entre cada atualizacao. Ex.: se
+     * igual a 60, indica que a atualizacao deve ocorrer a cada minuto.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val UPDATE_MCT_M0_M9_PARAMS = 0x0E
 
     /**
-     * **S->I**<br></br>
      * Informa que os parametros do Mct (M0..M9) foram atualizados no banco de dados e
-     * traz o valor de dois parametros M.<br></br>
-     * **Param1:** Valor do parametro M0.<br></br>
-     * **Param2:** Valor do parametro M2.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * traz o valor de dois parametros M.
+     * @param Param1 Valor do parametro M0.
+     * @param Param2 Valor do parametro M2.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val MCT_M0_M9_PARAMS_UPDATED = 0x0F
 
     /**
-     * **I->S**<br></br>
-     * Habilita ou desabilita o uso da rede WiFi pelo servico.<br></br>
-     * **Param1:** Habilita/desabilita o uso do WiFi<br></br>
-     * 0 - Habilita o uso do WiFi pelo servico.<br></br>
-     * 1 - Desabilita o uso do WiFi pelo servico (aplicac�es externas podem utilizar o WiFi).<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Habilita ou desabilita o uso da rede WiFi pelo servico.
+     * @param Param1 Habilita/desabilita o uso do WiFi
+     * @return 0 - Habilita o uso do WiFi pelo servico.
+     *
+     * 1 - Desabilita o uso do WiFi pelo servico (aplicac�es externas podem utilizar o WiFi).
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val DISABLE_WIFI_COMMUNICATION = 0x10
 
     /**
-     * **I->S**<br></br>
-     * Inicia ou cancela o processo de ativacao;<br></br>
-     * **Param1:** Acao a ser executada: Ver [AmcuipValuesActivationActionParam1].<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Inicia ou cancela o processo de ativacao;
+     * @param Param1 Acao a ser executada: Ver [AmcuipValuesActivationActionParam1].
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val ACTIVATION_ACTION = 0x11
 
     /**
-     * **S->I**<br></br>
-     * Notifica que a Data/Hora do servico foi alterada.<br></br>
-     * **Param1:** Data/Hora atualizada, em segundos desde 01/01/1970 00:00:00 GMT.<br></br>
-     * **Param2:** Diferenca para a Data/Hora do sistema, em segundos. Pode ser um n�mero
-     * positivo ou negativo. O resultado de Param1 - Param2 E igual a Data/Hora do sistema.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Notifica que a Data/Hora do servico foi alterada.
+     * @param Param1 Data/Hora atualizada, em segundos desde 01/01/1970 00:00:00 GMT.
+     * @param Param2 Diferenca para a Data/Hora do sistema, em segundos. Pode ser um numero
+     * positivo ou negativo. O resultado de Param1 - Param2 E igual a Data/Hora do sistema.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val DATE_TIME_CHANGED = 0x12
 
     /**
-     * **I->S** <br></br>
-     * Instrui o servico a recarregar o valor de um parametro do banco de dados.<br></br>
-     * **Param1:** N�mero do parametro a ser recarregado.
-     * **Param2:** Tipo do parametro a ser recarregado. Ver [AmcuipValuesRealoadParamFromDbParam2]. <br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Instrui o servico a recarregar o valor de um parametro do banco de dados.
+     * @param Param1 Numero do parametro a ser recarregado.
+     * @param Param2 Tipo do parametro a ser recarregado. Ver [AmcuipValuesRealoadParamFromDbParam2].
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val RELOAD_PARAMETER_FROM_DB = 0x13
 
     //TODO: implement
     /**
-     * **I->S**<br></br>
-     * Ac�es relacionadas a operac�es com arquivos.<br></br>
-     * **Param1:** Tipo de operacao a ser realizada. Ver [AmcuipValuesFileOperationActionParam1]. <br></br>
-     * **Param2:** Tipo de compressao utilizada. Ver [AmcuipValuesFileOperationActionParam2]. <br></br>
-     * **Param3:** Nomes dos arquivos de origem, separados por "|". Podem ser utilizados caracteres curingas
+     * Acoes relacionadas a operacoes com arquivos.
+     * @param Param1 Tipo de operacao a ser realizada. Ver [AmcuipValuesFileOperationActionParam1].
+     * @param Param2 Tipo de compressao utilizada. Ver [AmcuipValuesFileOperationActionParam2].
+     * @param Param3 Nomes dos arquivos de origem, separados por "|". Podem ser utilizados caracteres curingas
      * (wildcards: "*", "?") para indicar varios arquivos que seguem um padrao.
-     * Ex.: "/mnt/sdcard/Teste*.txt|/mnt/sdcard/Banco_num?.sqlite".<br></br>
-     * **Param4:** Depende da operacao e tipo de compressao:<br></br>
+     * Ex.: "/mnt/sdcard/Teste*.txt|/mnt/sdcard/Banco_num?.sqlite".
+     * @param Param4 Depende da operacao e tipo de compressao:
      *
      *  * **DestDirectory**: Quando a acao for [AmcuipValuesFileOperationActionParam1.COPY]
      * ou [AmcuipValuesFileOperationActionParam1.MOVE] e o tipo de compressao for
@@ -263,38 +233,40 @@ object ActionValues {
     const val FILE_OPERATION_ACTION = 0x14
     //TODO: implement
     /**
-     * **S->I**<br></br>
-     * Indica o status de uma operacao com arquivos iniciada anteriormente. <br></br>
-     * **Param1:** Status da operacao com arquivos. Ver [AmcuipValuesFileOperationStatusParam1]<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Indica o status de uma operacao com arquivos iniciada anteriormente.
+     * @param Param1 Status da operacao com arquivos. Ver [AmcuipValuesFileOperationStatusParam1]
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val FILE_OPERATION_STATUS = 0x15
 
     /**
      * Indica o status de uma mensagem no banco de dados. Esta acao pode ser utilizada quando uma nova mensagem
-     * for recebida ou quando uma mensagem que foi postada para envio acabou de ser enviada, alEm de outros
+     * for recebida ou quando uma mensagem que foi postada para envio acabou de ser enviada, alem de outros
      * status. Uma mensagem nao lida tera o status [MessageStatusValues.NOT_READ]. Uma mensagem
      * que foi enviada tera o status [MessageStatusValues.SENT].
-     * **Param1:** Codigo da mensagem no banco de dados.
-     * **Param2:** Status da mensagem. Este campo deve ser utilizado para distinguir entre os diferentes status
-     * de uma mensagem. Ver [MessageStatusValues]. Este campo deve ser tratado como um inteiro de
-     * 32bits com sinal (signed int).
-     * **Param3:** Nao utilizado.
-     * **Param4:** Nao utilizado.
+     * @param Param1 Codigo da mensagem no banco de dados.
+     * @param Param2 Status da mensagem.
+     *
+     * Este campo deve ser utilizado para distinguir entre os diferentes status
+     * de uma mensagem. Ver [MessageStatusValues].
+     *
+     * Este campo deve ser tratado como um inteiro de 32bits com sinal (signed int).
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val MESSAGE_STATUS = 0x16
 
-    /** Valores válidos para status de mensagens. */
+    /** Valores validos para status de mensagens. */
     object MessageStatusValues {
         /** Nenhum status associado.  */
         const val NONE = 0
 
-        /** A enviar. **Valido sómente para mensagens de Envio.**  */
+        /** A enviar. **Valido somente para mensagens de Envio.**  */
         const val TO_SEND = 1
 
-        /** Enviada. **Valido sómente para mensagens de Envio.**  */
+        /** Enviada. **Valido somente para mensagens de Envio.**  */
         const val SENT = 2
 
         /** Mensagem recebida nao lida. **Valido somente para mensagens de retorno.**  */
@@ -303,7 +275,7 @@ object ActionValues {
         /** Mensagem recebida lida. **Valido somente para mensagens de retorno.**  */
         const val READ = 4
 
-        /** Nao processada. **Valido sómente para mensagens de Envio.**  */
+        /** Nao processada. **Valido somente para mensagens de Envio.**  */
         const val NOT_PROCESSED = 5
 
         /**
@@ -332,28 +304,31 @@ object ActionValues {
         /**
          * Sinaliza que uma mensagem do tipo Serial esta bloqueando a fila de mensagens por ser muito grande para a
          * rede satelital.
-         * Uma mensagem do tipo Serial E muito grande para ser enviada via satElite, mas pode ser enviada
-         * via celular (quando configurada para poder ser enviada por qualquer rede disopnivel), porEm nao
-         * ha rede celular disponivel no momento para envio. Neste caso, a mensagem bloqueara a fila de
-         * envio atE que haja rede celular disponivel.<br></br>
-         * **Este status E apenas informativo, nao sera gravado no banco de dados.**
+         *
+         * Uma mensagem do tipo Serial pode ser muito grande para ser enviada via satElite, mas pode ser enviada
+         * via celular (quando configurada para ser enviada por qualquer rede disponivel). No entanto, caso nao
+         * haja rede celular disponivel no momento para envio, a mensagem bloquea a fila.
+         * A fila retorna ao normal quando a rede celular estiver disponivel novamente.
+         *
+         * **Status apenas informativo, nao sera gravado no banco de dados.**
          */
         const val SERIAL_MESSAGE_TOO_BIG_WAITING = 1000
 
         /**
-         * Sinaliza que uma mensagem do tipo Serial esta bloqueando a fila de mensagens por que o tipo de rede
-         * escolhido para o envio da mensagem nao esta disponivel.<br></br>
-         * Uma mensagem do tipo Serial possui o tipo de canal de transmissao igual a 'Cellular', mas no momento
-         * nao ha rede celular disponivel para o envio da mensagem. A mensagem só sera enviada quando a rede celular
-         * estiver disponivel.<br></br>
-         * **Este status E apenas informativo, nao sera gravado no banco de dados.**
+         * Sinaliza que uma mensagem do tipo Serial esta bloqueando a fila de mensagens porque o tipo de rede
+         * escolhido para o envio da mensagem nao esta disponivel.
+         *
+         * Uma mensagem do tipo Serial que possui o tipo de canal de transmissao igual a 'Cellular', somente será enviada
+         * quando houver rede celular disponivel.
+         *
+         * **Status apenas informativo, nao sera gravado no banco de dados.**
          */
         const val SERIAL_MESSAGE_CELL_NET_UNAVAILABLE = 1001
 
         /** Mensagem duplicada/descartada.  */
         const val MESSAGE_DUPLICATE = -5514
 
-        /** Mensagem muito grande para ser transmitida para o receptor. **Valido sómente para mensagens de Envio.**  */
+        /** Mensagem muito grande para ser transmitida para o receptor. **Valido somente para mensagens de Envio.**  */
         const val MESSAGE_TOO_BIG = -5531
 
         /** Mensagem OutOfBand: Arquivo nao encontrado.  */
@@ -363,24 +338,22 @@ object ActionValues {
         const val UNKNOWN_ERROR = -5599
     }
     /**
-     * **S->I**<br></br>
      * Indica o status de requisicao de algum recurso do sistema. Esta acao pode ser utilizada para informar
-     * status de requisic�es de recursos do sistema, mas geralmente E utilizada para informar quando algum recurso
-     * do sistema que E necessario ao bom funcionamento da aplicacao nao pode ser obtido.<br></br>
-     * **Param1:** Tipo do recurso requisitado. Ver [AmcuipValuesSysResourceReqParam1].<br></br>
-     * **Param2:** Status da requisicao. Ver [AmcuipValuesSysResourceStatusParam2].<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * status de requisicoes de recursos do sistema, mas geralmente E utilizada para informar quando algum recurso
+     * do sistema que E necessario ao bom funcionamento da aplicacao nao pode ser obtido.
+     * @param Param1 Tipo do recurso requisitado. Ver [AmcuipValuesSysResourceReqParam1].
+     * @param Param2 Status da requisicao. Ver [AmcuipValuesSysResourceStatusParam2].
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val SYSTEM_RESOURCE_REQ_STATUS = 0x17
 
     /**
-     * **S->I**<br></br>
-     * Indica o status da ignicao do dispositivo externo. <br></br>
-     * **Param1:** Status da ignicao. Ver [AmcuipValuesIgnitionStatusParam1]<br></br>
-     * **Param2:** Nao utilizado.<br></br>
-     * **Param3:** Nao utilizado.<br></br>
-     * **Param4:** Nao utilizado.<br></br>
+     * Indica o status da ignicao do dispositivo externo.
+     * @param Param1 Status da ignicao. Ver [AmcuipValuesIgnitionStatusParam1]
+     * @param Param2 Nao utilizado.
+     * @param Param3 Nao utilizado.
+     * @param Param4 Nao utilizado.
      */
     const val IGNITION_STATUS = 0x18
 
@@ -397,13 +370,13 @@ object ActionValues {
     }
 
     /**
-     * Operac�es possiveis de serem executadas na acao [ActionValues.BAPTISM_ACTION].
+     * Operacoes possiveis de serem executadas na acao [ActionValues.BAPTISM_ACTION].
      */
     object ValuesBaptismActionParam1 {
         /** Inicia o processo de batismo.  */
         const val DO_BAPTISM = 0
 
-        /** Consulta o n�mero do Mct.  */
+        /** Consulta o numero do Mct.  */
         const val CONSULT_MCT_ADDR = 1
 
         /** Desfaz o processo de batismo.  */
@@ -457,15 +430,15 @@ object ActionValues {
         /** Conexao fisica estabelecida.  */
         const val PHYSICAL_CONNECTED = 1
 
-        /** Conexao l�gica no estado desconectado.  */
+        /** Conexao logica no estado desconectado.  */
         const val LOGICAL_DISCONNECTED = 2
 
-        /** Conexao l�gica estabelecida (a troca de pacotes iniciada).  */
+        /** Conexao logica estabelecida (a troca de pacotes iniciada).  */
         const val LOGICAL_CONNECTED = 3
     }
 
     /**
-     * Operac�es possiveis de serem executadas na acao [ActionValues.ACTIVATION_ACTION].
+     * Operacoes possiveis de serem executadas na acao [ActionValues.ACTIVATION_ACTION].
      */
     object AmcuipValuesActivationActionParam1 {
         /** Inicia o processo de ativacao.  */
@@ -498,7 +471,7 @@ object ActionValues {
         /** O arquivo foi transferido com sucesso.  */
         const val SUCCESS = 0
 
-        /** Erro na transfer�ncia do arquivo.  */
+        /** Erro na transferencia do arquivo.  */
         const val ERROR = 1
     }
 
@@ -569,38 +542,38 @@ object ActionValues {
     object FileOperationOptions{
         /** Os arquivos devem ser copiados.*/
         const val COPY_FILES = 1
-        /** Nenhuma opção selecionada.*/
+        /** Nenhuma opçao selecionada.*/
         const val NO_OPTIONS = 0
-        /** Os arquivos devem ser compactados no destino com compressão zip.*/
+        /** Os arquivos devem ser compactados no destino com compressao zip.*/
         const val ZIP_COMPRESSION = 2
     }
     object FormTypeValues{
         /** Filtro desabilitado*/
         const val FILTER_DISABLED = 0
 
-        /** Binário; da UC fixa para a UC móvel */
+        /** Binário; da UC fixa para a UC movel */
         const val FIXED_TO_MOBILE_BINARY = 4
 
-        /**Texto; da UC fixa para a UC móvel. */
+        /**Texto; da UC fixa para a UC movel. */
         const val FIXED_TO_MOBILE_TXT = 1
 
-        /** Binário; da UC móvel para a UC fixa;*/
+        /** Binario; da UC movel para a UC fixa;*/
         const val MOBILE_TO_FIXED_BINARY = 8
 
-        /** Texto; da UC móvel para a UC fixa; */
+        /** Texto; da UC movel para a UC fixa; */
         const val MOBILE_TO_FIXED_TXT = 2
 
-        /** Binário; envio e recebimento tanto por UC móvel quanto por fixa; */
+        /** Binario; envio e recebimento tanto por UC movel quanto por fixa; */
         const val SEND_RECEIVE_BINARY = 12
 
-        /** Texto; envio e recebimento tanto por UC móvel quanto por fixa; */
+        /** Texto; envio e recebimento tanto por UC movel quanto por fixa; */
         const val	SEND_RECEIVE_TXT = 3
 
     }
     object PositionSourceType {
-        /** Posição do Gps interno.*/
+        /** Posicao do Gps interno.*/
         const val GPS = 0
-        /** Posição do Mct.*/
+        /** Posicao do Mct.*/
         const val MCT = 1
     }
 }
