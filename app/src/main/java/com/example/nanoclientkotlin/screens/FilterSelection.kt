@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,8 +38,16 @@ fun filterSelectionBox(
 ){
     val scope = rememberCoroutineScope()
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedFileName by remember { mutableStateOf<String>("") }
+
     val context = LocalContext.current
     val gson = Gson()
+
+    LaunchedEffect(selectedFileName){
+        if(selectedFileName != "") {
+            onParamsChanged(param1, param2, selectedFileName, param4)
+        }
+    }
 
     Row(modifier = Modifier.padding(horizontal = 16.dp)) {
         DropdownCard(title = "Filtro") {
@@ -490,6 +499,10 @@ fun filterSelectionBox(
                         selectedFileStringPicker = {
                             selectedFileUri = it
                             onParamsChanged(param1, param2, param3, selectedFileUri.toString())
+                        },
+                        selectedFileName = {
+                            selectedFileName = it
+
                         },
                         onSendMessage = {""},
                         navigateToInbox = null,

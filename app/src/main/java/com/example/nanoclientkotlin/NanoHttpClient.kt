@@ -23,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -35,7 +36,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
+import java.util.Date
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 import kotlin.coroutines.resume
 
 /**
@@ -46,22 +53,44 @@ import kotlin.coroutines.resume
 object NanoHttpClient {
     private val gson = Gson()
     private const val serverUrl =
-        "http://127.0.0.1:8081" // Replace with your NanoHTTPD WebSocket server URL
-    val client = OkHttpClient()
+        "https://127.0.0.1:8081" // Replace with your NanoHTTPD WebSocket server URL
+    val client = OkHttpClient.Builder()
     const val TAG = "NanoHttpClient"
     var webSocket:WebSocket? = null
     val maxChunkSize = 8192
 
-//    init{
-//        SSLSetup.customSSLContext.init(null, arrayOf(SSLSetup.trustAllCertificatesTrustManager), null)
-//    }
+
+    val trustAllCertificates: X509TrustManager = object : X509TrustManager {
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+        override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+            if (chain != null && chain.isNotEmpty()) {
+                val serverCert = chain[0] // The server's certificate
+
+                // Check the certificate's expiration date
+                val currentDate = Date()
+                if (currentDate.after(serverCert.notAfter)) {
+                    throw CertificateException("Server certificate has expired.")
+                }
+
+                // Perform additional validation checks as needed
+                // ...
+
+                // If all checks pass, the certificate is trusted
+            } else {
+                throw CertificateException("Empty certificate chain.")
+            }
+        }
+
+        override fun getAcceptedIssuers(): Array<X509Certificate> {
+            return emptyArray() // Return an empty array to trust all issuers
+        }
+    }
 
     /**
      * Método para envio de todas as requisições, menos a de mensagens longas [ConstsCommSvc.SEND_FILE_MESSAGE].
      * @see sendFileChunksHttp
      */
     suspend fun sendGetRequestHttp( endpoint: String, objectGet: RequestObject): String {
-        // ... existing code for sendGetRequest ...
         var token: String? = null
         var responseBody: ResponseBody? = null
         return withContext(Dispatchers.IO) {
@@ -72,6 +101,8 @@ object NanoHttpClient {
                     Log.d("NanoHttpClient", "Token is null ")
                 }
             }
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(null, arrayOf<TrustManager>(trustAllCertificates), null)
 
             // Construct the URL for the additional request
             val additionalRequestUrl = "$serverUrl/$endpoint/?token=$token"
@@ -79,8 +110,9 @@ object NanoHttpClient {
                 .readTimeout(30, TimeUnit.SECONDS) // Set your custom timeout here
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS)
-//                .sslSocketFactory(SSLSetup.customSSLContext.socketFactory, SSLSetup.trustAllCertificatesTrustManager)
-//                .hostnameVerifier { _, _ -> true } // Bypass hostname verification for self-signed certificates
+                .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
+                .sslSocketFactory(sslContext.socketFactory, trustAllCertificates)
+                .hostnameVerifier { _, _ -> true } // Bypass hostname verification for self-signed certificates
                 .build()
 
             // Create a new request using the additional URL
@@ -154,12 +186,21 @@ object NanoHttpClient {
                         "authorization",
                         authorizationToken
                     ) // Add the JWT token as an Authorization header
+                    .addHeader("user-agent", System.getProperty("http.agent")!!)
                     .build()
 
 
                 var response: String = ""
+                val sslContext = SSLContext.getInstance("TLS")
+                sslContext.init(null, arrayOf<TrustManager>(NanoHttpClient.trustAllCertificates),
+                    null)
 
-                webSocket = client.newWebSocket(request, object : WebSocketListener() {
+                webSocket = client
+                    .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
+                    .sslSocketFactory(sslContext.socketFactory, NanoHttpClient.trustAllCertificates)
+                    .hostnameVerifier { _, _ -> true }
+                    .build()
+                    .newWebSocket(request, object : WebSocketListener() {
 
                     override fun onOpen(webSocket: WebSocket, response: Response) {
                         // WebSocket connection is open

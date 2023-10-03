@@ -42,7 +42,8 @@ class MainActivity : ComponentActivity() {
         // Close the connection
         NanoWebsocketClient.disconnect()
         // Close the HTTP client
-        NanoHttpClient.client.dispatcher.cancelAll()
+//        NanoHttpClient.client.dispatcher.cancelAll()
+
     }
 
     override fun onResume() {

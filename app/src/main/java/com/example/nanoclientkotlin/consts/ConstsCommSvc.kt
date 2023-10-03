@@ -1,8 +1,8 @@
 package com.example.nanoclientkotlin.consts
 
 /**
- * Classe de constantes a serem empregadas na comunicação via integração NanoWebsocket e Http.
- * Refere-se aos endpoints e demais configurações.
+ * Classe de constantes a serem empregadas na comunicação via integraçao NanoWebsocket e Http.
+ * Refere-se aos endpoints e demais configuraçoes.
  * @author Melina Minaya
  */
 class ConstsCommSvc {
@@ -11,15 +11,15 @@ class ConstsCommSvc {
     companion object {
         /**
          * Intent utilizado para inicializar o serviço.
-         * A inicialização consiste em criar arquivos necessários ao funcionamento do serviço.
+         * A inicializaçao consiste em criar arquivos necessarios ao funcionamento do serviço.
          */
         // private static final String INTENT_SVC_INIT = "br.com.autotrac.jATMobileCommSvc.Init";
         const val INTENT_SVC_INITIALIZE = "br.com.autotrac.jATMobileCommSvc.Initialize"
 
-        /** Intent utilizado para iniciar a execução serviço.  */
+        /** Intent utilizado para iniciar o funcionamento do serviço.  */
         const val INTENT_SVC_START = "br.com.autotrac.jATMobileCommSvc.Start"
 
-        /** Intent utilizado para parar a execução serviço.  */
+        /** Intent utilizado para parar o funcionamento do serviço.  */
         const val INTENT_SVC_STOP = "br.com.autotrac.jATMobileCommSvc.Stop"
 
         /** Intent utilizado para finalizar o serviço.  */
@@ -31,7 +31,7 @@ class ConstsCommSvc {
         /** Classe do serviço.  */
         const val SERVICE_CLASSNAME = "br.com.autotrac.service.ATMobileCommSvc"
 
-        /** Ação se precisa de knox.  */
+        /** Intent utilizado para o knox.  */
         const val INTENT_ACTION_NEED_KNOX = "need_knox"
 
         const val BASE_URL = "http://127.0.0.1:8081"
@@ -41,20 +41,23 @@ class ConstsCommSvc {
 
         /**
          * Endpoint de envio de mensagens para o servidor.
+         *
+         *  [SEND_MESSAGE] para resposta referente ao envio de mensagem.
+         *
+         *  [SEND_FILE_MESSAGE] para resposta referente ao envio de arquivo.
          */
         const val SEND_MESSAGE = "SEND_MESSAGE"
         const val SEND_FILE_MESSAGE = "SEND_FILE_MESSAGE"
         const val SEND_FILE_CHUNK = "SEND_FILE_CHUNK"
 
         /**
-         * Resposta do Servidor será um objeto do tipo [ReceivedRequestResponse].
+         * Endpoint de notificacao.
          *
-         * @param param1: Pode ser notificação, requisição, parametro,
-         * [SEND_MESSAGE] para resposta referente ao envio de mensagem ou
-         * [SEND_FILE_MESSAGE] para resposta referente ao envio de arquivo.
+         * @return Resposta do Servidor será um objeto do tipo [ReceivedRequestResponse].
+         *
+         * @param param1 Pode ser notificacao, requisicao, parametro,
+
          * @see com.example.nanoclientkotlin.dataRemote.ReceivedRequestResponse
-         * @see SEND_MESSAGE
-         * @see SEND_FILE_MESSAGE
          *
          */
         const val NOTIFICATION = "NOTIFICATION"
@@ -67,12 +70,13 @@ class ConstsCommSvc {
 
         /**
          * Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
-         * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
-         * Neste caso o parâmetro isForward deve ser true e msgStatusNum deve ser [ActionValues.MessageStatusValues.TO_SEND].
-         * Ele deve ser preferido ao invés do método messageList(long, boolean, int) por questão de performance.
-         * Este método é muitas vezes mais rápido do que o método messageList(long, boolean, int).
+         *
+         * Pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
+         * Neste caso o parametro isForward deve ser true e msgStatusNum deve ser [ActionValues.MessageStatusValues.TO_SEND].
+         * Ele deve ser preferido ao inves do metodo messageList(long, boolean, int) por motivos de performance.
+         * Muitas vezes mais rapido do que o metodo messageList(long, boolean, int).
          * @param1: (isForward) - indica se as mensagens de envio ou retorno devem ser filtradas.
-         * Se true indica que as mensagens de envio serão filtradas. Se false as mensagens de retorno serão filtradas.
+         * Se true indica que as mensagens de envio serao filtradas. Se false as mensagens de retorno serao filtradas.
          * @param2: (msgStatusNum) - é número do status a ser filtrado.
          * @see ActionValues.MessageStatusValues
          */
@@ -80,16 +84,18 @@ class ConstsCommSvc {
 
         /**
          * Apaga uma mensagem (ou todas as mensagens) do banco de dados do serviço.
-         * @param1: (msgCode) - é o código da mensagem a ser apagada.
-         * Atenção: Se o código da mensagem for 0, todas as mensagens serão apagadas!
+         * @param1: (msgCode) - codigo da mensagem a ser apagada.
+         *
+         * **Atenção**: Se o codigo da mensagem for 0, todas as mensagens serao apagadas!
          */
         const val REQ_MESSAGE_DELETE = "REQ_MESSAGE_DELETE"
 
         /**
          * Marca uma mensagem com o status de "lida".
+         *
          * O status da mensagem será configurado para [ActionValues.MessageStatusValues.READ] e
-         * se a mensagem exigir confirmação de leitura, a confirmação será gerada e enviada ao servidor.
-         * @param1: (msgCode) - código da mensage que deve ser marcada como lida.
+         * se a mensagem exigir confirmaçao de leitura, a confirmação sera gerada e enviada ao servidor.
+         * @param1: (msgCode) - codigo da mensagem que deve ser marcada como lida.
          */
         const val REQ_MESSAGE_SET_AS_READ = "REQ_MESSAGE_SET_AS_READ"
 

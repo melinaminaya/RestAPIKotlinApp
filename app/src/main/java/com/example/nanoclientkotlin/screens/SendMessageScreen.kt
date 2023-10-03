@@ -64,6 +64,7 @@ fun SendMessageScreen(
     var viewModelFilePicker:FilePickerViewModel = viewModel()
     val selectedFileString by viewModelFilePicker.fileProcessedString.observeAsState()
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedFileName by remember { mutableStateOf<String?>("") }
     var response by remember { mutableStateOf("")}
     LaunchedEffect(Unit) {
         viewModel.fetchMessages()
@@ -131,10 +132,13 @@ fun SendMessageScreen(
                selectedFileStringPicker = {
                    selectedFileUri = it
                },
+               selectedFileName = {
+                     selectedFileName = it
+               },
                buttonSend = true,
                onSendMessage = {
                    coroutineScope.launch(Dispatchers.IO) {
-                       val dbMessageProcessed = messageOnPattern(messageText.value, selectedFileUri)
+                       val dbMessageProcessed = messageOnPattern(messageText.value, selectedFileUri, selectedFileName)
 //                       onSendMessage(dbMessageProcessed)
 //                       val filePath = getFilePathFromUri(selectedFileUri!!)
                        try {

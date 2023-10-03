@@ -1,7 +1,10 @@
 package com.example.nanoclientkotlin.screens
 
 import android.Manifest
+import android.content.Context
+import android.database.Cursor
 import android.net.Uri
+import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -51,6 +54,7 @@ fun FilePicker(
     buttonSend: Boolean,
     onSendMessage: () -> String,
     selectedFileStringPicker: (Uri?) -> Unit,
+    selectedFileName: (String) -> Unit,
     navigateToInbox: ((Int, Boolean) -> Unit)?,
     snackbarHost:SnackbarHostState?
 ) {
@@ -66,6 +70,7 @@ fun FilePicker(
 
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
     var selectedFileString by remember { mutableStateOf<Uri?>(null) }
+    var selectedFileNameString by remember { mutableStateOf<String>("") }
 
     val requiredPermission = Manifest.permission.READ_EXTERNAL_STORAGE
 
@@ -99,6 +104,13 @@ fun FilePicker(
             selectedFileStringPicker(selectedFileString)
         }
     }
+    LaunchedEffect(selectedFileUri) {
+        if (selectedFileUri != null) {
+            selectedFileNameString = getFileNameFromUri(selectedFileUri!!, context)
+            selectedFileName(selectedFileNameString)
+        }
+    }
+
 
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -184,11 +196,24 @@ fun FilePicker(
             }
         }
     }
+    /**
+     *  Esses métodos são executados após o recebimento da mudança para confirmação
+     *  do salvamento em variável.
+     *  São necessários em duplicidade.
+     *  TODO: Verificar outro modo de executar esses métodos.
+     */
+
+
     if (selectedFileUri != null) {
         // Call processFile when selectedFileUri is updated
         LaunchedEffect(selectedFileUri) {
             viewModel.processFile(selectedFileUri, context.contentResolver)
             selectedFileStringPicker(selectedFileUri)
+
+        }
+        LaunchedEffect(selectedFileUri) {
+            selectedFileNameString = getFileNameFromUri(selectedFileUri!!, context)
+            selectedFileName(selectedFileNameString)
         }
     }
     if(showSnackbar){
@@ -208,7 +233,7 @@ fun FilePicker(
  * Caso de exemplo a mensagem é enviada como texto, portanto seta o [IntegrationMessage.msgSubtype] == 0.
  * Caso a mensagem seja enviada como byteArray (Binária), seta o [IntegrationMessage.msgSubtype] == 1.
  */
-suspend fun messageOnPattern(value: String, selectedFileString: Uri?): IntegrationMessage {
+suspend fun messageOnPattern(value: String, selectedFileString: Uri?, selectedFileName: String?): IntegrationMessage {
     var isOutOfBandMessage = false
     if (selectedFileString != null) {
         isOutOfBandMessage = true
@@ -233,7 +258,7 @@ suspend fun messageOnPattern(value: String, selectedFileString: Uri?): Integrati
             deliveryTime = null,
             gmn = null,
             isOutOfBandMsg = isOutOfBandMessage,
-            outOfBandFilename = null,
+            outOfBandFilename = selectedFileName,
             outOfBandMsgStatusNum = null,
             sourceAddress = "",
             destAddress = "",
@@ -251,4 +276,25 @@ suspend fun messageOnPattern(value: String, selectedFileString: Uri?): Integrati
             transmissionType = 0, //DEFAULT_TRANS , if serialized SERIAL_TRANS
         )
     }
+}
+fun getFileNameFromUri(uri: Uri, context: Context): String {
+    val contentResolver = context.contentResolver
+    var cursor: Cursor? = null
+
+    try {
+        cursor = contentResolver.query(uri, null, null, null, null)
+
+        if (cursor != null && cursor.moveToFirst()) {
+            val displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (displayNameIndex != -1) {
+                return cursor.getString(displayNameIndex)
+            }
+        }
+    } finally {
+        cursor?.close()
+    }
+
+    // If the cursor is null or the file name couldn't be retrieved, return a default value
+    return "Unknown File"
+
 }

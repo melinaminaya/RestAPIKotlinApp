@@ -21,16 +21,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
 
 /**
  * Cliente WebSocket baseado em OKHttpClient e Retrofit.
@@ -38,15 +42,13 @@ import java.util.concurrent.TimeUnit
  */
 
 object NanoWebsocketClient{
-    private const val serverUrl =
-        "http://127.0.0.1:8081" // Replace with your NanoHTTPD WebSocket server URL
-//     private const val serverUrl = "https://127.0.0.1:8081"
+     private const val serverUrl = "https://127.0.0.1:8081"
     private var webSocketClient: WebSocket? = null
     val gson: Gson = Gson()
     const val TAG = "NanoWebsocket"
     private const val MAX_RETRIES = 5
     private const val RETRY_DELAY_MS: Long = 5000 // 1 second
-    private val client = OkHttpClient()
+    private val client = OkHttpClient.Builder()
     const val packageName = "com.example.nanoclientkotlin"
 
     // Declare the observable subject
@@ -74,8 +76,16 @@ object NanoWebsocketClient{
                     .addHeader("user-agent", System.getProperty("http.agent")!!)
                     .addHeader("package-name", packageName)
                     .build()
+                val sslContext = SSLContext.getInstance("TLS")
+                sslContext.init(null, arrayOf<TrustManager>(NanoHttpClient.trustAllCertificates),
+                    null)
 
-                webSocketClient = client.newWebSocket(request, object : WebSocketListener() {
+                webSocketClient = client
+                    .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
+                    .sslSocketFactory(sslContext.socketFactory, NanoHttpClient.trustAllCertificates)
+                    .hostnameVerifier { _, _ -> true }
+                    .build()
+                    .newWebSocket(request, object : WebSocketListener() {
                     override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
                         println("WebSocket connected")
                         webSocketConnectionSubject.onNext(true)
@@ -319,64 +329,101 @@ object NanoWebsocketClient{
      * Insere linguagem de prefência para respostas do Servidor.
      */
     fun requestAuthorizationToken(): String? {
-        val client = OkHttpClient.Builder()
-            .readTimeout(30, TimeUnit.SECONDS) // Increase the timeout duration as needed
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .build()
+
 
         //Add en-US if you would like the server to respond in English
         val preferredLanguage = "pt-BR"
-        val request = Request.Builder()
+
+        try {
+            // Create an SSL context with the custom trust manager
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(null, arrayOf<TrustManager>(NanoHttpClient.trustAllCertificates),
+                null)
+
+            val client = OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS) // Increase the timeout duration as needed
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
+                .sslSocketFactory(sslContext.socketFactory, NanoHttpClient.trustAllCertificates)
+                .hostnameVerifier { _, _ -> true }
+                .build()
+
+//            val requestBody = FormBody.Builder()
+//                .add("password", "Autotrac2023")
+//                .build()
+            val request = Request.Builder()
             .url("$serverUrl/auth") // Replace with your server's endpoint URL
             .addHeader("user-agent", System.getProperty("http.agent")!!)
             .addHeader("package-name", packageName)
             .addHeader("Accept-Language", preferredLanguage)
-            .addHeader("password", "Autotrac@2023")
+            .addHeader("password", "K1cFXhcxJz5DKxMBKQILWjEBDwc3TQkKAR8ZGw==")
+//            .post(requestBody)
             .build()
-        var response: Response? = null
-        var retryCount = 0
-        while (response == null || !response.isSuccessful) {
-            try {
-                response = client.newCall(request).execute()
 
-                if (response.isSuccessful) {
-                    // Parse the response body to extract the authorization token
-                    val tokenReceived = response.body?.string()
-                    // val treatTokenReceived = tokenReceived!!.replace("\n", "")
-                    Log.d(TAG, "Received token: $tokenReceived")
-                    return tokenReceived
-                    //parseAuthorizationToken(responseBody)
-                } else {
-                    // Handle error response
-                    // Retry connection if retry count is within the limit
+            var response: Response? = null
+            var retryCount = 0
+            while (response == null || !response.isSuccessful) {
+                try {
+                    response = client.newCall(request).execute()
+
+                    if (response.isSuccessful) {
+                        // Parse the response body to extract the authorization token
+//                        val tokenReceived = response.body?.string()
+//                        // val treatTokenReceived = tokenReceived!!.replace("\n", "")
+//                        Log.d(TAG, "Received token: $tokenReceived")
+//                        return tokenReceived
+                        // Check if the content type is JSON
+                        val contentType = response.header("Content-Type")
+                        if (contentType != null && contentType.contains("application/json")) {
+                            // Parse the JSON response body to extract the authorization token and message
+                            val responseBody = response.body?.string()
+                            val jsonResponse = JSONObject(responseBody)
+                            val tokenReceived = jsonResponse.optString("token")
+//                            val messageReceived = jsonResponse.optString("message")
+
+                            Log.d(TAG, "Received token: $tokenReceived")
+//                            Log.d(TAG, "Received message: $messageReceived")
+
+                            return tokenReceived
+                        } else {
+                            return null
+                        }
+
+                    } else {
+                        // Handle error response
+                        // Retry connection if retry count is within the limit
+                        if (retryCount < MAX_RETRIES) {
+                            retryCount++
+                            Thread.sleep(RETRY_DELAY_MS)
+                        } else {
+                            // Retry limit exceeded, return null or throw an exception
+                            return null
+                        }
+                    }
+                } catch (e: IOException) {
                     if (retryCount < MAX_RETRIES) {
                         retryCount++
+                        e.printStackTrace()
                         Thread.sleep(RETRY_DELAY_MS)
                     } else {
                         // Retry limit exceeded, return null or throw an exception
                         return null
                     }
-                }
-            } catch (e: IOException) {
-                if (retryCount < MAX_RETRIES) {
-                    retryCount++
-                    e.printStackTrace()
-                    Thread.sleep(RETRY_DELAY_MS)
-                } else {
-                    // Retry limit exceeded, return null or throw an exception
-                    return null
-                }
 
-            } catch (e: InterruptedException) {
-                // Interrupted while waiting, return null or throw an exception
-                return null
-            } finally {
-                // Close the response body if it is not null
-                response?.body?.close()
+                } catch (e: InterruptedException) {
+                    // Interrupted while waiting, return null or throw an exception
+                    return null
+                } finally {
+                    // Close the response body if it is not null
+                    response?.body?.close()
+                }
             }
+            return null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
         }
-        return null
     }
     fun isWebSocketConnected(): Boolean {
         return webSocketClient?.send("Ping") ?: false
