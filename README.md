@@ -28,6 +28,8 @@ To Build Application
 
 6. Retry connection on failure by calling `retryConnection()`.
 
+**Attention**: Before connecting to the Api, you need to start the Service (CommSvc - Service App from Autotrac).
+
 ### Example
 
 val websocketClient = NanoWebsocketClient.getInstance()
@@ -75,6 +77,13 @@ websocketClient.observeWebSocketConnection()
 - `REQ_MESSAGE_COUNT`: Represents the request type for retrieving the message count.
 
 - `REQ_MESSAGE_DELETE`: Represents the request type for deleting a message.
+
+## Security
+ Must authenticate every HTTP Request. 
+The first request will be to endpoint (/auth), trusting the certificate and sending the headers:
+- package-name: The package name of the application
+- password: The password generated for authentication
+It will return a token to be added on the additional request with the specific endpoint and parameters on the queries.
 
 
 ## Contributing

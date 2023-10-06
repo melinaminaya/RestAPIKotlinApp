@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.dokka' version '1.6.0'
 //    id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.example.nanoclientkotlin'
+    namespace 'br.com.autotrac.testnanoclient'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.nanoclientkotlin"
+        applicationId "br.com.autotrac.testnanoclient"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -43,13 +44,48 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += '/META-INF/NOTICE.md'
+            excludes += '/META-INF/LICENSE.md'
         }
     }
-    viewBinding{
+    viewBinding {
         enable = true
     }
 }
+tasks.named("dokkaHtml") {
+//    outputDirectory.set(buildDir.resolve("dokka"))
+    dokkaSourceSets {
+//        configureEach {
+//            sourceRoot.from(file("src/main/java/br/com/autotrac/testnanoclient/di"))
+//            sourceRoot.from(file("src/main/java/br/com/autotrac/testnanoclient/consts"))
+//            sourceRoot.from(file("src/main/java/br/com/autotrac/testnanoclient/dataRemote"))
+//
+//        }
 
+
+    }
+}
+tasks.withType(dokkaHtml.getClass()).configureEach {
+    pluginsMapConfiguration.set(["org.jetbrains.dokka.base.DokkaBase":"""{"separateInheritedMembers":true}"""])
+}
+dokkaHtml.configure{
+    //Gerar documentacao somente de algumas classes.
+
+
+
+    dokkaSourceSets {
+        named("main") {
+            skipDeprecated.set(true)
+            //include only classes from directory with name consts
+//            includes.from("br.com.autotrac.testnanoclient.consts.ActionValues")
+            configureEach {
+                sourceRoot.from(file("java/br/com/autotrac/testnanoclient/di"))
+                sourceRoot.from(file("java/br/com/autotrac/testnanoclient/consts"))
+                sourceRoot.from(file("java/br/com/autotrac/testnanoclient/dataRemote"))
+            }
+        }
+    }
+}
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
@@ -60,7 +96,6 @@ dependencies {
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3:1.1.1'
-//    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
@@ -84,9 +119,7 @@ dependencies {
     // RxAndroid for Android-specific bindings
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
-    def nav_version = "2.6.0"
-
-    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "androidx.navigation:navigation-compose:2.6.0"
 
     // Dagger Hilt
     implementation "com.google.dagger:hilt-android:2.43.2"
@@ -108,6 +141,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:2.6.1"
 
     implementation "com.google.accompanist:accompanist-swiperefresh:0.20.0"
+
+    //Swagger - API Documentation
+    implementation 'io.swagger.core.v3:swagger-core:2.1.10'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.1.10'
 
 
 }
