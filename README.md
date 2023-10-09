@@ -85,6 +85,8 @@ The first request will be to endpoint (/auth), trusting the certificate and send
 - password: The password generated for authentication
 It will return a token to be added on the additional request with the specific endpoint and parameters on the queries.
 
+## Documentation in HTML
+[Api Documentation](app/build/dokka/API_html/index.html)
 
 ## Contributing
 N/A
