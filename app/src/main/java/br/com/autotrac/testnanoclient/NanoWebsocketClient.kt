@@ -54,7 +54,6 @@ object NanoWebsocketClient{
     const val packageName = "com.example.nanoclientkotlin"
 //    const val packageName = "br.com.autotrac.testnanoclient"
 
-    // Declare the observable subject
     private val webSocketConnectionSubject: BehaviorSubject<Boolean> =
         BehaviorSubject.createDefault(false)
     var currentMsgCode: String? = null
@@ -294,9 +293,9 @@ object NanoWebsocketClient{
                 else -> return // Return early if the parameter is not valid
             }
             //TODO:Remove this conversion
-            val response = gson.toJson(requestObject)
+//            val response = gson.toJson(requestObject)
 
-            val sendObject = SendObject(param, response)
+            val sendObject = SendObject(param, requestObject)
             val objectRequestJson = gson.toJson(sendObject)
 
             webSocketClient?.send(objectRequestJson)

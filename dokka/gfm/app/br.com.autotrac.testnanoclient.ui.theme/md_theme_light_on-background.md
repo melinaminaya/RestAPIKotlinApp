@@ -1,0 +1,6 @@
+//[app](../../index.md)/[br.com.autotrac.testnanoclient.ui.theme](index.md)/[md_theme_light_onBackground](md_theme_light_on-background.md)
+
+# md_theme_light_onBackground
+
+[androidJvm]\
+val [md_theme_light_onBackground](md_theme_light_on-background.md): Color

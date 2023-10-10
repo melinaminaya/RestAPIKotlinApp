@@ -1,0 +1,6 @@
+//[app](../../../index.md)/[br.com.autotrac.testnanoclient.dataRemote](../index.md)/[LastPosition](index.md)/[LastPosition](-last-position.md)
+
+# LastPosition
+
+[androidJvm]\
+fun [LastPosition](-last-position.md)(code: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, latitude: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, longitude: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, altitude: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html)?, positionTime: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, speed: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, heading: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html)?, aging: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, accuracy: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, lastUpdTime: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, sourceType: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?)

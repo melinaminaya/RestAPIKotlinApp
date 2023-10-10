@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.dokka' version '1.6.0'
+    id 'org.jetbrains.dokka' version '1.9.0'
 //    id 'kotlin-kapt'
 }
 
@@ -53,15 +53,10 @@ android {
     }
 }
 tasks.named("dokkaHtml") {
-//    outputDirectory.set(buildDir.resolve("dokka"))
     dokkaSourceSets {
-//        configureEach {
-//            sourceRoot.from(file("src/main/java/br/com/autotrac/testnanoclient/di"))
-//            sourceRoot.from(file("src/main/java/br/com/autotrac/testnanoclient/consts"))
-//            sourceRoot.from(file("src/main/java/br/com/autotrac/testnanoclient/dataRemote"))
-//
-//        }
-
+        named("main") {
+//            excludeDirectory = ["app/src/main/java/br/com/autotrac/testnanoclient/common/*"]
+        }
 
     }
 }
@@ -69,20 +64,9 @@ tasks.withType(dokkaHtml.getClass()).configureEach {
     pluginsMapConfiguration.set(["org.jetbrains.dokka.base.DokkaBase":"""{"separateInheritedMembers":true}"""])
 }
 dokkaHtml.configure{
-    //Gerar documentacao somente de algumas classes.
-
-
-
     dokkaSourceSets {
         named("main") {
             skipDeprecated.set(true)
-            //include only classes from directory with name consts
-//            includes.from("br.com.autotrac.testnanoclient.consts.ActionValues")
-            configureEach {
-                sourceRoot.from(file("java/br/com/autotrac/testnanoclient/di"))
-                sourceRoot.from(file("java/br/com/autotrac/testnanoclient/consts"))
-                sourceRoot.from(file("java/br/com/autotrac/testnanoclient/dataRemote"))
-            }
         }
     }
 }
@@ -146,5 +130,8 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-core:2.1.10'
     implementation 'io.swagger.core.v3:swagger-annotations:2.1.10'
 
+    //Dokka
+//    implementation("org.jetbrains.dokka:kotlin-as-java-plugin:1.7.20")
+    dokkaPlugin 'org.jetbrains.dokka:android-documentation-plugin:1.9.0'
 
 }

@@ -1,7 +1,7 @@
 package br.com.autotrac.testnanoclient.dataRemote
 
 /**
- * O SendObject é o objeto que é enviado para o servidor.
+ * O SendObject é o objeto final a ser enviado ao servidor.
  * @param param1 refere-se ao endpoint.
  * @param param2 refere-se ao objeto a ser enviado no formato de [RequestObject], que se encontra encapsulado em formato Gson.
  */
