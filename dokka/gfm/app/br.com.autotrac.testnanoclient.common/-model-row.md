@@ -4,6 +4,6 @@
 
 [androidJvm]\
 
-@Composable
+@[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)
 
 fun [ModelRow](-model-row.md)(title: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)

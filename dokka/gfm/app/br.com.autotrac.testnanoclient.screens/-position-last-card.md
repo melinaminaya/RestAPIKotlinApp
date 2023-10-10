@@ -4,6 +4,6 @@
 
 [androidJvm]\
 
-@Composable
+@[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)
 
 fun [PositionLastCard](-position-last-card.md)(content: [LastPosition](../br.com.autotrac.testnanoclient.dataRemote/-last-position/index.md)?)

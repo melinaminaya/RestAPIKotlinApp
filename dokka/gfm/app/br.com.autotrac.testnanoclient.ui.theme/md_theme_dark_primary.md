@@ -3,4 +3,4 @@
 # md_theme_dark_primary
 
 [androidJvm]\
-val [md_theme_dark_primary](md_theme_dark_primary.md): Color
+val [md_theme_dark_primary](md_theme_dark_primary.md): [Color](https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/Color.html)

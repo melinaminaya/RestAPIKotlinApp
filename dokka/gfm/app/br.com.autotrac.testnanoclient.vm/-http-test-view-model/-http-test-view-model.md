@@ -3,4 +3,4 @@
 # HttpTestViewModel
 
 [androidJvm]\
-fun [HttpTestViewModel](-http-test-view-model.md)()
+constructor()

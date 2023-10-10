@@ -15,7 +15,7 @@ Melina Minaya
 
 | | |
 |---|---|
-| [ParameterHandler](-parameter-handler.md) | [androidJvm]<br>fun [ParameterHandler](-parameter-handler.md)() |
+| [ParameterHandler](-parameter-handler.md) | [androidJvm]<br>constructor() |
 
 ## Types
 

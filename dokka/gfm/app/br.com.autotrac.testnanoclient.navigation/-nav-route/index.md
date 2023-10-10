@@ -2,8 +2,20 @@
 
 # NavRoute
 
-[androidJvm]\
 sealed class [NavRoute](index.md)
+
+#### Inheritors
+
+| |
+|---|
+| [Login](-login/index.md) |
+| [Home](-home/index.md) |
+| [Inbox](-inbox/index.md) |
+| [Search](-search/index.md) |
+| [SendMessage](-send-message/index.md) |
+| [CheckList](-check-list/index.md) |
+| [Parameters](-parameters/index.md) |
+| [HttpTest](-http-test/index.md) |
 
 ## Types
 
@@ -30,16 +42,3 @@ sealed class [NavRoute](index.md)
 |---|---|
 | [withArgs](with-args.md) | [androidJvm]<br>fun [withArgs](with-args.md)(vararg args: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [withArgsFormat](with-args-format.md) | [androidJvm]<br>fun [withArgsFormat](with-args-format.md)(vararg args: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-
-## Inheritors
-
-| Name |
-|---|
-| [Login](-login/index.md) |
-| [Home](-home/index.md) |
-| [Inbox](-inbox/index.md) |
-| [Search](-search/index.md) |
-| [SendMessage](-send-message/index.md) |
-| [CheckList](-check-list/index.md) |
-| [Parameters](-parameters/index.md) |
-| [HttpTest](-http-test/index.md) |

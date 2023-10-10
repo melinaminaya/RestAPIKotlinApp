@@ -32,8 +32,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.common.DropDownToSet
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.RequestObject
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
+import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.vm.HttpTestViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -51,10 +52,10 @@ fun HttpTestScreen(
     val viewModel: HttpTestViewModel = viewModel()
     val requestResponse by viewModel.responseRequest.observeAsState(initial = "")
 
-    val listOfOptions = ApiConstEndpoints.requestsList + ApiConstEndpoints.parametersList +
+    val listOfOptions = EndpointsLists.requestsList + EndpointsLists.parametersList +
             listOf(
-                ApiConstEndpoints.SEND_MESSAGE ,
-                ApiConstEndpoints.SEND_FILE_MESSAGE
+                ApiEndpoints.SEND_MESSAGE ,
+                ApiEndpoints.SEND_FILE_MESSAGE
             )
 
 
@@ -120,7 +121,7 @@ fun HttpTestScreen(
                     )
                 }
             }
-            if (ApiConstEndpoints.listOfFilteredRequests.contains(listOfOptions[selectedOption])) {
+            if (EndpointsLists.listOfFilteredRequests.contains(listOfOptions[selectedOption])) {
                 item {
                     FilterSelectionBox(
                         optionSelected = listOfOptions[selectedOption],

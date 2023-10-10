@@ -15,7 +15,7 @@ Melina Minaya
 
 | | |
 |---|---|
-| [MessageSenderAccess](-message-sender-access.md) | [androidJvm]<br>fun [MessageSenderAccess](-message-sender-access.md)() |
+| [MessageSenderAccess](-message-sender-access.md) | [androidJvm]<br>constructor() |
 
 ## Functions
 

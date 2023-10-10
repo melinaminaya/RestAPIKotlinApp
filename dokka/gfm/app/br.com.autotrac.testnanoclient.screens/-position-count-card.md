@@ -4,6 +4,6 @@
 
 [androidJvm]\
 
-@Composable
+@[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)
 
 fun [PositionCountCard](-position-count-card.md)(content: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)

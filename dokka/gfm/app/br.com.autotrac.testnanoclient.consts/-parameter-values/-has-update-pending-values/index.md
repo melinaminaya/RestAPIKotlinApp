@@ -5,7 +5,7 @@
 [androidJvm]\
 object [HasUpdatePendingValues](index.md)
 
-Valores possíveis para o [ApiConstEndpoints.GET_PARAM_HAS_UPDATE_PENDING](../../-api-const-endpoints/-companion/-g-e-t_-p-a-r-a-m_-h-a-s_-u-p-d-a-t-e_-p-e-n-d-i-n-g.md).
+Valores possíveis para o [ApiEndpoints.GET_PARAM_HAS_UPDATE_PENDING](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-h-a-s_-u-p-d-a-t-e_-p-e-n-d-i-n-g.md).
 
 ## Properties
 

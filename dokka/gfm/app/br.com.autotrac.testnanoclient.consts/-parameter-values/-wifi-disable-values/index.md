@@ -2,18 +2,16 @@
 
 # WifiDisableValues
 
-[androidJvm]\
 object [WifiDisableValues](index.md)
 
 Desabilita o uso da rede WiFi. (=0 habilita o uso, =1 desabilita o uso. Aplicações externas podem utilizar o WiFi.)
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-s-e-t_-p-a-r-a-m_-l-o-c-a-l_-d-i-s-a-b-l-e_-w-i-f-i_-c-o-m-m-u-n-i-c-a-t-i-o-n.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-l-o-c-a-l_-d-i-s-a-b-l-e_-w-i-f-i_-c-o-m-m-u-n-i-c-a-t-i-o-n.md) |
+| [ApiEndpoints.Companion.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION](../../-api-endpoints/-companion/-s-e-t_-p-a-r-a-m_-l-o-c-a-l_-d-i-s-a-b-l-e_-w-i-f-i_-c-o-m-m-u-n-i-c-a-t-i-o-n.md) |
 
 ## Properties
 

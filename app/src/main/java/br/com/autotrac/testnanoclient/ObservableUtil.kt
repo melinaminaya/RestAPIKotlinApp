@@ -1,6 +1,6 @@
 package br.com.autotrac.testnanoclient
 
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import com.google.gson.Gson
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
@@ -11,10 +11,10 @@ object ObservableUtil {
     private val parameterMap = HashMap<String, Any?>()
 
     init {
-        ApiConstEndpoints.parametersList.forEach { parameter ->
+        EndpointsLists.parametersList.forEach { parameter ->
             parameterMap[parameter] = null
         }
-        ApiConstEndpoints.requestsListForObservables.forEach { parameter ->
+        EndpointsLists.requestsListForObservables.forEach { parameter ->
             parameterMap[parameter] = null
         }
     }

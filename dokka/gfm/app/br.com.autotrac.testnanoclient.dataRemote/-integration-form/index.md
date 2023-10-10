@@ -3,7 +3,15 @@
 # IntegrationForm
 
 [androidJvm]\
-data class [IntegrationForm](index.md)(code: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), version: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), createdTime: [Date](https://developer.android.com/reference/kotlin/java/util/Date.html), definition: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), type: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), number: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), formReply: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), codeFormGroup: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html))
+data class [IntegrationForm](index.md)(val code: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), val version: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), var createdTime: [Date](https://developer.android.com/reference/kotlin/java/util/Date.html), val definition: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val type: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val number: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val formReply: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val codeFormGroup: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html))
+
+Objeto de retorno da requisição [br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQ_FORM_LIST](../../br.com.autotrac.testnanoclient.consts/-api-endpoints/-companion/-r-e-q_-f-o-r-m_-l-i-s-t.md)
+
+## Constructors
+
+| | |
+|---|---|
+| [IntegrationForm](-integration-form.md) | [androidJvm]<br>constructor(code: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), version: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), createdTime: [Date](https://developer.android.com/reference/kotlin/java/util/Date.html), definition: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), type: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), number: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), formReply: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), codeFormGroup: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)) |
 
 ## Properties
 

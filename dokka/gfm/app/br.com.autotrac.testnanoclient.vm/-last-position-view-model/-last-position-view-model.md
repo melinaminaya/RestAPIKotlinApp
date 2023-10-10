@@ -3,4 +3,4 @@
 # LastPositionViewModel
 
 [androidJvm]\
-fun [LastPositionViewModel](-last-position-view-model.md)()
+constructor()

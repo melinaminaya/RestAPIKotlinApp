@@ -4,13 +4,15 @@ import android.content.Context
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.ChunkObject
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiConstants
+import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
 import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
-import br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse
-import br.com.autotrac.testnanoclient.dataRemote.RequestObject
-import br.com.autotrac.testnanoclient.dataRemote.SendObject
-import br.com.autotrac.testnanoclient.di.ApiService
+import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
+import br.com.autotrac.testnanoclient.requestObjects.SendObject
+import br.com.autotrac.testnanoclient.retrofit.ApiService
+import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
 import br.com.autotrac.testnanoclient.security.SSLSetup
@@ -50,7 +52,7 @@ import kotlin.coroutines.resume
  */
 object NanoHttpClient {
     private val gson = Gson()
-    private const val serverUrl = ApiConstEndpoints.BASE_URL
+    private const val serverUrl = ApiConstants.BASE_URL
     val client = OkHttpClient.Builder()
     const val TAG = "NanoHttpClient"
     var webSocket:WebSocket? = null
@@ -60,7 +62,7 @@ object NanoHttpClient {
 
 
     /**
-     * Método para envio de todas as requisições, menos a de mensagens longas [ApiConstEndpoints.SEND_FILE_MESSAGE].
+     * Método para envio de todas as requisições, menos a de mensagens longas [ApiEndpoints.SEND_FILE_MESSAGE].
      * @see sendFileChunksHttp
      *
      * O [br.com.autotrac.testnanoclient.dataRemote.RequestObject] é distribuído em queries na requisição HTTP.
@@ -100,8 +102,8 @@ object NanoHttpClient {
             val service = additionalRequest.create(ApiService::class.java)
             val headers = "$token"
 
-            val listOfRequests = ApiConstEndpoints.requestsList + ApiConstEndpoints.parametersList +
-                    listOf<String>(ApiConstEndpoints.SEND_MESSAGE, ApiConstEndpoints.SEND_FILE_MESSAGE)
+            val listOfRequests = EndpointsLists.requestsList + EndpointsLists.parametersList +
+                    listOf<String>(ApiEndpoints.SEND_MESSAGE, ApiEndpoints.SEND_FILE_MESSAGE)
 
             val response:Call<ResponseBody> = when (endpoint) {
 
@@ -188,9 +190,9 @@ object NanoHttpClient {
                         val notification =
                             gson.fromJson(text, ReceivedRequestResponse::class.java)
                         val param1 = notification.param1 ?: return // Exit if param1 is null
-                        if (param1 == ApiConstEndpoints.SEND_FILE_MESSAGE) {
+                        if (param1 == ApiEndpoints.SEND_FILE_MESSAGE) {
                             val myObject =
-                                SendObject(ApiConstEndpoints.SEND_FILE_MESSAGE, notification)
+                                SendObject(ApiEndpoints.SEND_FILE_MESSAGE, notification)
                             response = gson.toJson(myObject)
 //                            continuation.resumeWith(Result.success(response))
                             webSocket.close(1000, "File Sent: Client Disconnecting.")
@@ -270,7 +272,7 @@ object NanoHttpClient {
                         )
 
                         // Send the chunk over the WebSocket
-                        val myObject = SendObject(ApiConstEndpoints.SEND_FILE_MESSAGE, chunkObject)
+                        val myObject = SendObject(ApiEndpoints.SEND_FILE_MESSAGE, chunkObject)
                         val response = NanoWebsocketClient.gson.toJson(myObject)
                         webSocket?.send(response)
 
@@ -287,7 +289,7 @@ object NanoHttpClient {
                         data = "" // Empty data for the end marker
                     )
 
-                    val myObject = SendObject(ApiConstEndpoints.SEND_FILE_MESSAGE, endMarkerObject)
+                    val myObject = SendObject(ApiEndpoints.SEND_FILE_MESSAGE, endMarkerObject)
                     val response = NanoWebsocketClient.gson.toJson(myObject)
                     webSocket?.send(response)
                     // Close the input stream and clean up
@@ -302,7 +304,7 @@ object NanoHttpClient {
                     data = ""
                 )
 
-                val myObject = SendObject(ApiConstEndpoints.SEND_MESSAGE, messageToSend)
+                val myObject = SendObject(ApiEndpoints.SEND_MESSAGE, messageToSend)
                 val response = NanoWebsocketClient.gson.toJson(myObject)
                 webSocket?.send(response)
             }

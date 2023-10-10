@@ -3,4 +3,4 @@
 # CheckListViewModel
 
 [androidJvm]\
-fun [CheckListViewModel](-check-list-view-model.md)()
+constructor()

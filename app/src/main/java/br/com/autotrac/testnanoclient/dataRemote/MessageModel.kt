@@ -4,7 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Date
 
-
+/**
+ * Objeto de envio e de retorno das requisições que envolvem mensagens.
+ *
+ * @see br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQ_MESSAGE_LIST
+ * @see br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQ_MESSAGE_DELETE
+ * @see br.com.autotrac.testnanoclient.consts.ApiEndpoints.SEND_MESSAGE
+ * @see br.com.autotrac.testnanoclient.consts.ApiEndpoints.SEND_FILE_MESSAGE
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class IntegrationMessage(
 

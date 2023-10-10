@@ -5,7 +5,7 @@
 [androidJvm]\
 object [FileOperationOptions](index.md)
 
-Opções a serem utilizadas na cópia de arquivos setados pelo Param2 da requisição [ApiConstEndpoints.REQ_FILE_OPERATION](../../-api-const-endpoints/-companion/-r-e-q_-f-i-l-e_-o-p-e-r-a-t-i-o-n.md).
+Opções a serem utilizadas na cópia de arquivos setados pelo Param2 da requisição [ApiEndpoints.REQ_FILE_OPERATION](../../-api-endpoints/-companion/-r-e-q_-f-i-l-e_-o-p-e-r-a-t-i-o-n.md).
 
 ## Properties
 

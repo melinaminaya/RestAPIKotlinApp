@@ -2,18 +2,17 @@
 
 # CmuSubtypeValues
 
-[androidJvm]\
 object [CmuSubtypeValues](index.md)
 
 Valores possíveis para o parâmetro:
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-s-e-t_-p-a-r-a-m_-w-i-f-i_-s-s-i-d.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.GET_PARAM_UC_SUBTYPE](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-u-c_-s-u-b-t-y-p-e.md) |
+| [ApiEndpoints.Companion.GET_PARAM_WIFI_SSID](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-w-i-f-i_-s-s-i-d.md) |
+| [ApiEndpoints.Companion.SET_PARAM_WIFI_SSID](../../-api-endpoints/-companion/-s-e-t_-p-a-r-a-m_-w-i-f-i_-s-s-i-d.md) |
 
 ## Properties
 

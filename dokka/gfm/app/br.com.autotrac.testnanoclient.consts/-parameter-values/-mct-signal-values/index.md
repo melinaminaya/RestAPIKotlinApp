@@ -2,18 +2,15 @@
 
 # MctSignalValues
 
-[androidJvm]\
 object [MctSignalValues](index.md)
 
 Indica se o Mct está com sinal ou não (=0 sem sinal, =1 com sinal).
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-g-e-t_-p-a-r-a-m_-h-a-s_-s-a-t-e-l-l-i-t-e_-s-i-g-n-a-l.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.GET_PARAM_HAS_SATELLITE_SIGNAL](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-h-a-s_-s-a-t-e-l-l-i-t-e_-s-i-g-n-a-l.md) |
 
 ## Properties
 

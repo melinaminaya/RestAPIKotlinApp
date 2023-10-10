@@ -1,6 +1,6 @@
 //[app](../../index.md)/[br.com.autotrac.testnanoclient.vm](index.md)
 
-# Package br.com.autotrac.testnanoclient.vm
+# Package-level declarations
 
 ## Types
 

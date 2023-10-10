@@ -9,4 +9,4 @@ object [TypoGraphy](index.md)
 
 | Name | Summary |
 |---|---|
-| [Typography](-typography.md) | [androidJvm]<br>val [Typography](-typography.md): Typography |
+| [Typography](-typography.md) | [androidJvm]<br>val [Typography](-typography.md): [Typography](https://developer.android.com/reference/kotlin/androidx/compose/material3/Typography.html) |

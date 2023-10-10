@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.NanoWebsocketClient.TAG
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 import br.com.autotrac.testnanoclient.vm.FilePickerViewModel
@@ -71,7 +71,7 @@ fun SendMessageScreen(
 
         launch(Dispatchers.IO){
             while (true) {
-                response = ObservableUtil.getValue(ApiConstEndpoints.SEND_MESSAGE).toString()
+                response = ObservableUtil.getValue(ApiEndpoints.SEND_MESSAGE).toString()
                 delay(100)
             }
         }

@@ -2,6 +2,9 @@ package br.com.autotrac.testnanoclient.dataRemote
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
+/**
+ * Objeto de retorno da requisição [br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQ_POSITION_HISTORY_LIST]
+ */
 data class PositionHistory(
     @JsonProperty("code") val code: Long?,
     @JsonProperty("latitude") val latitude:Long?,

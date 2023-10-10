@@ -1,6 +1,6 @@
 //[app](../../index.md)/[br.com.autotrac.testnanoclient.navigation](index.md)
 
-# Package br.com.autotrac.testnanoclient.navigation
+# Package-level declarations
 
 ## Types
 
@@ -12,4 +12,4 @@
 
 | Name | Summary |
 |---|---|
-| [NavGraph](-nav-graph.md) | [androidJvm]<br>@Composable<br>fun [NavGraph](-nav-graph.md)(navController: [NavHostController](https://developer.android.com/reference/kotlin/androidx/navigation/NavHostController.html)) |
+| [NavGraph](-nav-graph.md) | [androidJvm]<br>@[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)<br>fun [NavGraph](-nav-graph.md)(navController: [NavHostController](https://developer.android.com/reference/kotlin/androidx/navigation/NavHostController.html)) |

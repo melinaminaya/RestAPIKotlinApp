@@ -5,7 +5,7 @@
 [androidJvm]\
 object [HWControlDisableValues](index.md)
 
-Possíveis valores para [ApiConstEndpoints.GET_PARAM_HW_CONTROL_DISABLE](../../-api-const-endpoints/-companion/-g-e-t_-p-a-r-a-m_-h-w_-c-o-n-t-r-o-l_-d-i-s-a-b-l-e.md). Mapa de bits. Pode ser uma combinação de um dos valores. Um bit setado indica que o gerenciamento do dispositivo em questão não deve ser executado.
+Possíveis valores para [ApiEndpoints.GET_PARAM_HW_CONTROL_DISABLE](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-h-w_-c-o-n-t-r-o-l_-d-i-s-a-b-l-e.md). Mapa de bits. Pode ser uma combinação de um dos valores. Um bit setado indica que o gerenciamento do dispositivo em questão não deve ser executado.
 
 ## Properties
 

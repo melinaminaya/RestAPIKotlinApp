@@ -16,19 +16,30 @@ To Build Application
   Configure your Android Studio (Flamingo).
 
 ## Usage
-1. Create an instance of `NanoWebsocketClient` by calling `getInstance()`.
+API for the use of user interfaces to interact with the Autotrac communication service.
 
-2. Connect to the WebSocket server by calling `connect()`.
+This API implements methods that allow one or more user interfaces to interact with the Autotrac communication service, which must be previously installed and activated on the mobile device.
 
-3. Send messages to the server using `sendMessage(message: String)` or `sendDbMessage(message: DbMessage)`.
+### Step-by-step
+1. Create an instance of NanoWebsocketClient by calling getInstance().
 
-4. Receive messages from the server by subscribing to the WebSocket connection using `observeWebSocketConnection()`.
+2. Request authentication via the endpoint: "/auth".
 
-5. Disconnect from the WebSocket server by calling `disconnect()`.
+3. Receive the token and make an additional request or connect to the WebSocket server by calling connect().
 
-6. Retry connection on failure by calling `retryConnection()`.
+4. Send messages to the server using sendMessage(message: String) or sendDbMessage(message: DbMessage).
 
-**Attention**: Before connecting to the Api, you need to start the Service (CommSvc - Service App from Autotrac).
+5. Receive messages from the server by subscribing to the WebSocket connection using observeWebSocketConnection().
+
+6. Disconnect from the WebSocket server by calling disconnect().
+
+7. Attempt to reconnect in case of failure by calling retryConnection().
+
+**Attention**: Before connecting to the API, you need to start the Service (CommSvc - Autotrac Service App).
+
+API URL: <"https://127.0.0.1:8081">
+Authentication URL: <"https://127.0.0.1:8081/auth">
+
 
 ### Example
 

@@ -1,11 +1,12 @@
 //[app](../../index.md)/[br.com.autotrac.testnanoclient.handlers](index.md)
 
-# Package br.com.autotrac.testnanoclient.handlers
+# Package-level declarations
 
 ## Types
 
 | Name | Summary |
 |---|---|
+| [EndpointsLists](-endpoints-lists/index.md) | [androidJvm]<br>object [EndpointsLists](-endpoints-lists/index.md) |
 | [MessageSenderAccess](-message-sender-access/index.md) | [androidJvm]<br>class [MessageSenderAccess](-message-sender-access/index.md)<br>Classe para acessar externamente o Websocket Client. |
 | [ParameterHandler](-parameter-handler/index.md) | [androidJvm]<br>class [ParameterHandler](-parameter-handler/index.md)<br>Trata e converte parametros em strings para serem exibidos nas telas. |
 | [ParseData](-parse-data/index.md) | [androidJvm]<br>object [ParseData](-parse-data/index.md) |

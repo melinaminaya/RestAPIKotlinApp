@@ -4,8 +4,8 @@ import android.util.Log
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
@@ -48,7 +48,7 @@ class ParseOnMessage {
             val param1 = notification.param1 ?:  return ParseResult.Error("param1 is null") // Exit if param1 is null
 
             when (param1) {
-                ApiConstEndpoints.NOTIFICATION -> {
+                ApiEndpoints.NOTIFICATION -> {
                     //TODO: Tratar recebimento de notificação, conforme cliente necessita.
                    val notificationType = notification.param2 ?: return ParseResult.Error("param2 is null") // Exit if param2 is null
                     if(notificationType.toString() == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
@@ -59,34 +59,34 @@ class ParseOnMessage {
                     return ParseResult.Ok
                 }
 
-                ApiConstEndpoints.REQUEST -> {
+                ApiEndpoints.REQUEST -> {
                     val objectReq = notification.param4 ?: return ParseResult.Error("param4 is null") // Exit if param4 is null
                     when (notification.param2) {
-                        ApiConstEndpoints.REQ_MESSAGE_LIST -> {
+                        ApiEndpoints.REQ_MESSAGE_LIST -> {
                             val param3Json = notification.param3.toString()
                             val filterList =
                                 ParseData.parseMessageList(param3Json)
                             Log.d(Companion.TAG, "$filterList")
                             when (filterList.param2) {
                                 true -> ObservableUtil.attachProperty(
-                                    ApiConstEndpoints.REQ_MESSAGE_LIST_OUTBOX,
+                                    ApiEndpoints.REQ_MESSAGE_LIST_OUTBOX,
                                     objectReq
                                 ) // equal fetchOutboxMessages
                                 false -> ObservableUtil.attachProperty(
-                                    ApiConstEndpoints.REQ_MESSAGE_LIST_INBOX,
+                                    ApiEndpoints.REQ_MESSAGE_LIST_INBOX,
                                     objectReq
                                 )
                             }
                         }
 
-                        ApiConstEndpoints.REQ_MESSAGE_COUNT, ApiConstEndpoints.REQ_FORM_LIST,
-                        ApiConstEndpoints.REQ_GET_CHECKLIST, ApiConstEndpoints.REQ_CELL_SIGNAL,
-                        ApiConstEndpoints.REQ_WIFI_SIGNAL, ApiConstEndpoints.REQ_GET_CURRENT_DATE,
-                        ApiConstEndpoints.REQ_GET_MCT_PARAMETERS, ApiConstEndpoints.REQ_GET_POSITION_LAST,
-                        ApiConstEndpoints.REQ_POSITION_HISTORY_COUNT, ApiConstEndpoints.REQ_POSITION_HISTORY_LIST,
-                        ApiConstEndpoints.REQ_RESET_DATABASE, ApiConstEndpoints.REQ_MESSAGE_DELETE,
-                        ApiConstEndpoints.REQ_MESSAGE_SET_AS_READ, ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG,
-                        ApiConstEndpoints.REQ_FILE_OPERATION,
+                        ApiEndpoints.REQ_MESSAGE_COUNT, ApiEndpoints.REQ_FORM_LIST,
+                        ApiEndpoints.REQ_GET_CHECKLIST, ApiEndpoints.REQ_CELL_SIGNAL,
+                        ApiEndpoints.REQ_WIFI_SIGNAL, ApiEndpoints.REQ_GET_CURRENT_DATE,
+                        ApiEndpoints.REQ_GET_MCT_PARAMETERS, ApiEndpoints.REQ_GET_POSITION_LAST,
+                        ApiEndpoints.REQ_POSITION_HISTORY_COUNT, ApiEndpoints.REQ_POSITION_HISTORY_LIST,
+                        ApiEndpoints.REQ_RESET_DATABASE, ApiEndpoints.REQ_MESSAGE_DELETE,
+                        ApiEndpoints.REQ_MESSAGE_SET_AS_READ, ApiEndpoints.REQ_CONFIG_SERVICE_LOG,
+                        ApiEndpoints.REQ_FILE_OPERATION,
                         -> {
                             ObservableUtil.attachProperty(
                                 notification.param2,
@@ -98,17 +98,17 @@ class ParseOnMessage {
                     return ParseResult.Ok
                 }
 
-                ApiConstEndpoints.PARAMETER -> {
+                ApiEndpoints.PARAMETER -> {
                     val objectReq = notification.param3 ?: return ParseResult.Error("param3 is null")
                     when (notification.param2) {
-                        in ApiConstEndpoints.parametersList.filter { it.startsWith("GET") } -> {
+                        in EndpointsLists.parametersList.filter { it.startsWith("GET") } -> {
                             ObservableUtil.attachProperty(
                                 notification.param2!!,
                                 objectReq
                             )
                         }
 
-                        in ApiConstEndpoints.parametersList.filter { it.startsWith("SET") } -> {
+                        in EndpointsLists.parametersList.filter { it.startsWith("SET") } -> {
                             //TODO: TO BE IMPLEMENTED
 
                         }
@@ -117,13 +117,13 @@ class ParseOnMessage {
                     return ParseResult.Ok
                 }
 
-                ApiConstEndpoints.SEND_MESSAGE -> {
+                ApiEndpoints.SEND_MESSAGE -> {
                     NanoWebsocketClient.currentMsgCode = notification.param2
-                    ObservableUtil.attachProperty(ApiConstEndpoints.SEND_MESSAGE, notification.param2)
+                    ObservableUtil.attachProperty(ApiEndpoints.SEND_MESSAGE, notification.param2)
                     Log.d(Companion.TAG, "Received Sent Information: $notification")
                     return ParseResult.Ok
                 }
-                ApiConstEndpoints.SEND_FILE_MESSAGE -> {
+                ApiEndpoints.SEND_FILE_MESSAGE -> {
                     NanoWebsocketClient.currentMsgCode = notification.param2
                     val objectReq = notification.param3 ?: return ParseResult.Error("param3 is null")
                     ObservableUtil.attachProperty(

@@ -3,4 +3,4 @@
 # HighPriorityColor
 
 [androidJvm]\
-val [HighPriorityColor](-high-priority-color.md): Color
+val [HighPriorityColor](-high-priority-color.md): [Color](https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/Color.html)

@@ -5,10 +5,8 @@
 [androidJvm]\
 suspend fun [fetchPositionHistoryList](fetch-position-history-list.md)()
 
-## See also
-
-androidJvm
+#### See also
 
 | | |
 |---|---|
-| [br.com.autotrac.testnanoclient.consts.ActionValues.MessageStatusValues](../../br.com.autotrac.testnanoclient.consts/-action-values/-message-status-values/index.md) | Este parâmetro só é considerado se posCode for igual a 0. |
+| [ActionValues.MessageStatusValues](../../br.com.autotrac.testnanoclient.consts/-action-values/-message-status-values/index.md) | Este parâmetro só é considerado se posCode for igual a 0. |

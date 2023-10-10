@@ -2,18 +2,15 @@
 
 # ValuesSysResourceStatusParam2
 
-[androidJvm]\
 object [ValuesSysResourceStatusParam2](index.md)
 
 Possiveis status dos recursos solicitados ao sistema.
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ActionValues](../-s-y-s-t-e-m_-r-e-s-o-u-r-c-e_-r-e-q_-s-t-a-t-u-s.md) |  |
+| |
+|---|
+| [ActionValues.SYSTEM_RESOURCE_REQ_STATUS](../-s-y-s-t-e-m_-r-e-s-o-u-r-c-e_-r-e-q_-s-t-a-t-u-s.md) |
 
 ## Properties
 

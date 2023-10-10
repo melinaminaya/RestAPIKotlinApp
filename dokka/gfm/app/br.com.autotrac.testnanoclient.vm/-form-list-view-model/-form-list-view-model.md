@@ -3,4 +3,4 @@
 # FormListViewModel
 
 [androidJvm]\
-fun [FormListViewModel](-form-list-view-model.md)()
+constructor()

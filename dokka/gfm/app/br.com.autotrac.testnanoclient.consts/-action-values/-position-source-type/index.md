@@ -2,18 +2,15 @@
 
 # PositionSourceType
 
-[androidJvm]\
 object [PositionSourceType](index.md)
 
 Valores da requisição de última posição.
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-r-e-q_-g-e-t_-p-o-s-i-t-i-o-n_-l-a-s-t.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.REQ_GET_POSITION_LAST](../../-api-endpoints/-companion/-r-e-q_-g-e-t_-p-o-s-i-t-i-o-n_-l-a-s-t.md) |
 
 ## Properties
 

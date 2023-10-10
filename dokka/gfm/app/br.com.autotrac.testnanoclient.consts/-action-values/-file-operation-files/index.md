@@ -5,7 +5,7 @@
 [androidJvm]\
 object [FileOperationFiles](index.md)
 
-Valores de arquivos utilizados no [ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG](../../-api-const-endpoints/-companion/-r-e-q_-c-o-n-f-i-g_-s-e-r-v-i-c-e_-l-o-g.md)
+Valores de arquivos utilizados no [ApiEndpoints.REQ_CONFIG_SERVICE_LOG](../../-api-endpoints/-companion/-r-e-q_-c-o-n-f-i-g_-s-e-r-v-i-c-e_-l-o-g.md)
 
 ## Properties
 

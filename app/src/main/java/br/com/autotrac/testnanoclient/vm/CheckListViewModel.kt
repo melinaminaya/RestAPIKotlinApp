@@ -3,7 +3,7 @@ package br.com.autotrac.testnanoclient.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.CheckList
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
@@ -29,7 +29,7 @@ open class CheckListViewModel: ViewModel() {
 
 
     suspend fun fetchCheckList() {
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_GET_CHECKLIST, null, null, null, null)
+        senderAccess.sendRequest(ApiEndpoints.REQ_GET_CHECKLIST, null, null, null, null)
 
         val fetchedMessages: List<CheckList>? = fetchDataFromDataSource()
         _checkList.value = fetchedMessages
@@ -37,7 +37,7 @@ open class CheckListViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSource(): List<CheckList>? {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_GET_CHECKLIST)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_CHECKLIST)
         return if(valueOnLaunched != null) {
             val jsonOnLaunched = gson.toJson(valueOnLaunched)
 
@@ -53,11 +53,11 @@ open class CheckListViewModel: ViewModel() {
 
     fun sendConfigServiceLog(enable: Boolean, maxFileCount: Int, maxFileSize: Long){
         senderAccess.sendRequest(
-            ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG,
+            ApiEndpoints.REQ_CONFIG_SERVICE_LOG,
             enable, maxFileCount, maxFileSize, null)
     }
     fun sendFileOperation(files: Int, options: Int, destination: String, timeoutMS: Int){
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG,
+        senderAccess.sendRequest(ApiEndpoints.REQ_CONFIG_SERVICE_LOG,
             files, options, destination, timeoutMS)
     }
 
@@ -65,14 +65,14 @@ open class CheckListViewModel: ViewModel() {
      * Example calls for fetching CellSignal and WifiSignal values from the Requests
      */
     suspend fun fetchCellSignal(){
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_CELL_SIGNAL, null, null, null, null)
+        senderAccess.sendRequest(ApiEndpoints.REQ_CELL_SIGNAL, null, null, null, null)
 
         val fetchedMessages: String = fetchDataFromDataSourceCellSignal()
         _cellSignal.value = fetchedMessages
     }
     private suspend fun fetchDataFromDataSourceCellSignal(): String {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_CELL_SIGNAL)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_CELL_SIGNAL)
 
         val jsonOnLaunched = gson.toJson(valueOnLaunched)
 

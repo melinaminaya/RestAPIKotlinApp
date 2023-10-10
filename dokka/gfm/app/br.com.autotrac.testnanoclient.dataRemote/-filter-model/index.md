@@ -3,7 +3,15 @@
 # FilterModel
 
 [androidJvm]\
-data class [FilterModel](index.md)(param1: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, param2: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), param3: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, param4: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?)
+data class [FilterModel](index.md)(val param1: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, val param2: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), val param3: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, val param4: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?)
+
+Objeto de envio de filtro de mensagens para receber a lista de mensagens da requisição [br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQ_MESSAGE_LIST](../../br.com.autotrac.testnanoclient.consts/-api-endpoints/-companion/-r-e-q_-m-e-s-s-a-g-e_-l-i-s-t.md).
+
+## Constructors
+
+| | |
+|---|---|
+| [FilterModel](-filter-model.md) | [androidJvm]<br>constructor(param1: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, param2: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), param3: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, param4: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?) |
 
 ## Properties
 

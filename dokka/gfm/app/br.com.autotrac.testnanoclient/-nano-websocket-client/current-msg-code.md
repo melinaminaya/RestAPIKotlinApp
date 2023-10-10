@@ -3,4 +3,4 @@
 # currentMsgCode
 
 [androidJvm]\
-var [currentMsgCode](current-msg-code.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null
+var [currentMsgCode](current-msg-code.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?

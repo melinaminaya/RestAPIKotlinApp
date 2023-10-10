@@ -2,18 +2,15 @@
 
 # ValuesNetworkTypes
 
-[androidJvm]\
 object [ValuesNetworkTypes](index.md)
 
 Tipos de redes de comunicação disponiveis.
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-g-e-t_-p-a-r-a-m_-c-u-r-r-e-n-t_-c-o-m-m_-m-o-d-e.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.GET_PARAM_CURRENT_COMM_MODE](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-c-u-r-r-e-n-t_-c-o-m-m_-m-o-d-e.md) |
 
 ## Properties
 

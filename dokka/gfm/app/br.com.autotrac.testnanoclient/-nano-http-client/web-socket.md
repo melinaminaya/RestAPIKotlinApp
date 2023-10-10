@@ -3,4 +3,4 @@
 # webSocket
 
 [androidJvm]\
-var [webSocket](web-socket.md): WebSocket? = null
+var [webSocket](web-socket.md): WebSocket?

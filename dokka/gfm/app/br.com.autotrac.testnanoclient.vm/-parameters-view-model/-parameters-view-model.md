@@ -3,4 +3,4 @@
 # ParametersViewModel
 
 [androidJvm]\
-fun [ParametersViewModel](-parameters-view-model.md)()
+constructor()

@@ -3,4 +3,4 @@
 # ConfigServiceLogModel
 
 [androidJvm]\
-fun [ConfigServiceLogModel](-config-service-log-model.md)(enable: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?, maxFileCountInt: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, maxFileSize: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?)
+constructor(enable: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?, maxFileCountInt: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, maxFileSize: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?)

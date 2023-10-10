@@ -3,4 +3,4 @@
 # CurrentDateViewModel
 
 [androidJvm]\
-fun [CurrentDateViewModel](-current-date-view-model.md)()
+constructor()

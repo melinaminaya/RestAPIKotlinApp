@@ -5,4 +5,15 @@
 [androidJvm]\
 const val [FILE_OPERATION_STATUS](-f-i-l-e_-o-p-e-r-a-t-i-o-n_-s-t-a-t-u-s.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 21
 
-Indica o status de uma [ApiConstEndpoints.REQ_FILE_OPERATION](../-api-const-endpoints/-companion/-r-e-q_-f-i-l-e_-o-p-e-r-a-t-i-o-n.md) iniciada anteriormente.
+Indica o status de uma [ApiEndpoints.REQ_FILE_OPERATION](../-api-endpoints/-companion/-r-e-q_-f-i-l-e_-o-p-e-r-a-t-i-o-n.md) iniciada anteriormente.
+
+#### Parameters
+
+androidJvm
+
+| | |
+|---|---|
+| Param1 | Status da operação. Ver [ValuesFileOperationStatusParam1](-values-file-operation-status-param1/index.md) |
+| Param2 | Não utilizado. |
+| Param3 | Não utilizado. |
+| Param4 | Não utilizado. |

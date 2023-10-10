@@ -3,4 +3,4 @@
 # ParameterHandler
 
 [androidJvm]\
-fun [ParameterHandler](-parameter-handler.md)()
+constructor()

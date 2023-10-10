@@ -2,18 +2,15 @@
 
 # VpnConnectionStatusValues
 
-[androidJvm]\
 object [VpnConnectionStatusValues](index.md)
 
 Indica o status atual da conexão VPN (=0 desconectada, =1 conectada).
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-g-e-t_-p-a-r-a-m_-v-p-n_-c-o-n-n-e-c-t-i-o-n_-s-t-a-t-u-s.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.GET_PARAM_VPN_CONNECTION_STATUS](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-v-p-n_-c-o-n-n-e-c-t-i-o-n_-s-t-a-t-u-s.md) |
 
 ## Properties
 

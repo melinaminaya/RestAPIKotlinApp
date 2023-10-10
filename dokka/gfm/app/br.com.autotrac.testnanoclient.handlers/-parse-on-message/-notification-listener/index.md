@@ -2,17 +2,16 @@
 
 # NotificationListener
 
-[androidJvm]\
 interface [NotificationListener](index.md)
+
+#### Inheritors
+
+| |
+|---|
+| [ParametersViewModel](../../../br.com.autotrac.testnanoclient.vm/-parameters-view-model/index.md) |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [onNotificationReceived](on-notification-received.md) | [androidJvm]<br>abstract fun [onNotificationReceived](on-notification-received.md)(notification: [ReceivedRequestResponse](../../../br.com.autotrac.testnanoclient.dataRemote/-received-request-response/index.md)) |
-
-## Inheritors
-
-| Name |
-|---|
-| [ParametersViewModel](../../../br.com.autotrac.testnanoclient.vm/-parameters-view-model/index.md) |
+| [onNotificationReceived](on-notification-received.md) | [androidJvm]<br>abstract fun [onNotificationReceived](on-notification-received.md)(notification: [ReceivedRequestResponse](../../../br.com.autotrac.testnanoclient.requestObjects/-received-request-response/index.md)) |

@@ -3,4 +3,4 @@
 # OrangeDanger
 
 [androidJvm]\
-val [OrangeDanger](-orange-danger.md): Color
+val [OrangeDanger](-orange-danger.md): [Color](https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/Color.html)

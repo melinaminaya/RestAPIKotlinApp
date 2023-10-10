@@ -3,4 +3,4 @@
 # MessageViewModel
 
 [androidJvm]\
-fun [MessageViewModel](-message-view-model.md)()
+constructor()

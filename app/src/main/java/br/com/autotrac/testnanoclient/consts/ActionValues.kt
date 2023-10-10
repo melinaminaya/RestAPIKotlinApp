@@ -119,7 +119,7 @@ object ActionValues {
 
     //TODO: implement
     /**
-     * Indica o status de uma [ApiConstEndpoints.REQ_FILE_OPERATION] iniciada anteriormente.
+     * Indica o status de uma [ApiEndpoints.REQ_FILE_OPERATION] iniciada anteriormente.
      * @param Param1 Status da operação. Ver [ValuesFileOperationStatusParam1]
      * @param Param2 Não utilizado.
      * @param Param3 Não utilizado.
@@ -246,7 +246,7 @@ object ActionValues {
 
 
     /** Status retornados pelo Param1 de ação [ActionValues.BAPTISM_STATUS].
-     * Utilizado também no retorno da [ApiConstEndpoints.GET_PARAM_IS_BAPTIZED] .  */
+     * Utilizado também no retorno da [ApiEndpoints.GET_PARAM_IS_BAPTIZED] .  */
     object ValuesBaptismStatusParam1 {
         /** A Uc não está batizada.  */
         const val NOT_BAPTIZED = 0
@@ -285,7 +285,7 @@ object ActionValues {
     }
 
     /** Status retornados pelo Param1 da ação [ActionValues.IGNITION_STATUS].
-     * Utilizado também para [ApiConstEndpoints.GET_PARAM_IGNITION_STATUS]
+     * Utilizado também para [ApiEndpoints.GET_PARAM_IGNITION_STATUS]
      * */
     object ValuesIgnitionStatusParam1 {
         /** A ignição está desligada.  */
@@ -327,7 +327,7 @@ object ActionValues {
 
 
     /** Opções a serem utilizadas na cópia de arquivos setados pelo Param2
-     *  da requisição [ApiConstEndpoints.REQ_FILE_OPERATION].  */
+     *  da requisição [ApiEndpoints.REQ_FILE_OPERATION].  */
     object FileOperationOptions {
         /** Os arquivos devem ser compactados no destino com compressão zip.*/
         const val ZIP_COMPRESSION = 2
@@ -338,7 +338,7 @@ object ActionValues {
     }
 
     /**
-     * Valores de arquivos utilizados no [ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG]
+     * Valores de arquivos utilizados no [ApiEndpoints.REQ_CONFIG_SERVICE_LOG]
      */
     object FileOperationFiles{
         /** Arquivo de log do serviço.*/
@@ -351,7 +351,7 @@ object ActionValues {
 
     /**
      * Valores do tipo de formulário.
-     * @see ApiConstEndpoints.REQ_FORM_LIST
+     * @see ApiEndpoints.REQ_FORM_LIST
      */
     object FormTypeValues{
         /** Filtro desabilitado*/
@@ -379,7 +379,7 @@ object ActionValues {
 
     /**
      * Valores da requisição de última posição.
-     * @see ApiConstEndpoints.REQ_GET_POSITION_LAST
+     * @see ApiEndpoints.REQ_GET_POSITION_LAST
      */
     object PositionSourceType {
         /** Posição do Gps interno.*/

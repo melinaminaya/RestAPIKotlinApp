@@ -3,7 +3,7 @@ package br.com.autotrac.testnanoclient.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -24,7 +24,7 @@ open class ResetDatabaseViewModel: ViewModel() {
 
    suspend fun fetchResetDb() {
         senderAccess.sendRequest(
-            ApiConstEndpoints.REQ_RESET_DATABASE, null,
+            ApiEndpoints.REQ_RESET_DATABASE, null,
             null, null, null)
 
         val fetchedMessages: String = fetchDataFromDataSource()
@@ -33,7 +33,7 @@ open class ResetDatabaseViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSource(): String {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_RESET_DATABASE)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_RESET_DATABASE)
         val jsonOnLaunched =  gson.toJson(valueOnLaunched)
 
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)

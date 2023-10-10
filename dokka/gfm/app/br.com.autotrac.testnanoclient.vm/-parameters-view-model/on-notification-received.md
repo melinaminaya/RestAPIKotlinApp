@@ -3,4 +3,4 @@
 # onNotificationReceived
 
 [androidJvm]\
-open override fun [onNotificationReceived](on-notification-received.md)(notification: [ReceivedRequestResponse](../../br.com.autotrac.testnanoclient.dataRemote/-received-request-response/index.md))
+open override fun [onNotificationReceived](on-notification-received.md)(notification: [ReceivedRequestResponse](../../br.com.autotrac.testnanoclient.requestObjects/-received-request-response/index.md))

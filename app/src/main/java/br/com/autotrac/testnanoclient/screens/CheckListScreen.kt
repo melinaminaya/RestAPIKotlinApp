@@ -48,7 +48,7 @@ import br.com.autotrac.testnanoclient.common.DropDownToSet
 import br.com.autotrac.testnanoclient.common.DropdownCard
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.CheckList
 import br.com.autotrac.testnanoclient.dataRemote.LastPosition
 import br.com.autotrac.testnanoclient.dataRemote.ParameterModel
@@ -109,7 +109,7 @@ fun CheckListScreen(
                 .padding(contentPadding),
         ) {
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_GET_CHECKLIST) {
+                DropdownCard(title = ApiEndpoints.REQ_GET_CHECKLIST) {
                     CheckListCard(
                         content = checkList
                     )
@@ -122,7 +122,7 @@ fun CheckListScreen(
                     .padding(16.dp)) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = ApiConstEndpoints.REQ_GET_CURRENT_DATE,
+                            text = ApiEndpoints.REQ_GET_CURRENT_DATE,
                             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -134,21 +134,21 @@ fun CheckListScreen(
                 }
             }
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_GET_POSITION_LAST, content = {
+                DropdownCard(title = ApiEndpoints.REQ_GET_POSITION_LAST, content = {
                     PositionLastCard(
                         content = lastPosition
                     )
                 })
             }
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_POSITION_HISTORY_COUNT, content = {
+                DropdownCard(title = ApiEndpoints.REQ_POSITION_HISTORY_COUNT, content = {
                     PositionCountCard(
                         content = positionHistoryCount
                     )
                 })
             }
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_POSITION_HISTORY_LIST, content = {
+                DropdownCard(title = ApiEndpoints.REQ_POSITION_HISTORY_LIST, content = {
                     PositionHistoryListCard(
                         content = positionHistoryList
                     )
@@ -156,14 +156,14 @@ fun CheckListScreen(
             }
 
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_GET_MCT_PARAMETERS) {
+                DropdownCard(title = ApiEndpoints.REQ_GET_MCT_PARAMETERS) {
                     MctParametersCard(
                         content = mctParams
                     )
                 }
             }
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG) {
+                DropdownCard(title = ApiEndpoints.REQ_CONFIG_SERVICE_LOG) {
                     ConfigServiceLogCard(
                        onSaveClick = { enableLog, maxFileCount, maxFileSize ->
                            viewModel.sendConfigServiceLog(enableLog, maxFileCount, maxFileSize)
@@ -172,7 +172,7 @@ fun CheckListScreen(
                 }
             }
             item {
-                DropdownCard(title = ApiConstEndpoints.REQ_FILE_OPERATION) {
+                DropdownCard(title = ApiEndpoints.REQ_FILE_OPERATION) {
                     FileOperationCard(onSaveClick = { files, options, destination, timeoutMs ->
                         viewModel.sendFileOperation(files, options, destination, timeoutMs)
                     })

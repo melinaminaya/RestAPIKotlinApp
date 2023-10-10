@@ -3,4 +3,4 @@
 # MessageSenderAccess
 
 [androidJvm]\
-fun [MessageSenderAccess](-message-sender-access.md)()
+constructor()

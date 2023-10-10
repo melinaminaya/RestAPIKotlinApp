@@ -2,18 +2,16 @@
 
 # ExternalDeviceCommunicationTypeValues
 
-[androidJvm]\
 object [ExternalDeviceCommunicationTypeValues](index.md)
 
 Valores possíveis para os tipos de comunicação (meio físico) a ser utilizado com o dispositivo externo.
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-s-e-t_-p-a-r-a-m_-e-x-t_-d-e-v_-c-o-m-m_-t-y-p-e.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.GET_PARAM_EXT_DEV_COMM_TYPE](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-e-x-t_-d-e-v_-c-o-m-m_-t-y-p-e.md) |
+| [ApiEndpoints.Companion.SET_PARAM_EXT_DEV_COMM_TYPE](../../-api-endpoints/-companion/-s-e-t_-p-a-r-a-m_-e-x-t_-d-e-v_-c-o-m-m_-t-y-p-e.md) |
 
 ## Properties
 

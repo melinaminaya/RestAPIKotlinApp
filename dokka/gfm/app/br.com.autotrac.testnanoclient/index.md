@@ -1,6 +1,6 @@
 //[app](../../index.md)/[br.com.autotrac.testnanoclient](index.md)
 
-# Package br.com.autotrac.testnanoclient
+# Package-level declarations
 
 ## Types
 
@@ -15,5 +15,5 @@
 
 | Name | Summary |
 |---|---|
-| [NanoApp](-nano-app.md) | [androidJvm]<br>@Composable<br>fun [NanoApp](-nano-app.md)() |
-| [NanoPreview](-nano-preview.md) | [androidJvm]<br>@Preview(showBackground = true)<br>@Composable<br>fun [NanoPreview](-nano-preview.md)() |
+| [NanoApp](-nano-app.md) | [androidJvm]<br>@[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)<br>fun [NanoApp](-nano-app.md)() |
+| [NanoPreview](-nano-preview.md) | [androidJvm]<br>@[Preview](https://developer.android.com/reference/kotlin/androidx/compose/ui/tooling/preview/Preview.html)(showBackground = true)<br>@[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)<br>fun [NanoPreview](-nano-preview.md)() |

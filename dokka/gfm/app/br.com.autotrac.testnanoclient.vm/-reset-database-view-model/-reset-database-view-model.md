@@ -3,4 +3,4 @@
 # ResetDatabaseViewModel
 
 [androidJvm]\
-fun [ResetDatabaseViewModel](-reset-database-view-model.md)()
+constructor()

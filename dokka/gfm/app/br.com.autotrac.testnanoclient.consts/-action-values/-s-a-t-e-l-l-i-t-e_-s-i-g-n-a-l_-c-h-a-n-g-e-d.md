@@ -12,3 +12,14 @@ Mudanca no sinal do satélite.
 0: Sem sinal.
 
 1: Com sinal.
+
+#### Parameters
+
+androidJvm
+
+| | |
+|---|---|
+| Param1 | Status do sinal. |
+| Param2 | Não utilizado. |
+| Param3 | Não utilizado. |
+| Param4 | Não utilizado. |

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.LastPosition
 import br.com.autotrac.testnanoclient.dataRemote.PositionHistory
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
@@ -37,7 +37,7 @@ open class LastPositionViewModel: ViewModel() {
 
     suspend fun fetchPositionLast() {
 
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_GET_POSITION_LAST,
+        senderAccess.sendRequest(ApiEndpoints.REQ_GET_POSITION_LAST,
             ActionValues.PositionSourceType.GPS , null, null, null)
 
         val fetchedMessages: LastPosition? = fetchDataFromDataSource()
@@ -46,7 +46,7 @@ open class LastPositionViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSource(): LastPosition? {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_GET_POSITION_LAST)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_POSITION_LAST)
 //        val jsonOnLaunched =  gson.toJson(valueOnLaunched)
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
         mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true)
@@ -79,7 +79,7 @@ open class LastPositionViewModel: ViewModel() {
 
     suspend fun fetchPositionHistoryCount() {
 
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_POSITION_HISTORY_COUNT,2 ,
+        senderAccess.sendRequest(ApiEndpoints.REQ_POSITION_HISTORY_COUNT,2 ,
             null,
             null,
             null)
@@ -90,7 +90,7 @@ open class LastPositionViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSourceCount(): String {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_POSITION_HISTORY_COUNT)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_POSITION_HISTORY_COUNT)
 //        val jsonOnLaunched =  gson.toJson(valueOnLaunched)
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
         mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true)
@@ -113,7 +113,7 @@ open class LastPositionViewModel: ViewModel() {
      */
     suspend fun fetchPositionHistoryList() {
 
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_POSITION_HISTORY_LIST,0 ,
+        senderAccess.sendRequest(ApiEndpoints.REQ_POSITION_HISTORY_LIST,0 ,
             4, null, null)
 
         val fetchedMessages: List<PositionHistory>? = fetchDataFromDataSourceList()
@@ -122,7 +122,7 @@ open class LastPositionViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSourceList(): List<PositionHistory>? {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_POSITION_HISTORY_LIST)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_POSITION_HISTORY_LIST)
 //        val jsonOnLaunched =  gson.toJson(valueOnLaunched)
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
         mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true)

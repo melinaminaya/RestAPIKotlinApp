@@ -7,10 +7,19 @@ const val [FORM_RECEIVED](-f-o-r-m_-r-e-c-e-i-v-e-d.md): [Int](https://kotlinlan
 
 Um formulário foi recebido ou atualizado.
 
-## See also
+#### Parameters
 
 androidJvm
 
 | | |
 |---|---|
-| [br.com.autotrac.testnanoclient.dataRemote.IntegrationForm](../../br.com.autotrac.testnanoclient.dataRemote/-integration-form/code.md) |  |
+| Param1 | Código do formulário no banco de dados. |
+| Param2 | Não utilizado. |
+| Param3 | Não utilizado. |
+| Param4 | Não utilizado. |
+
+#### See also
+
+| |
+|---|
+| [IntegrationForm.code](../../br.com.autotrac.testnanoclient.dataRemote/-integration-form/code.md) |

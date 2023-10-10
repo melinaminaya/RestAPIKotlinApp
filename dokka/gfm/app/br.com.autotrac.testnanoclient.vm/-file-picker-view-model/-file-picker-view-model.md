@@ -3,4 +3,4 @@
 # FilePickerViewModel
 
 [androidJvm]\
-fun [FilePickerViewModel](-file-picker-view-model.md)()
+constructor()

@@ -5,7 +5,7 @@
 [androidJvm]\
 object [ValuesBaptismStatusParam1](index.md)
 
-Status retornados pelo Param1 de ação [ActionValues.BAPTISM_STATUS](../-b-a-p-t-i-s-m_-s-t-a-t-u-s.md). Utilizado também no retorno da [ApiConstEndpoints.GET_PARAM_IS_BAPTIZED](../../-api-const-endpoints/-companion/-g-e-t_-p-a-r-a-m_-i-s_-b-a-p-t-i-z-e-d.md) .
+Status retornados pelo Param1 de ação [ActionValues.BAPTISM_STATUS](../-b-a-p-t-i-s-m_-s-t-a-t-u-s.md). Utilizado também no retorno da [ApiEndpoints.GET_PARAM_IS_BAPTIZED](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-i-s_-b-a-p-t-i-z-e-d.md) .
 
 ## Properties
 

@@ -3,7 +3,13 @@
 # Error
 
 [androidJvm]\
-data class [Error](index.md)(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) : [ParseResult](../index.md)
+data class [Error](index.md)(val errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) : [ParseResult](../index.md)
+
+## Constructors
+
+| | |
+|---|---|
+| [Error](-error.md) | [androidJvm]<br>constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
 
 ## Properties
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.JsonParser
@@ -48,7 +48,7 @@ open class MessageViewModel (
     // Function to fetch messages
     suspend fun fetchMessages() {
         senderAccess.sendRequest(
-            ApiConstEndpoints.REQ_MESSAGE_LIST, 0,
+            ApiEndpoints.REQ_MESSAGE_LIST, 0,
             false, null, null)
 //        sendMessageAndWait("messageList")
         // Replace with your logic to fetch messages from a data source
@@ -62,7 +62,7 @@ open class MessageViewModel (
 
     }
     suspend fun fetchOutboxMessages() {
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_MESSAGE_LIST, 0,
+        senderAccess.sendRequest(ApiEndpoints.REQ_MESSAGE_LIST, 0,
             true, null, null)
 
         val fetchedMessages: List<IntegrationMessage>? = fetchDataFromDataSourceOutbox()
@@ -106,7 +106,7 @@ open class MessageViewModel (
     }
     suspend fun fetchDataFromDataSource(): List<IntegrationMessage>? {
         delay(500)
-          val  valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_MESSAGE_LIST_INBOX)
+          val  valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_LIST_INBOX)
 
         val jsonOnLaunched = gson.toJson(valueOnLaunched)
         val dateFormat = SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.ENGLISH)
@@ -117,7 +117,7 @@ open class MessageViewModel (
     }
     private suspend fun fetchDataFromDataSourceOutbox(): List<IntegrationMessage>? {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_MESSAGE_LIST_OUTBOX)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_LIST_OUTBOX)
 
         val jsonOnLaunched = gson.toJson(valueOnLaunched)
         val dateFormat = SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.ENGLISH)
@@ -128,12 +128,12 @@ open class MessageViewModel (
     }
 
     private fun deleteMessageFromDataSource(message: IntegrationMessage) {
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_MESSAGE_DELETE,
+        senderAccess.sendRequest(ApiEndpoints.REQ_MESSAGE_DELETE,
             message.code, null, null, null)
     }
 
     private fun markMessageAsReadInDataSource(message: IntegrationMessage) {
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_MESSAGE_SET_AS_READ,
+        senderAccess.sendRequest(ApiEndpoints.REQ_MESSAGE_SET_AS_READ,
             message.code, null, null, null)
     }
 

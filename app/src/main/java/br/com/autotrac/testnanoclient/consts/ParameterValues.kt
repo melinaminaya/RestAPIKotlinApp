@@ -25,8 +25,8 @@ class ParameterValues {
     /**
      * Valores possíveis para os tipos de comunicação (meio físico) a ser
      * utilizado com o dispositivo externo.
-     *@see [ApiConstEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE]
-     *@see [ApiConstEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE]
+     *@see [ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE]
+     *@see [ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE]
      * */
     object ExternalDeviceCommunicationTypeValues {
         /** Utilizar comunicação via interface serial RS232.  */
@@ -61,9 +61,9 @@ class ParameterValues {
     }
     /**
      * Valores possíveis para o parâmetro:
-     * @see ApiConstEndpoints.GET_PARAM_UC_SUBTYPE
-     * @see ApiConstEndpoints.GET_PARAM_WIFI_SSID
-     * @see ApiConstEndpoints.SET_PARAM_WIFI_SSID
+     * @see ApiEndpoints.GET_PARAM_UC_SUBTYPE
+     * @see ApiEndpoints.GET_PARAM_WIFI_SSID
+     * @see ApiEndpoints.SET_PARAM_WIFI_SSID
      * */
     object CmuSubtypeValues {
 
@@ -78,7 +78,7 @@ class ParameterValues {
     }
 
     /** Tipos de redes de comunicação disponiveis.
-     * @see ApiConstEndpoints.GET_PARAM_CURRENT_COMM_MODE
+     * @see ApiEndpoints.GET_PARAM_CURRENT_COMM_MODE
      * */
     object ValuesNetworkTypes {
         /** Nenhuma/Sem conexão.  */
@@ -92,7 +92,7 @@ class ParameterValues {
     }
 
     /** Tipos possiveis de conexão.
-     * @see ApiConstEndpoints.GET_PARAM_LAST_SAT_CONNECTION_STATUS
+     * @see ApiEndpoints.GET_PARAM_LAST_SAT_CONNECTION_STATUS
      * */
     object ValuesConnectionStates {
         /** Conexão fisica no estado desconectado.  */
@@ -109,7 +109,7 @@ class ParameterValues {
     }
 
     /**
-     * Valores possíveis para o [ApiConstEndpoints.GET_PARAM_HAS_UPDATE_PENDING].
+     * Valores possíveis para o [ApiEndpoints.GET_PARAM_HAS_UPDATE_PENDING].
      * */
     object HasUpdatePendingValues {
         /** Nenhuma solicitação de atualização realizada.  */
@@ -131,7 +131,7 @@ class ParameterValues {
         const val WAITING_BOOT = 5
     }
     /**
-     * Possíveis valores para [ApiConstEndpoints.GET_PARAM_HW_CONTROL_DISABLE].
+     * Possíveis valores para [ApiEndpoints.GET_PARAM_HW_CONTROL_DISABLE].
      * Mapa de bits. Pode ser uma combinação de um dos valores.
      * Um bit setado indica que o gerenciamento do dispositivo em questão
      * não deve ser executado.
@@ -154,7 +154,7 @@ class ParameterValues {
     }
 
     /** Indica se o Mct está com sinal ou não (=0 sem sinal, =1 com sinal).
-     * @see [ApiConstEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]
+     * @see [ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]
      * */
     object MctSignalValues {
         const val MCT_SIGNAL_OFF = 0
@@ -164,8 +164,8 @@ class ParameterValues {
 
     /**
      * Indica se o uso da VPN pelo serviço de comunicação é permitido ou não.
-     *@see [ApiConstEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
-     *@see [ApiConstEndpoints.SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
+     *@see [ApiEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
+     *@see [ApiEndpoints.SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
      * O valor 1 desabilita o uso da VPN pelo serviço de comunicação e o valor 0 habilita.
      * Esta opção deve ser utilizada quando operações envolvendo o uso simultâneo do HotSpot WiFi e da conexão celular.
      * Logo que possível o uso da VPN deve ser habilitado (configurando o valor deste parâmetro como 0), caso seja desejável o seu uso.
@@ -177,7 +177,7 @@ class ParameterValues {
     /**
      * Indica o status atual da conexão VPN (=0 desconectada, =1 conectada).
      *
-     * @see [ApiConstEndpoints.GET_PARAM_VPN_CONNECTION_STATUS]
+     * @see [ApiEndpoints.GET_PARAM_VPN_CONNECTION_STATUS]
      */
     object VpnConnectionStatusValues {
         const val VPN_DISCONNECTED = 0
@@ -188,8 +188,8 @@ class ParameterValues {
     /**
      * Desabilita o uso da rede WiFi. (=0 habilita o uso, =1 desabilita o uso. Aplicações externas podem utilizar o
      * WiFi.)
-     *@see [ApiConstEndpoints.GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]
-     *@see [ApiConstEndpoints.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]
+     *@see [ApiEndpoints.GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]
+     *@see [ApiEndpoints.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]
      */
     object WifiDisableValues {
         const val ENABLE_WIFI = 0

@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.NanoHttpClient
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
-import br.com.autotrac.testnanoclient.dataRemote.RequestObject
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
 import br.com.autotrac.testnanoclient.screens.messageOnPattern
@@ -42,7 +42,7 @@ open class HttpTestViewModel: ViewModel() {
         val reqMessageCountFilter = RequestObject(false, 3, null, null)
         var fetchRequestResponse: String = withContext(Dispatchers.IO) {
             NanoHttpClient.sendGetRequestHttp(
-                ApiConstEndpoints.REQ_MESSAGE_COUNT,
+                ApiEndpoints.REQ_MESSAGE_COUNT,
                 reqMessageCountFilter
             )
         }
@@ -54,7 +54,7 @@ open class HttpTestViewModel: ViewModel() {
             val result =
                 parseOnMessage.parseMessage(fetchRequestResponse)
             if (result == ParseResult.Ok){
-                val valueResponse =  ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ApiConstEndpoints.REQ_MESSAGE_COUNT).toString()).toString()
+                val valueResponse =  ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_COUNT).toString()).toString()
                 _reqMessageCount.value = valueResponse
             }else{
                 Log.e("ParseOnMessage", "Error on parse")
@@ -70,7 +70,7 @@ open class HttpTestViewModel: ViewModel() {
     suspend fun fetchRequest(url: String, requestObject: RequestObject, context: Context) {
 
         when (url) {
-            ApiConstEndpoints.SEND_MESSAGE -> {
+            ApiEndpoints.SEND_MESSAGE -> {
                 val messageParseResult = gson.toJson(
                     messageOnPattern(
                         requestObject.param1.toString(),
@@ -96,7 +96,7 @@ open class HttpTestViewModel: ViewModel() {
                     _responseReq.value = "Error: ${e.message}"
                 }
             }
-            ApiConstEndpoints.SEND_FILE_MESSAGE -> {
+            ApiEndpoints.SEND_FILE_MESSAGE -> {
                 val messageParseResult = gson.toJson(
                     messageOnPattern(
                         requestObject.param1.toString(),

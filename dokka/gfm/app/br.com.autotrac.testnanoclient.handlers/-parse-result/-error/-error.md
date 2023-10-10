@@ -3,4 +3,4 @@
 # Error
 
 [androidJvm]\
-fun [Error](-error.md)(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))
+constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))

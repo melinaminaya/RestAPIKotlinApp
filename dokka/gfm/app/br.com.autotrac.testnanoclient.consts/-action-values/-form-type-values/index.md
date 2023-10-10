@@ -2,18 +2,15 @@
 
 # FormTypeValues
 
-[androidJvm]\
 object [FormTypeValues](index.md)
 
 Valores do tipo de formulário.
 
-## See also
+#### See also
 
-androidJvm
-
-| | |
-|---|---|
-| [br.com.autotrac.testnanoclient.consts.ApiConstEndpoints.Companion](../../-api-const-endpoints/-companion/-r-e-q_-f-o-r-m_-l-i-s-t.md) |  |
+| |
+|---|
+| [ApiEndpoints.Companion.REQ_FORM_LIST](../../-api-endpoints/-companion/-r-e-q_-f-o-r-m_-l-i-s-t.md) |
 
 ## Properties
 

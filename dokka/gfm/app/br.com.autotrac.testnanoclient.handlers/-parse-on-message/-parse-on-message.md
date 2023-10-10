@@ -3,4 +3,4 @@
 # ParseOnMessage
 
 [androidJvm]\
-fun [ParseOnMessage](-parse-on-message.md)()
+constructor()

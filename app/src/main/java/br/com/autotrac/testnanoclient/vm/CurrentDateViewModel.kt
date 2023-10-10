@@ -3,7 +3,7 @@ package br.com.autotrac.testnanoclient.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -25,7 +25,7 @@ open class CurrentDateViewModel: ViewModel() {
 
 
     suspend fun fetchCurrentDate() {
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_GET_CURRENT_DATE, null,
+        senderAccess.sendRequest(ApiEndpoints.REQ_GET_CURRENT_DATE, null,
             null, null, null)
 
         val fetchedMessages: String = fetchDataFromDataSource()
@@ -34,7 +34,7 @@ open class CurrentDateViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSource(): String {
         delay(500)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_GET_CURRENT_DATE)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_CURRENT_DATE)
         val jsonOnLaunched =  gson.toJson(valueOnLaunched)
         val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
         val date = dateFormat.parse(jsonOnLaunched.trim('"'))

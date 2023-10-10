@@ -7,10 +7,19 @@ const val [FORM_DELETED](-f-o-r-m_-d-e-l-e-t-e-d.md): [Int](https://kotlinlang.o
 
 Um formulário foi removido.
 
-## See also
+#### Parameters
 
 androidJvm
 
 | | |
 |---|---|
-| [br.com.autotrac.testnanoclient.dataRemote.IntegrationForm](../../br.com.autotrac.testnanoclient.dataRemote/-integration-form/code.md) |  |
+| Param1 | Código do formulário no banco de dados. |
+| Param2 | Não utilizado. |
+| Param3 | Não utilizado. |
+| Param4 | Não utilizado. |
+
+#### See also
+
+| |
+|---|
+| [IntegrationForm.code](../../br.com.autotrac.testnanoclient.dataRemote/-integration-form/code.md) |

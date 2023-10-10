@@ -3,7 +3,7 @@ package br.com.autotrac.testnanoclient.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.ParameterModel
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
@@ -25,7 +25,7 @@ open class MctParamsViewModel: ViewModel() {
 
     suspend fun fetchData() {
         senderAccess.sendRequest(
-            ApiConstEndpoints.REQ_GET_MCT_PARAMETERS,
+            ApiEndpoints.REQ_GET_MCT_PARAMETERS,
             null, null, null, null)
 
         val fetchedMessages: List<ParameterModel> = fetchDataFromDataSource()
@@ -34,7 +34,7 @@ open class MctParamsViewModel: ViewModel() {
 
     private suspend fun fetchDataFromDataSource(): List<ParameterModel> {
         delay(1000)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_GET_MCT_PARAMETERS)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_MCT_PARAMETERS)
         val jsonOnLaunched = gson.toJson(valueOnLaunched)
 
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)

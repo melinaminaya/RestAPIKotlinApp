@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import com.fasterxml.jackson.core.type.TypeReference
@@ -21,7 +21,7 @@ class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
     private val mapper = ObjectMapper()
 
 
-    private val parameterListGet = ApiConstEndpoints.parametersList.filter { it.startsWith("GET") }
+    private val parameterListGet = EndpointsLists.parametersList.filter { it.startsWith("GET") }
     private val parameterLiveDataMap = HashMap<String, MutableLiveData<String>>()
 
     private val _isBaptizedValue = MutableLiveData<String>("") // Initialize with default value

@@ -55,7 +55,8 @@ import br.com.autotrac.testnanoclient.common.CustomAlert
 import br.com.autotrac.testnanoclient.common.DefaultButton
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.common.ToggleCard
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiConstants
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.ResetDatabaseViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
@@ -152,9 +153,9 @@ fun HomeScreen(
                                 isLoading.value = true
                                 val thread = Thread {
                                     try {
-                                        val intent = Intent(ApiConstEndpoints.INTENT_SVC_START)
-                                        intent.setPackage(ApiConstEndpoints.INTENT_SVC_PACKAGE_NAME)
-                                        intent.putExtra(ApiConstEndpoints.INTENT_ACTION_NEED_KNOX, true)
+                                        val intent = Intent(ApiConstants.INTENT_SVC_START)
+                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             context.startForegroundService(intent)
                                         } else {
@@ -172,9 +173,9 @@ fun HomeScreen(
                             } else {
                                 val thread = Thread {
                                     try {
-                                        val intent = Intent(ApiConstEndpoints.INTENT_SVC_STOP)
-                                        intent.setPackage(ApiConstEndpoints.INTENT_SVC_PACKAGE_NAME)
-                                        intent.putExtra(ApiConstEndpoints.INTENT_ACTION_NEED_KNOX, true)
+                                        val intent = Intent(ApiConstants.INTENT_SVC_STOP)
+                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             context.startForegroundService(intent)
                                         } else {

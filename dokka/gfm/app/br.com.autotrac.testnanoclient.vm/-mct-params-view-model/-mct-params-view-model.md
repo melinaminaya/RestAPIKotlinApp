@@ -3,4 +3,4 @@
 # MctParamsViewModel
 
 [androidJvm]\
-fun [MctParamsViewModel](-mct-params-view-model.md)()
+constructor()

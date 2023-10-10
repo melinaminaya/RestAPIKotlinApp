@@ -5,11 +5,13 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.ChunkObject
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiConstants
+import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
 import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
-import br.com.autotrac.testnanoclient.dataRemote.RequestObject
-import br.com.autotrac.testnanoclient.dataRemote.SendObject
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
+import br.com.autotrac.testnanoclient.requestObjects.SendObject
+import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
 import br.com.autotrac.testnanoclient.security.SSLSetup
@@ -43,7 +45,7 @@ import javax.net.ssl.TrustManager
  */
 
 object NanoWebsocketClient{
-     private const val serverUrl = ApiConstEndpoints.BASE_URL
+     private const val serverUrl = ApiConstants.BASE_URL
     private var webSocketClient: WebSocket? = null
     val gson: Gson = Gson()
     const val TAG = "NanoWebsocket"
@@ -174,7 +176,7 @@ object NanoWebsocketClient{
     fun sendMessageFromClient() {
         val notificationSubscription =
             SendObject(
-                ApiConstEndpoints.NOTIFICATION,
+                ApiEndpoints.NOTIFICATION,
                 listOf(
                     ActionValues.MESSAGE_STATUS, ActionValues.BAPTISM_STATUS,
                     ActionValues.COMMUNICATION_MODE_CHANGED, ActionValues.DATE_TIME_CHANGED,
@@ -236,7 +238,7 @@ object NanoWebsocketClient{
                             data = chunkData
                         )
 
-                        val myObject = SendObject(ApiConstEndpoints.SEND_FILE_MESSAGE, chunkObject)
+                        val myObject = SendObject(ApiEndpoints.SEND_FILE_MESSAGE, chunkObject)
                         val response = gson.toJson(myObject)
                         if (webSocketClient != null) {
                             webSocketClient!!.send(response)
@@ -253,7 +255,7 @@ object NanoWebsocketClient{
                         data = ""
                     )
 
-                    val myObject = SendObject(ApiConstEndpoints.SEND_FILE_MESSAGE, endMarkerObject)
+                    val myObject = SendObject(ApiEndpoints.SEND_FILE_MESSAGE, endMarkerObject)
                     val response = gson.toJson(myObject)
                     if (webSocketClient != null) {
                         webSocketClient!!.send(response)
@@ -269,7 +271,7 @@ object NanoWebsocketClient{
                     data = ""
                 )
 
-                val myObject = SendObject(ApiConstEndpoints.SEND_MESSAGE, messageToSend)
+                val myObject = SendObject(ApiEndpoints.SEND_MESSAGE, messageToSend)
                 val response = gson.toJson(myObject)
                 if (webSocketClient != null) {
                     webSocketClient!!.send(response)
@@ -284,8 +286,8 @@ object NanoWebsocketClient{
     }
 
     fun sendMessageRequest(param: String, param1: Any?, param2: Any?, param3: Any?, param4: Any?) {
-        val listOfParams = ApiConstEndpoints.parametersList
-        val listOfRequests = ApiConstEndpoints.requestsList
+        val listOfParams = EndpointsLists.parametersList
+        val listOfRequests = EndpointsLists.requestsList
         try {
             val requestObject = when (param) {
                 in listOfParams -> RequestObject(param1, param2, param3, param4)
@@ -320,7 +322,7 @@ object NanoWebsocketClient{
         coroutineScope.launch {
             while (true) {
                 // Send your request on the WebSocket
-                sendMessageRequest(ApiConstEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
+                sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
 
                 delay(10000)
             }
@@ -354,7 +356,7 @@ object NanoWebsocketClient{
                 .build()
 
             val request = Request.Builder()
-            .url("$serverUrl/${ApiConstEndpoints.AUTH_ENDPOINT}") // Replace with your server's endpoint URL
+            .url("$serverUrl/${ApiConstants.AUTH_ENDPOINT}") // Replace with your server's endpoint URL
             .addHeader("user-agent", System.getProperty("http.agent")!!)
             .addHeader("package-name", packageName)
             .addHeader("Accept-Language", preferredLanguage)

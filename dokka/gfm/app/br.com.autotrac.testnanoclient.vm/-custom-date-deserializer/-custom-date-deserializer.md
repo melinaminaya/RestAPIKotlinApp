@@ -3,4 +3,4 @@
 # CustomDateDeserializer
 
 [androidJvm]\
-fun [CustomDateDeserializer](-custom-date-deserializer.md)()
+constructor()

@@ -3,4 +3,4 @@
 # connectionDisposable
 
 [androidJvm]\
-var [connectionDisposable](connection-disposable.md): Disposable? = null
+var [connectionDisposable](connection-disposable.md): Disposable?

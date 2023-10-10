@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.autotrac.testnanoclient.common.DropdownCard
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import com.google.gson.Gson
 
 /**
@@ -54,7 +54,7 @@ fun FilterSelectionBox(
 
             Spacer(modifier = Modifier.height(16.dp))
             when (optionSelected) {
-                ApiConstEndpoints.REQ_MESSAGE_COUNT ->{
+                ApiEndpoints.REQ_MESSAGE_COUNT ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -86,7 +86,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_MESSAGE_LIST ->{
+                ApiEndpoints.REQ_MESSAGE_LIST ->{
                     // Text field for 'param1' parameter
                     TextField(
                         value = param1,
@@ -132,7 +132,7 @@ fun FilterSelectionBox(
                             }
                     )
                 }
-                ApiConstEndpoints.REQ_MESSAGE_DELETE ->{
+                ApiEndpoints.REQ_MESSAGE_DELETE ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -146,7 +146,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_MESSAGE_SET_AS_READ ->{
+                ApiEndpoints.REQ_MESSAGE_SET_AS_READ ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -160,7 +160,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_FILE_OPERATION ->{
+                ApiEndpoints.REQ_FILE_OPERATION ->{
                     // Text field for 'param1' parameter
                     TextField(
                         value = param1,
@@ -220,7 +220,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_CONFIG_SERVICE_LOG ->{
+                ApiEndpoints.REQ_CONFIG_SERVICE_LOG ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -263,7 +263,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_FORM_LIST->{
+                ApiEndpoints.REQ_FORM_LIST->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -307,7 +307,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_GET_POSITION_LAST->{
+                ApiEndpoints.REQ_GET_POSITION_LAST->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -321,7 +321,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_POSITION_HISTORY_COUNT ->{
+                ApiEndpoints.REQ_POSITION_HISTORY_COUNT ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -335,7 +335,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.REQ_POSITION_HISTORY_LIST ->{
+                ApiEndpoints.REQ_POSITION_HISTORY_LIST ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -367,7 +367,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE ->{
+                ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -381,7 +381,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S ->{
+                ApiEndpoints.SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -394,7 +394,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION ->{
+                ApiEndpoints.SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -407,7 +407,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH ->{
+                ApiEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -420,7 +420,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_WIFI_SSID ->{
+                ApiEndpoints.SET_PARAM_WIFI_SSID ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -435,7 +435,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION ->{
+                ApiEndpoints.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -448,7 +448,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG ->{
+                ApiEndpoints.SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG ->{
                     TextField(
                         value = param1,
                         onValueChange = { onParamsChanged(it, param2, param3, param4) },
@@ -462,7 +462,7 @@ fun FilterSelectionBox(
                         }
                     )
                 }
-                ApiConstEndpoints.SEND_MESSAGE ->{
+                ApiEndpoints.SEND_MESSAGE ->{
                     TextField(
                         value = param1,
                         onValueChange = {onParamsChanged(it, param2, param3, param4)},
@@ -480,7 +480,7 @@ fun FilterSelectionBox(
                 /**
                  * Endpoint com envio via websocket.
                  */
-                ApiConstEndpoints.SEND_FILE_MESSAGE ->{
+                ApiEndpoints.SEND_FILE_MESSAGE ->{
                     TextField(
                         value = param1,
                         onValueChange = {

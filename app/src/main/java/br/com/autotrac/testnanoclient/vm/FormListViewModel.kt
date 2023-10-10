@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiConstEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.dataRemote.IntegrationForm
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
@@ -25,7 +25,7 @@ open class FormListViewModel (
     private val mapper = ObjectMapper()
 
     suspend fun fetchMessages() {
-        senderAccess.sendRequest(ApiConstEndpoints.REQ_FORM_LIST, false, 0,
+        senderAccess.sendRequest(ApiEndpoints.REQ_FORM_LIST, false, 0,
             ActionValues.FormTypeValues.FIXED_TO_MOBILE_TXT, null)
 //        sendMessageAndWait("messageList")
         // Replace with your logic to fetch messages from a data source
@@ -34,7 +34,7 @@ open class FormListViewModel (
     }
     private suspend fun fetchDataFromDataSource(): List<IntegrationForm>? {
         delay(1000)
-        val valueOnLaunched = ObservableUtil.getValue(ApiConstEndpoints.REQ_FORM_LIST)
+        val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_FORM_LIST)
         return if (valueOnLaunched != null  && valueOnLaunched != "[]") {
 
             val jsonOnLaunched = gson.toJson(valueOnLaunched)

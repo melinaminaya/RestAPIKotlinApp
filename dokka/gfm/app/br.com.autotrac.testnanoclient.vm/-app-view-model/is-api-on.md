@@ -3,4 +3,4 @@
 # isApiOn
 
 [androidJvm]\
-var [isApiOn](is-api-on.md): &lt;ERROR CLASS&gt;
+var [isApiOn](is-api-on.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
