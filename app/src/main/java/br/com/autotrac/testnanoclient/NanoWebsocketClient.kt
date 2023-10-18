@@ -52,9 +52,7 @@ object NanoWebsocketClient{
     private const val MAX_RETRIES = 5
     private const val RETRY_DELAY_MS: Long = 5000 // 1 second
     private val client = OkHttpClient.Builder()
-    //TODO: implementa novo package com senha nova.
-    const val packageName = "com.example.nanoclientkotlin"
-//    const val packageName = "br.com.autotrac.testnanoclient"
+    private const val packageName = "br.com.autotrac.testnanoclient"
 
     private val webSocketConnectionSubject: BehaviorSubject<Boolean> =
         BehaviorSubject.createDefault(false)
@@ -159,14 +157,14 @@ object NanoWebsocketClient{
      *
      * [ActionValues.MESSAGE_STATUS] : retorna [ActionValues.MessageStatusValues]
      *
-     * [ActionValues.COMMUNICATION_MODE_CHANGED] : [ActionValues.ValuesNetworkTypes]
+     * [ActionValues.COMMUNICATION_MODE_CHANGED] : [br.com.autotrac.testnanoclient.consts.ParameterValues.ValuesNetworkTypes]
      *
      * [ActionValues.FILE_OPERATION_STATUS] : [ActionValues.ValuesFileOperationStatusParam1]
      *
      * [ActionValues.IGNITION_STATUS] : [ActionValues.ValuesIgnitionStatusParam1]
      *
-     * [ActionValues.NETWORK_CONNECTION_STATUS] : [ActionValues.ValuesNetworkTypes] e
-     * [ActionValues.ValuesConnectionStates]
+     * [ActionValues.NETWORK_CONNECTION_STATUS] : [br.com.autotrac.testnanoclient.consts.ParameterValues.ValuesNetworkTypes] e
+     * [br.com.autotrac.testnanoclient.consts.ParameterValues.ValuesConnectionStates]
      *
      * [ActionValues.SYSTEM_RESOURCE_REQ_STATUS] : [ActionValues.ValuesSysResourceReqParam1]
      * e [ActionValues.ValuesSysResourceStatusParam2]
@@ -360,8 +358,7 @@ object NanoWebsocketClient{
             .addHeader("user-agent", System.getProperty("http.agent")!!)
             .addHeader("package-name", packageName)
             .addHeader("Accept-Language", preferredLanguage)
-            .addHeader("password", "K1cFXhcxJz5DKxMBKQILWjEBDwc3TQkKAR8ZGw==")
-//            .post(requestBody)
+            .addHeader("password", "KkpGEx0kaDJGMxlbNQIGGyYIFRY3WAwKFh8ZEDg/")
             .build()
 
             var response: Response? = null
@@ -378,19 +375,19 @@ object NanoWebsocketClient{
 //                        return tokenReceived
                         // Check if the content type is JSON
                         val contentType = response.header("Content-Type")
-                        if (contentType != null && contentType.contains("application/json")) {
+                        return if (contentType != null && contentType.contains("application/json")) {
                             // Parse the JSON response body to extract the authorization token and message
                             val responseBody = response.body?.string()
                             val jsonResponse = JSONObject(responseBody)
                             val tokenReceived = jsonResponse.optString("token")
-//                            val messageReceived = jsonResponse.optString("message")
+                    //                            val messageReceived = jsonResponse.optString("message")
 
                             Log.d(TAG, "Received token: $tokenReceived")
-//                            Log.d(TAG, "Received message: $messageReceived")
+                    //                            Log.d(TAG, "Received message: $messageReceived")
 
-                            return tokenReceived
+                            tokenReceived
                         } else {
-                            return null
+                            null
                         }
 
                     } else {
@@ -424,7 +421,9 @@ object NanoWebsocketClient{
         }
     }
     fun isWebSocketConnected(): Boolean {
-        return webSocketClient?.send("Ping") ?: false
+        val sendObject = SendObject(ApiEndpoints.REQ_MESSAGE_COUNT, RequestObject(false, 3, null, null))
+        val objectRequestJson = gson.toJson(sendObject)
+        return webSocketClient?.send(objectRequestJson) ?: false
     }
 
 }

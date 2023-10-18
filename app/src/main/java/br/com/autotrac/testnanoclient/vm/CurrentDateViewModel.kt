@@ -37,14 +37,17 @@ open class CurrentDateViewModel: ViewModel() {
         val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_CURRENT_DATE)
         val jsonOnLaunched =  gson.toJson(valueOnLaunched)
         val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
-        val date = dateFormat.parse(jsonOnLaunched.trim('"'))
+//        val date = dateFormat.parse(jsonOnLaunched.trim('"'))
 
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
+        return if (jsonOnLaunched != null && jsonOnLaunched.isNotBlank()) {
 
-        return mapper.readValue(
-            jsonOnLaunched,
-            object : TypeReference<String>() {})
+                val result = mapper.readValue(jsonOnLaunched, String::class.java)
+                result
 
+        } else {
+            "JSON string is null"
+        }
     }
 
 }

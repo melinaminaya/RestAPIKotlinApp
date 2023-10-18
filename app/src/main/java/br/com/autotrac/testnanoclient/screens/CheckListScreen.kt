@@ -210,27 +210,30 @@ fun FileOperationCard(
     val pathDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
 
     var filesOperation by rememberSaveable {
-        mutableStateOf(ActionValues.FileOperationFiles.SVC_DATABASE)
+        mutableStateOf(ActionValues.FileOperationFiles.API_LOG.toString())
     }
     var optionsOperation by rememberSaveable {
-        mutableStateOf(listOfOptions[1])
+        mutableStateOf(listOfOptions[2])
     }
     var selectedOption:Int? by rememberSaveable {
         mutableStateOf(null)
     }
     var destinationOperation by rememberSaveable {
-        mutableStateOf("$pathDir/AutotracMobile/logs.zip")
+        mutableStateOf("$pathDir/AutotracAPI")
     }
     var timeoutMs by rememberSaveable {
-        mutableStateOf(10000)
+        mutableStateOf(0.toString())
     }
+
     Column(modifier = Modifier.padding(16.dp)) {
 
         Text("Files: Mapa de bits ")
 
         TextField(
-            value = filesOperation.toString(),
-            onValueChange = { filesOperation = it.toInt() },
+            value = filesOperation,
+            onValueChange = { newValue ->
+                filesOperation = newValue
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
             ),
@@ -243,7 +246,9 @@ fun FileOperationCard(
         DropDownToSet(
             title = "Options: cópia, zip ou nenhuma. ",
             previousText = optionsOperation,
-            onTextChange = { selectedOption = it.toInt()},
+            onTextChange = {
+                selectedOption = it.toInt()
+            },
             textStatus = optionsOperation ,
             dropdownItems = listOfOptions
         )
@@ -260,9 +265,8 @@ fun FileOperationCard(
 
         Text("Timeout em MS: indica quanto deve aguardar até o fim da operação.")
         TextField(
-            value = timeoutMs.toString(),
-            onValueChange = {
-                timeoutMs = it.toInt()},
+            value = timeoutMs,
+            onValueChange = { timeoutMs = it },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
             ),
@@ -272,7 +276,7 @@ fun FileOperationCard(
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onSaveClick(filesOperation,selectedOption ?: 1,destinationOperation , timeoutMs.toInt()) },
+            onClick = { onSaveClick(filesOperation.toInt(),selectedOption ?: 2 ,destinationOperation , timeoutMs.toInt()) },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Salvar")

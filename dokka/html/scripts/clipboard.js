@@ -51,7 +51,9 @@ const copyAndShowPopup = (element, after) => {
 const hrefWithoutCurrentlyUsedAnchor = () => window.location.href.split('#')[0]
 
 /**
- * Specific changes for client API
+ * Specific changes for client API Documentation.
+ * This script must be paste inside clipboard.js
+ * @author Melina Minaya
  */
 var titleElement = document.querySelector('title');
 
@@ -162,3 +164,4 @@ myMap.forEach(function(elementText, key){
         }
     });
 });
+

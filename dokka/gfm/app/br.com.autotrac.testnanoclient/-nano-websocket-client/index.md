@@ -18,7 +18,6 @@ Melina Minaya.
 | [connectionDisposable](connection-disposable.md) | [androidJvm]<br>var [connectionDisposable](connection-disposable.md): Disposable? |
 | [currentMsgCode](current-msg-code.md) | [androidJvm]<br>var [currentMsgCode](current-msg-code.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [gson](gson.md) | [androidJvm]<br>val [gson](gson.md): Gson |
-| [packageName](package-name.md) | [androidJvm]<br>const val [packageName](package-name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [responseListener](response-listener.md) | [androidJvm]<br>var [responseListener](response-listener.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [TAG](-t-a-g.md) | [androidJvm]<br>const val [TAG](-t-a-g.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 

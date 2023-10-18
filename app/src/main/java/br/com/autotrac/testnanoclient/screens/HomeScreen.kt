@@ -214,7 +214,7 @@ fun HomeScreen(
                                     val thread = Thread {
                                         try {
                                             NanoWebsocketClient.connect()
-                                            Thread.sleep(2000)
+                                            Thread.sleep(10000)
                                             if (NanoWebsocketClient.isWebSocketConnected()) {
                                                 coroutineScope.launch {
                                                     snackbarHostState.showSnackbar(

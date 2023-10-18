@@ -114,13 +114,23 @@ class ApiEndpoints {
 
         /**
          * Copia os arquivos para o diretório especificado.
+         *
+         * Exemplo de requisição HTTP para copiar todos os logs para um diretório específico:
+         * /REQ_FILE_OPERATION,{param3=[/storage/emulated/0/Download/LogA/], param4=[], param1=[7], param2=[1]}
+         *
+         * **Atenção**: Ao indicar o diretório final, utilizar a "/" para finalizar.
+         *
+         * Exemplo de requisição Websocket para zipar todos os arquivos em um arquivo com nome específico:
+         * {"param1":"REQ_FILE_OPERATION","param2":{"param1":7,"param2":1,"param3":"/storage/emulated/0/Download/AutotracA/","param4":0}}
+         *
          * @param param1 (files) - indica quais arquivos devem ser envolvidos na operação.
          * Este parâmetro é um mapa de bits. Mais de um arquivo pode ser especificado utilizando o operador OU bit a bit ("|").
          * @see ActionValues.FileOperationFiles
          * @param param2 (options) - opções a serem utilizadas na operação.
          * @see ActionValues.FileOperationOptions
          * @param param3 (destination) - no caso da opção [ActionValues.FileOperationOptions.COPY_FILES],
-         * é o diretório de destino para os arquivos.
+         * é o diretório de destino para os arquivos. E no caso [ActionValues.FileOperationOptions.ZIP_COMPRESSION],
+         * pode ser um diretório ou o nome do arquivo de zip.
          * @param param4 (timeoutMs) - indica quanto tempo, em ms, que o método deve aguardar até o fim da operação.
          * Se este parâmetro for diferente de 0, o método só retornará quando a operação for concluída ou o timeout expirar.
          * Se este parâmetro for 0, o método retorna imediatamente e o cliente deve aguardar o evento

@@ -28,7 +28,7 @@ class ApiConstants {
         const val INTENT_ACTION_NEED_KNOX:String = "need_knox"
 
         /** URL da API */
-        const val BASE_URL:String = "https://127.0.0.1:8081"
+        const val BASE_URL:String = "https://localhost:8081"
 
         /** Endpoint de Autenticação */
         const val AUTH_ENDPOINT:String = "auth"

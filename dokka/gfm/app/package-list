@@ -624,7 +624,6 @@ $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/disconnect/#/
 $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/getInstance/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/get-instance.md
 $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/gson/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/gson.md
 $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/isWebSocketConnected/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/is-web-socket-connected.md
-$dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/packageName/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/package-name.md
 $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/requestAuthorizationToken/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/request-authorization-token.md
 $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/responseListener/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/response-listener.md
 $dokka.location:br.com.autotrac.testnanoclient/NanoWebsocketClient/retryConnection/#/PointingToDeclaration/app/br.com.autotrac.testnanoclient/-nano-websocket-client/retry-connection.md

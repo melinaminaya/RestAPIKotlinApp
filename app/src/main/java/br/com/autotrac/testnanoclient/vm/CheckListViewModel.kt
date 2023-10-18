@@ -57,7 +57,7 @@ open class CheckListViewModel: ViewModel() {
             enable, maxFileCount, maxFileSize, null)
     }
     fun sendFileOperation(files: Int, options: Int, destination: String, timeoutMS: Int){
-        senderAccess.sendRequest(ApiEndpoints.REQ_CONFIG_SERVICE_LOG,
+        senderAccess.sendRequest(ApiEndpoints.REQ_FILE_OPERATION,
             files, options, destination, timeoutMS)
     }
 
