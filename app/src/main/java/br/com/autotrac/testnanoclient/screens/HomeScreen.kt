@@ -84,6 +84,7 @@ fun HomeScreen(
     val appViewModel = viewModel<AppViewModel>()
     val resetDbResponse by viewModel.resetDatabaseResponse.observeAsState("")
     val isServiceOn = rememberSaveable{ mutableStateOf(false) }
+    val isMobileCommunicatorOn = rememberSaveable{ mutableStateOf(false) }
     val showDialogService = rememberSaveable { mutableStateOf(false) }
 //    var isApiOn = rememberSaveable{ mutableStateOf(false) }
     var isApiOn = appViewModel.isApiOn
@@ -153,7 +154,8 @@ fun HomeScreen(
                                 isLoading.value = true
                                 val thread = Thread {
                                     try {
-                                        val intent = Intent(ApiConstants.INTENT_SVC_START)
+//                                        val intent = Intent(ApiConstants.INTENT_SVC_START)
+                                        val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
                                         intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -173,7 +175,8 @@ fun HomeScreen(
                             } else {
                                 val thread = Thread {
                                     try {
-                                        val intent = Intent(ApiConstants.INTENT_SVC_STOP)
+//                                        val intent = Intent(ApiConstants.INTENT_SVC_STOP)
+                                        val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
                                         intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -189,7 +192,70 @@ fun HomeScreen(
                                 thread.start()
                             }
                         },
-                        text = "Inicia Serviço",
+                        text = "Serviço de Comunicação",
+                        icon = R.drawable.baseline_start_24,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        color = Color(0x86FFFFFF).compositeOver(Color.White),
+                    )
+                }
+            }
+            //Inicializa o módulo de comunicação
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    //TODO:Check if service is On.
+                    ToggleCard(
+                        isChecked = isMobileCommunicatorOn.value,
+                        onCheckedChange = { isChecked ->
+                            isMobileCommunicatorOn.value = isChecked
+
+                            if (isChecked) {
+                                isLoading.value = true
+                                val thread = Thread {
+                                    try {
+                                        val intent = Intent(ApiConstants.INTENT_SVC_START)
+//                                        val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
+                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            context.startForegroundService(intent)
+                                        } else {
+                                            context.startService(intent)
+                                        }
+                                        Log.i(TAG, "Mobile Communicator Started")
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }finally {
+                                        isLoading.value = false
+                                    }
+                                }
+                                thread.start()
+
+                            } else {
+                                val thread = Thread {
+                                    try {
+                                        val intent = Intent(ApiConstants.INTENT_SVC_STOP)
+//                                        val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
+                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            context.startForegroundService(intent)
+                                        } else {
+                                            context.startService(intent)
+                                        }
+                                        Log.i(TAG, "Mobile Communicator Stopped")
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                thread.start()
+                            }
+                        },
+                        text = "Módulo de Comunicação",
                         icon = R.drawable.baseline_start_24,
                         modifier = Modifier
                             .weight(1f)
@@ -260,7 +326,7 @@ fun HomeScreen(
 
                         },
 
-                        text = "Conecta à API",
+                        text = "API de Integração",
                         icon = R.drawable.baseline_private_connectivity_24,
                         modifier = Modifier
                             .weight(1f)
