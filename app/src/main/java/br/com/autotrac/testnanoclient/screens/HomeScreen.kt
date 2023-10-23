@@ -136,7 +136,6 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
         ) {
             //Inicialização do Serviço.
             item {
@@ -154,7 +153,6 @@ fun HomeScreen(
                                 isLoading.value = true
                                 val thread = Thread {
                                     try {
-//                                        val intent = Intent(ApiConstants.INTENT_SVC_START)
                                         val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
                                         intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
@@ -175,7 +173,6 @@ fun HomeScreen(
                             } else {
                                 val thread = Thread {
                                     try {
-//                                        val intent = Intent(ApiConstants.INTENT_SVC_STOP)
                                         val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
                                         intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
@@ -218,7 +215,6 @@ fun HomeScreen(
                                 val thread = Thread {
                                     try {
                                         val intent = Intent(ApiConstants.INTENT_SVC_START)
-//                                        val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
                                         intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -239,7 +235,6 @@ fun HomeScreen(
                                 val thread = Thread {
                                     try {
                                         val intent = Intent(ApiConstants.INTENT_SVC_STOP)
-//                                        val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
                                         intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -441,11 +436,7 @@ fun HomeScreen(
                             .fillMaxWidth(),
                         color = null,
                     ) {
-//                        if (isApiOn.value) {
-                            navigateToHttpTest("httpTest")
-//                        } else {
-//                            showDialogApi.value = true
-//                        }
+                        navigateToHttpTest("httpTest")
                     }
                 }
             }

@@ -31,11 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MessageInboxActivity"
-            android:label="Message Inbox">
-            <!-- Additional activity attributes -->
-        </activity>
     </application>
 
 
