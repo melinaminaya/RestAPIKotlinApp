@@ -1,6 +1,8 @@
 package br.com.autotrac.testnanoclient.common
 
+import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
+import android.os.Build
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,10 +26,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
@@ -38,6 +42,7 @@ fun SwipeItem(
     onMessageDelete: () ->Unit,
     onMessageClick:() ->Unit,
 ){
+    val context = LocalContext.current
     val status = when (message.msgStatusNum) {
         0 -> "N/A"
         1 -> "A enviar"
@@ -50,8 +55,14 @@ fun SwipeItem(
         8 -> "Transmitindo"
         else -> "Erro"
     }
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-    val formattedDate = dateFormat.format(message.createdTime)
+    var dateFormat:SimpleDateFormat?
+    var formattedDate:String? = ""
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        formattedDate = dateFormat.format(message.createdTime)
+    }else{
+        formattedDate = android.text.format.DateFormat.getDateFormat(context).format(message.createdTime)
+    }
     val hasTriedToDismiss = remember { mutableStateOf(false) }
     var hasConfirmedDismissal: Boolean by remember { mutableStateOf(false) }
     val dismissState = rememberDismissState(

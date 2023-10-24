@@ -106,7 +106,9 @@ fun HomeScreen(
                             modifier = Modifier
                                 .size(dimensionResource(id = R.dimen.image_size))
                                 .padding(dimensionResource(id = R.dimen.padding_small)),
-                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            painter = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                                painterResource(R.drawable.ic_launcher_foreground) else
+                                painterResource(id = R.drawable.ic_launcher_foreground_legacy_foreground),
                             contentDescription = null
                         )
                         Text(text = stringResource(R.string.app_name),

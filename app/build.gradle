@@ -11,10 +11,10 @@ android {
 
     defaultConfig {
         applicationId "br.com.autotrac.testnanoclient"
-        minSdk 24
+        minSdk 21
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.00.00"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -50,6 +50,13 @@ android {
     }
     viewBinding {
         enable = true
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            // Modify the APK name based on the variant (e.g., debug, release):${variant.name}
+            def newApkName = "testnanoclient-${defaultConfig.versionName}.apk"
+            outputFileName = newApkName
+        }
     }
 }
 tasks.named("dokkaHtml") {
