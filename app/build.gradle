@@ -54,7 +54,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all {
             // Modify the APK name based on the variant (e.g., debug, release):${variant.name}
-            def newApkName = "testnanoclient-${defaultConfig.versionName}.apk"
+            def newApkName = "testnanoclient-${defaultConfig.versionName}-${variant.name}.apk"
             outputFileName = newApkName
         }
     }
