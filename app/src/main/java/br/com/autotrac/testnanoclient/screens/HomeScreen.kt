@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +51,7 @@ import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.NanoWebsocketClient.TAG
 import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.BadgeText
+import br.com.autotrac.testnanoclient.common.BlockingAlert
 import br.com.autotrac.testnanoclient.common.ButtonTicker
 import br.com.autotrac.testnanoclient.common.CustomAlert
 import br.com.autotrac.testnanoclient.common.DefaultButton
@@ -91,7 +93,9 @@ fun HomeScreen(
     val showDialogApi = rememberSaveable { mutableStateOf(false) }
     val checkedService = rememberSaveable { mutableStateOf(false) }
     val scope = CoroutineScope(Dispatchers.Main)
-    var isLoading = rememberSaveable { mutableStateOf(false) }
+    var isLoadingServiceOn =  remember{ mutableStateOf(false) }
+    var isLoadingServiceOff =  remember{ mutableStateOf(false) }
+    var isLoadingApiOn =  remember{ mutableStateOf(false) }
     val handler = Handler(Looper.getMainLooper())
     // To show a Snackbar
     val snackbarHostState = remember { SnackbarHostState() }
@@ -149,11 +153,13 @@ fun HomeScreen(
                     ToggleCard(
                         isChecked = isServiceOn.value,
                         onCheckedChange = { isChecked ->
-                            isServiceOn.value = isChecked
+
 
                             if (isChecked) {
-                                isLoading.value = true
+                                isLoadingServiceOn.value = true
+
                                 val thread = Thread {
+
                                     try {
                                         val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
                                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
@@ -167,12 +173,15 @@ fun HomeScreen(
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }finally {
-                                     isLoading.value = false
+
+
                                     }
                                 }
                                 thread.start()
 
+
                             } else {
+                                isLoadingServiceOff.value = true
                                 val thread = Thread {
                                     try {
                                         val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
@@ -190,6 +199,7 @@ fun HomeScreen(
                                 }
                                 thread.start()
                             }
+                            isServiceOn.value = isChecked
                         },
                         text = "Serviço de Comunicação",
                         icon = R.drawable.baseline_start_24,
@@ -213,7 +223,7 @@ fun HomeScreen(
                             isMobileCommunicatorOn.value = isChecked
 
                             if (isChecked) {
-                                isLoading.value = true
+//                                isLoading = true
                                 val thread = Thread {
                                     try {
                                         val intent = Intent(ApiConstants.INTENT_SVC_START)
@@ -228,10 +238,17 @@ fun HomeScreen(
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }finally {
-                                        isLoading.value = false
+//                                        isLoading = false
                                     }
                                 }
                                 thread.start()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Módulo de Comunicação Conectado",
+                                        actionLabel = "OK",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
 
                             } else {
                                 val thread = Thread {
@@ -250,6 +267,13 @@ fun HomeScreen(
                                     }
                                 }
                                 thread.start()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Módulo de Comunicação Desconectado",
+                                        actionLabel = "OK",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
                             }
                         },
                         text = "Módulo de Comunicação",
@@ -274,10 +298,11 @@ fun HomeScreen(
                                 appViewModel.isApiOn = isChecked
 
                                 if (isChecked) {
+                                    isLoadingApiOn.value = true
                                     val thread = Thread {
                                         try {
                                             NanoWebsocketClient.connect()
-                                            Thread.sleep(10000)
+                                            Thread.sleep(8000)
                                             if (NanoWebsocketClient.isWebSocketConnected()) {
                                                 coroutineScope.launch {
                                                     snackbarHostState.showSnackbar(
@@ -464,14 +489,19 @@ fun HomeScreen(
                 showDialogApi.value = false
             }
         }
-        if (isLoading.value) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
-            ) {
-                // Add your loading indicator (e.g., CircularProgressIndicator) here
-                LoadingIcon(size = 100)
+        if (isLoadingServiceOn.value) {
+            BlockingAlert(message =  "Aguarde o processo de inicialização...", durationMillis =3000 ){
+                isLoadingServiceOn.value = false
+            }
+        }
+        if (isLoadingServiceOff.value){
+            BlockingAlert(message =  "Aguarde o processo de finalização...", durationMillis =3000 ){
+                isLoadingServiceOff.value = false
+            }
+        }
+        if (isLoadingApiOn.value){
+            BlockingAlert(message =  "Conectando à Api...", durationMillis = 3000 ){
+                isLoadingApiOn.value = false
             }
         }
     }
