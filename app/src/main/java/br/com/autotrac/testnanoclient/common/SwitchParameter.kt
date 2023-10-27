@@ -20,7 +20,6 @@ fun SwitchParameter(
     paramText: String?,
     isChecked: Boolean,
     onTextChange: (Boolean) -> Unit,
-    textStatus: String?
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -35,11 +34,11 @@ fun SwitchParameter(
                 .wrapContentWidth(Alignment.Start)
         )
         Spacer(modifier = Modifier.width(2.dp))
-        if (textStatus != null && paramText != null) {
+        if (paramText != null && paramText != "") {
             ToggleSwitch(
                 isChecked = isChecked,
                 onCheckedChange =   onTextChange,
-                text = textStatus,
+                text =  "",
                 icon = null,
                 modifier = Modifier
                     .weight(2f)

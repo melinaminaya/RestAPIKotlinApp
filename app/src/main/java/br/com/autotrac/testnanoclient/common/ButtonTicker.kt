@@ -34,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.HttpTestViewModel
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,11 +54,17 @@ fun ButtonTicker(
 
     val isApiOn = appViewModel.isApiOn
     LaunchedEffect(Unit) {
-      if (isApiOn) {
-          NanoWebsocketClient.startSendingRequests()
-      } else{
-        httpTestViewModel.messageCountHttp()
-      }
+        while (true) {
+            //Checa a contagem de mensagens
+            if (isApiOn) {
+                NanoWebsocketClient.startSendingRequests()
+                delay(20000)
+            } else {
+                httpTestViewModel.messageCountHttp()
+                delay(5000)
+            }
+
+        }
     }
     LaunchedEffect(count){
         messagesCount.value = count

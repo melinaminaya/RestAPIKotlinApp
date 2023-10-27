@@ -30,6 +30,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,7 @@ import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.ResetDatabaseViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 import br.com.autotrac.testnanoclient.ui.theme.OrangeDanger
+import br.com.autotrac.testnanoclient.vm.HttpTestViewModel
 import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,6 +85,7 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val viewModel: ResetDatabaseViewModel = viewModel()
+    val httpViewModel = viewModel<HttpTestViewModel>()
     val appViewModel = viewModel<AppViewModel>()
     val resetDbResponse by viewModel.resetDatabaseResponse.observeAsState("")
     val isServiceOn = rememberSaveable{ mutableStateOf(false) }
@@ -90,6 +93,8 @@ fun HomeScreen(
     val showDialogService = rememberSaveable { mutableStateOf(false) }
 //    var isApiOn = rememberSaveable{ mutableStateOf(false) }
     var isApiOn = appViewModel.isApiOn
+    val isSocketOn by httpViewModel.isSocketOn.observeAsState(false)
+    var isSocketWorking = rememberSaveable{ mutableStateOf(false) }
     val showDialogApi = rememberSaveable { mutableStateOf(false) }
     val checkedService = rememberSaveable { mutableStateOf(false) }
     val scope = CoroutineScope(Dispatchers.Main)
@@ -100,6 +105,12 @@ fun HomeScreen(
     // To show a Snackbar
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit){
+        appViewModel.startCheckingApiStatus()
+    }
+    LaunchedEffect(isSocketOn){
+        isSocketWorking.value = isSocketOn
+    }
 
     Scaffold(
         topBar = {
@@ -121,7 +132,7 @@ fun HomeScreen(
                         },
                 actions = {
                     // HTTP Icon
-                    BadgeText(text = "HTTP", isServiceOn = isServiceOn )
+                    BadgeText(text = "HTTP", isServiceOn = isSocketWorking.value )
 
                     IconButton(onClick = popUpToLogin) {
                         Icon(Icons.Filled.ExitToApp , contentDescription = "Log Out")
@@ -198,6 +209,9 @@ fun HomeScreen(
                                     }
                                 }
                                 thread.start()
+                                isApiOn = false
+                                isMobileCommunicatorOn.value = false
+
                             }
                             isServiceOn.value = isChecked
                         },
@@ -495,7 +509,7 @@ fun HomeScreen(
             }
         }
         if (isLoadingServiceOff.value){
-            BlockingAlert(message =  "Aguarde o processo de finalização...", durationMillis =3000 ){
+            BlockingAlert(message =  "Aguarde o processo de finalização...", durationMillis =19000 ){
                 isLoadingServiceOff.value = false
             }
         }

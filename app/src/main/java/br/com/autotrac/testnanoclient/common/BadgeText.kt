@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import br.com.autotrac.testnanoclient.ui.theme.OrangeDanger
 
 @Composable
-fun BadgeText(text: String, isServiceOn: MutableState<Boolean>): Unit {
+fun BadgeText(text: String, isServiceOn: Boolean): Unit {
     return Box(
         modifier = Modifier
             .padding(end = 16.dp)
             .background(
-                color = if (!isServiceOn.value) OrangeDanger.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                color = if (!isServiceOn) OrangeDanger.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp)
             )
         ,

@@ -32,7 +32,8 @@ open class HttpTestViewModel: ViewModel() {
 
     private val parseOnMessage: ParseOnMessage = ParseOnMessage()
 
-
+    private val _isSocketOn = MutableLiveData(false)
+    val isSocketOn: MutableLiveData<Boolean> get() = _isSocketOn
     /**
      * Método para retornar contagem de mensagens de acordo com o filtro especificado.
      * No caso abaixo, a requisição é feita para contagem de mensagens não lidas.
@@ -49,17 +50,21 @@ open class HttpTestViewModel: ViewModel() {
 
         Log.d("HTTP GET request", "HTTP GET request: $fetchRequestResponse")
         if (fetchRequestResponse != "") {
-
             // Request successful, process the response
+            _isSocketOn.value = true
             val result =
                 parseOnMessage.parseMessage(fetchRequestResponse)
-            if (result == ParseResult.Ok){
-                val valueResponse =  ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_COUNT).toString()).toString()
+            if (result == ParseResult.Ok) {
+                val valueResponse = ObservableUtil.transformJsonToInteger(
+                    ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_COUNT).toString()
+                ).toString()
                 _reqMessageCount.value = valueResponse
-            }else{
+            } else {
                 Log.e("ParseOnMessage", "Error on parse")
                 return
             }
+        } else {
+            _isSocketOn.value = false
         }
     }
 

@@ -88,41 +88,41 @@ object NanoWebsocketClient{
                     .hostnameVerifier { _, _ -> true }
                     .build()
                     .newWebSocket(request, object : WebSocketListener() {
-                    override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
-                        println("WebSocket connected")
-                        webSocketConnectionSubject.onNext(true)
-                    }
-
-                    override fun onMessage(webSocket: WebSocket, text: String) {
-                        val parseMessage = ParseOnMessage()
-                        val response = parseMessage.parseMessage(text)
-                        if (response == ParseResult.Ok) {
-                           sendMessage(NanoHTTPD.Response.Status.OK.toString())
-                        }else{
-                            sendMessage(NanoHTTPD.Response.Status.INTERNAL_ERROR.toString())
+                        override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
+                            println("WebSocket connected")
+                            webSocketConnectionSubject.onNext(true)
                         }
-                        responseListener = text
-                    }
 
-                    override fun onFailure(
-                        webSocket: WebSocket,
-                        t: Throwable,
-                        response: okhttp3.Response?,
-                    ) {
-                        Log.d(TAG, "WebSocket connection failed: ${t.message}")
-                        webSocketConnectionSubject.onNext(false)
-                        // Retry connection on failure
-//                    retryConnection()
-                        responseListener = t.toString()
-                    }
+                        override fun onMessage(webSocket: WebSocket, text: String) {
+                            val parseMessage = ParseOnMessage()
+                            val response = parseMessage.parseMessage(text)
+                            if (response == ParseResult.Ok) {
+                               sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                            }else{
+                                sendMessage(NanoHTTPD.Response.Status.INTERNAL_ERROR.toString())
+                            }
+                            responseListener = text
+                        }
 
-                    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                        Log.d(TAG, "WebSocket connection closed: $reason")
-                        webSocketConnectionSubject.onNext(false)
-                        connectionDisposable!!.dispose()
-                        responseListener = code.toString()
-                    }
-                })
+                        override fun onFailure(
+                            webSocket: WebSocket,
+                            t: Throwable,
+                            response: okhttp3.Response?,
+                        ) {
+                            Log.d(TAG, "WebSocket connection failed: ${t.message}")
+                            webSocketConnectionSubject.onNext(false)
+                            // Retry connection on failure
+    //                    retryConnection()
+                            responseListener = t.toString()
+                        }
+
+                        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                            Log.d(TAG, "WebSocket connection closed: $reason")
+                            webSocketConnectionSubject.onNext(false)
+                            connectionDisposable!!.dispose()
+                            responseListener = code.toString()
+                        }
+                    })
             }
         }
     }
@@ -345,9 +345,9 @@ object NanoWebsocketClient{
                 null)
 
             val client = OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS) // Increase the timeout duration as needed
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS) // Increase the timeout duration as needed
+                .writeTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(120, TimeUnit.SECONDS)
                 .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
                 .sslSocketFactory(sslContext.socketFactory, SSLSetup.trustAllCertificates)
                 .hostnameVerifier { _, _ -> true }
@@ -384,28 +384,17 @@ object NanoWebsocketClient{
 
                             Log.d(TAG, "Received token: $tokenReceived")
                     //                            Log.d(TAG, "Received message: $messageReceived")
-
                             tokenReceived
                         } else {
                             null
                         }
 
                     } else {
-                        if (retryCount < MAX_RETRIES) {
-                            retryCount++
-                            Thread.sleep(RETRY_DELAY_MS)
-                        } else {
-                            return null
-                        }
-                    }
-                } catch (e: IOException) {
-                    if (retryCount < MAX_RETRIES) {
-                        retryCount++
-                        e.printStackTrace()
-                        Thread.sleep(RETRY_DELAY_MS)
-                    } else {
                         return null
                     }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    return null
 
                 } catch (e: InterruptedException) {
                     // Interrupted while waiting, return null or throw an exception

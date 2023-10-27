@@ -48,6 +48,7 @@ import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
 import br.com.autotrac.testnanoclient.vm.ParametersViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,14 +81,12 @@ fun ParametersScreen(
             parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
         )
     }
-    var enabledVpnDisableCommText by rememberSaveable { mutableStateOf(vpnDisableCommText != "0") }
 
     var wifiDisableCommText by rememberSaveable {
         mutableStateOf(
             parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]
         )
     }
-    var enabledWifiDisableCommText by rememberSaveable { mutableStateOf(wifiDisableCommText != "0") }
 
     var extDevCommType by rememberSaveable {
         mutableStateOf( parameterValues[ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE])
@@ -104,7 +103,7 @@ fun ParametersScreen(
    var baptismStarted by rememberSaveable { mutableStateOf(false) }
 //    val isBaptizedValueState by viewModel.isBaptizedValue.observeAsState(initial = isBaptizedValue)
 //    val baptismStatusState by viewModel.observeBaptismStatus().collectAsState(initial = "")
-    var baptismStatus by remember{ mutableStateOf("") }
+    var baptismStatus by remember{ mutableStateOf( "") }
 
     LaunchedEffect(Unit) {
         viewModel.fetchParameters()
@@ -112,26 +111,25 @@ fun ParametersScreen(
             focusRequester.requestFocus()
         }
         launch(Dispatchers.IO) {
-            while (baptismStarted) {
+            while (true) {
                 val valueBaptism =
                     ObservableUtil.getValue(ActionValues.BAPTISM_STATUS_OBSERVABLE).toString()
                 val newBaptism = ParameterHandler.convertIsBaptized(
                     valueBaptism
                 )
-
-                if (newBaptism == "Batizada") {
-                    launch(Dispatchers.Main) {
-                        baptismStatus = newBaptism
-                    }
-                    baptismStarted = false
-                } else {
-                    launch(Dispatchers.Main) {
-                        baptismStatus = newBaptism!!
-                    }
-//                Log.d("BAPTISM_STATUS", "BAPTISM_STATUS no launchEffectUnit: $newBaptism")
+                launch(Dispatchers.Main) {
+                    baptismStatus = newBaptism ?: "Processando..."
                 }
+                delay(1000)
             }
         }
+    }
+    LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED]) {
+        isBaptizedValue = ParameterHandler.convertIsBaptized( parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED])
+        if(isBaptizedValue != null) {
+            baptismStatus = isBaptizedValue as String
+        }
+        Log.d("BAPTISM_STATUS", "BAPTISM_STATUS no PARAM: $baptismStatus")
     }
     // Update wifiSSIDText when paramWifiSSID changes
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_WIFI_SSID]) {
@@ -160,13 +158,7 @@ fun ParametersScreen(
         timeoutSendCellMsg =
             parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]
     }
-    LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED]) {
-        isBaptizedValue = ParameterHandler.convertIsBaptized( parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED])
-        if(isBaptizedValue != null) {
-            baptismStatus = isBaptizedValue as String
-        }
-        Log.d("BAPTISM_STATUS", "BAPTISM_STATUS no PARAM: $baptismStatus")
-    }
+
 
     Scaffold(
         topBar = {
@@ -204,14 +196,14 @@ fun ParametersScreen(
 //                        BaptismView(wifiSSIDText, enabled, focusRequester, viewModel)
                         CustomTextFieldWithButton(
                             title = "Batizar",
-                            text = wifiSSIDText,
+                            text = wifiSSIDText ?: "" ,
                             onTextChange = { wifiSSIDText = it },
                             onSaveClick = {
                                 viewModel.setParam(
                                     ApiEndpoints.SET_PARAM_WIFI_SSID,
                                     wifiSSIDText ?: ""
                                 )
-                                baptismStarted = true
+//                                baptismStarted = true
                             }
                         )
                     }
@@ -219,12 +211,12 @@ fun ParametersScreen(
             }
             item {
                 DropdownCard(title = "Account Number") {
-                    if (parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER] != null) {
+                    parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER]?.let{
                         Text(
                             text = parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER].toString(),
                             style = TextStyle(fontSize = 14.sp)
                         )
-                    }
+                    } ?: LoadingIcon(size = 25)
                 }
             }
             item {
@@ -248,7 +240,7 @@ fun ParametersScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                         ModelRow(
                             title = "Endereço do dispositivo de comunicação alternativo:",
-                            status =parameterValues[ApiEndpoints.GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS] )
+                            status = parameterValues[ApiEndpoints.GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS] )
                     }
                 }
             }
@@ -282,7 +274,7 @@ fun ParametersScreen(
                     ) {
                         viewModel.setParam(
                             ApiEndpoints.SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG,
-                            wifiSSIDText ?: ""
+                            timeoutSendCellMsg ?: ""
                         )
                     }
                 }
@@ -439,26 +431,25 @@ fun ParametersScreen(
                 DropdownCard(title = "Habilita/Desabilita VPN e WIFI") {
                     Column {
                         SwitchParameter(
-                            title = "Vpn Status: " ,
+                            title = "Vpn Status: ",
                             paramText = vpnDisableCommText,
-                            isChecked = enabledVpnDisableCommText,
+                            isChecked = vpnDisableCommText == "0",
                             onTextChange = { newCheckedState ->
-                                enabledVpnDisableCommText = newCheckedState
+//                                            enabledVpnDisableCommText = newCheckedState
                                 vpnDisableCommText = if (!newCheckedState) {
                                     viewModel.setParam(
                                         ApiEndpoints.SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION,
                                         ParameterValues.VpnDisableValues.DISABLE_VPN.toString()
                                     )
                                     ParameterValues.VpnDisableValues.DISABLE_VPN.toString()
-                                }else {
+                                } else {
                                     viewModel.setParam(
                                         ApiEndpoints.SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION,
                                         ParameterValues.VpnDisableValues.ENABLE_VPN.toString()
                                     )
                                     ParameterValues.VpnDisableValues.ENABLE_VPN.toString()
                                 }
-                                                         },
-                            textStatus = ParameterHandler.convertVPNStatus(vpnDisableCommText)
+                            },
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -469,18 +460,18 @@ fun ParametersScreen(
 
                         Spacer(modifier = Modifier.height(4.dp))
                         SwitchParameter(
-                            title = "Wifi Status:" ,
+                            title = "Wifi Status:",
                             paramText = wifiDisableCommText,
-                            isChecked = enabledWifiDisableCommText,
+                            isChecked = wifiDisableCommText == "0",
                             onTextChange = { newCheckedState ->
-                                enabledWifiDisableCommText = newCheckedState
+//                                enabledWifiDisableCommText = newCheckedState
                                 wifiDisableCommText = if (!newCheckedState) {
                                     viewModel.setParam(
                                         ApiEndpoints.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION,
                                         ParameterValues.WifiDisableValues.DISABLE_WIFI.toString()
                                     )
                                     ParameterValues.WifiDisableValues.DISABLE_WIFI.toString()
-                                }else {
+                                } else {
                                     viewModel.setParam(
                                         ApiEndpoints.SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION,
                                         ParameterValues.WifiDisableValues.ENABLE_WIFI.toString()
@@ -488,8 +479,8 @@ fun ParametersScreen(
                                     ParameterValues.WifiDisableValues.ENABLE_WIFI.toString()
                                 }
                             },
-                            textStatus = ParameterHandler.convertWifiStatus(wifiDisableCommText)
                         )
+
 
                         Spacer(modifier = Modifier.height(4.dp))
                         ModelRow(

@@ -71,13 +71,10 @@ object NanoHttpClient {
         var token: String? = null
         var responseBody: ResponseBody?
         return withContext(Dispatchers.IO) {
-            while (token.isNullOrBlank()) {
                 token = NanoWebsocketClient.requestAuthorizationToken()
                 if (token.isNullOrBlank()) {
-                    delay(100) // Wait for 1 second before retrying
-                    Log.d("NanoHttpClient", "Token is null ")
+                    return@withContext ""
                 }
-            }
             val sslContext = SSLContext.getInstance("TLS")
             sslContext.init(null, arrayOf<TrustManager>(SSLSetup.trustAllCertificates), null)
 
