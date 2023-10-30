@@ -306,26 +306,6 @@ object NanoWebsocketClient{
         }
     }
 
-    /**
-     * Método fixo de requesição de mensagens a cada período de tempo.
-     *
-     * REQ_MESSAGE_COUNT: Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
-     * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
-     * @param1:Boolean: True para mensagens de saída, False para mensagens de entrada (caixa de entrada).
-     * @param2:Int: número do status a ser filtrado.
-     */
-    fun startSendingRequests() {
-        val coroutineScope = CoroutineScope(Dispatchers.Default)
-
-        coroutineScope.launch {
-            while (true) {
-                // Send your request on the WebSocket
-                sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
-
-                delay(10000)
-            }
-        }
-    }
 
     fun disconnect() {
         webSocketClient?.close(1000, "Client disconnecting")
@@ -410,11 +390,38 @@ object NanoWebsocketClient{
         }
     }
     fun isWebSocketConnected(): Boolean {
-        val sendObject = SendObject(ApiEndpoints.REQ_MESSAGE_COUNT, RequestObject(false, 3, null, null))
-        val objectRequestJson = gson.toJson(sendObject)
+        val coroutineScope = CoroutineScope(Dispatchers.Default)
+        var objectRequestJson:String = ""
+        coroutineScope.launch {
+            while (true) {
+                val sendObject =
+                    SendObject(ApiEndpoints.REQ_MESSAGE_COUNT, RequestObject(false, 3, null, null))
+                objectRequestJson = gson.toJson(sendObject)
+                delay(30000)
+            }
+        }
         return webSocketClient?.send(objectRequestJson) ?: false
     }
+    /**
+     * Método fixo de requesição de mensagens a cada período de tempo.
+     *
+     * REQ_MESSAGE_COUNT: Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
+     * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
+     * @param1:Boolean: True para mensagens de saída, False para mensagens de entrada (caixa de entrada).
+     * @param2:Int: número do status a ser filtrado.
+     */
+    fun startSendingRequests() {
+        val coroutineScope = CoroutineScope(Dispatchers.Default)
 
+        coroutineScope.launch {
+            while (true) {
+                // Send your request on the WebSocket
+                sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
+
+                delay(30000)
+            }
+        }
+    }
 }
 
 

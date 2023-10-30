@@ -91,12 +91,9 @@ fun HomeScreen(
     val isServiceOn = rememberSaveable{ mutableStateOf(false) }
     val isMobileCommunicatorOn = rememberSaveable{ mutableStateOf(false) }
     val showDialogService = rememberSaveable { mutableStateOf(false) }
-//    var isApiOn = rememberSaveable{ mutableStateOf(false) }
     var isApiOn = appViewModel.isApiOn
     val isSocketOn by httpViewModel.isSocketOn.observeAsState(false)
-    var isSocketWorking = rememberSaveable{ mutableStateOf(false) }
     val showDialogApi = rememberSaveable { mutableStateOf(false) }
-    val checkedService = rememberSaveable { mutableStateOf(false) }
     val scope = CoroutineScope(Dispatchers.Main)
     var isLoadingServiceOn =  remember{ mutableStateOf(false) }
     var isLoadingServiceOff =  remember{ mutableStateOf(false) }
@@ -107,9 +104,6 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit){
         appViewModel.startCheckingApiStatus()
-    }
-    LaunchedEffect(isSocketOn){
-        isSocketWorking.value = isSocketOn
     }
 
     Scaffold(
@@ -132,12 +126,11 @@ fun HomeScreen(
                         },
                 actions = {
                     // HTTP Icon
-                    BadgeText(text = "HTTP", isServiceOn = isSocketWorking.value )
+                    BadgeText(text = "HTTP", isServiceOn = isSocketOn )
 
                     IconButton(onClick = popUpToLogin) {
                         Icon(Icons.Filled.ExitToApp , contentDescription = "Log Out")
                     }
-
                 }
             )
         },
@@ -316,7 +309,7 @@ fun HomeScreen(
                                     val thread = Thread {
                                         try {
                                             NanoWebsocketClient.connect()
-                                            Thread.sleep(8000)
+                                            Thread.sleep(5000) //while isLoadingApiOn with BlockingAlert finishes
                                             if (NanoWebsocketClient.isWebSocketConnected()) {
                                                 coroutineScope.launch {
                                                     snackbarHostState.showSnackbar(
@@ -504,7 +497,7 @@ fun HomeScreen(
             }
         }
         if (isLoadingServiceOn.value) {
-            BlockingAlert(message =  "Aguarde o processo de inicialização...", durationMillis =3000 ){
+            BlockingAlert(message =  "Aguarde o processo de inicialização...", durationMillis = 8000 ){
                 isLoadingServiceOn.value = false
             }
         }
@@ -514,7 +507,7 @@ fun HomeScreen(
             }
         }
         if (isLoadingApiOn.value){
-            BlockingAlert(message =  "Conectando à Api...", durationMillis = 3000 ){
+            BlockingAlert(message =  "Conectando à Api...", durationMillis = 5000 ){
                 isLoadingApiOn.value = false
             }
         }
