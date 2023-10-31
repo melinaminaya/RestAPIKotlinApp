@@ -12,6 +12,7 @@ import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
+import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.screens.messageOnPattern
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,8 @@ open class HttpTestViewModel: ViewModel() {
         }
 
         Log.d("HTTP GET request", "HTTP GET request: $fetchRequestResponse")
-        if (fetchRequestResponse != "") {
+        AppLogger.log("HTTP GET request: $fetchRequestResponse")
+        if (fetchRequestResponse != "" && fetchRequestResponse != null) {
             // Request successful, process the response
             _isSocketOn.value = true
             val result =
@@ -61,6 +63,7 @@ open class HttpTestViewModel: ViewModel() {
                 _reqMessageCount.value = valueResponse
             } else {
                 Log.e("ParseOnMessage", "Error on parse")
+                AppLogger.log("Error on parse in MessageCount - HttpTestViewModel.kt")
                 return
             }
         } else {

@@ -12,21 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropDownToSet
 import br.com.autotrac.testnanoclient.common.DropdownCard
 import br.com.autotrac.testnanoclient.common.LoadingIcon
@@ -60,7 +55,6 @@ import br.com.autotrac.testnanoclient.vm.LastPositionViewModel
 import br.com.autotrac.testnanoclient.vm.MctParamsViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckListScreen(
     popBackStack: () -> Unit,
@@ -88,19 +82,13 @@ fun CheckListScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "CheckList") },
-                navigationIcon = {
-                    IconButton(onClick = popBackStack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = popUpToLogin) {
-                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out")
-                    }
-                }
-            )
+            CustomTopAppBar(
+                title = "CheckList",
+                navigateToLogs = { },
+                onBackClick = {popBackStack()},
+                popUpToLogin = popUpToLogin,
+                isSocketOn = null) {
+            }
         }
     ) { contentPadding ->
         LazyColumn(

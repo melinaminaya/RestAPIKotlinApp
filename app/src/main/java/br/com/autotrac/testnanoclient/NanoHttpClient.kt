@@ -15,6 +15,7 @@ import br.com.autotrac.testnanoclient.retrofit.ApiService
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
+import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.security.SSLSetup
 import br.com.autotrac.testnanoclient.security.SSLSetup.trustAllCertificates
 import com.google.gson.Gson
@@ -23,7 +24,6 @@ import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -68,72 +68,87 @@ object NanoHttpClient {
      * O [br.com.autotrac.testnanoclient.dataRemote.RequestObject] é distribuído em queries na requisição HTTP.
      */
     suspend fun sendGetRequestHttp( endpoint: String, objectGet: RequestObject): String {
-        var token: String? = null
+        val token = NanoWebsocketClient.requestAuthorizationToken()
+
+        if (token.isNullOrBlank()) {
+            // Token is not available, don't proceed with the request
+            return ""
+        }
         var responseBody: ResponseBody?
         return withContext(Dispatchers.IO) {
-                token = NanoWebsocketClient.requestAuthorizationToken()
-                if (token.isNullOrBlank()) {
-                    return@withContext ""
-                }
-            val sslContext = SSLContext.getInstance("TLS")
-            sslContext.init(null, arrayOf<TrustManager>(SSLSetup.trustAllCertificates), null)
+            try {
+                val sslContext = SSLContext.getInstance("TLS")
+                sslContext.init(null, arrayOf<TrustManager>(SSLSetup.trustAllCertificates), null)
 
-            // Construct the URL for the additional request
-            val additionalRequestUrl = "$serverUrl/$endpoint/?token=$token"
-            val customHttpClient = OkHttpClient.Builder()
-                .readTimeout(30, TimeUnit.SECONDS) // Set your custom timeout here
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
-                .sslSocketFactory(sslContext.socketFactory, trustAllCertificates)
-                .hostnameVerifier { _, _ -> true } // Bypass hostname verification for self-signed certificates
-                .build()
-
-            // Create a new request using the additional URL
-            val additionalRequest = Retrofit.Builder()
-                .baseUrl(additionalRequestUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(customHttpClient)
-                .build()
-
-            val service = additionalRequest.create(ApiService::class.java)
-            val headers = "$token"
-
-            val listOfRequests = EndpointsLists.requestsList + EndpointsLists.parametersList +
-                    listOf<String>(ApiEndpoints.SEND_MESSAGE, ApiEndpoints.SEND_FILE_MESSAGE)
-
-            val response:Call<ResponseBody> = when (endpoint) {
-
-                in listOfRequests ->{
-                    service.callRequest(
-                        headers,
-                        endpoint,
-                        objectGet.param1,
-                        objectGet.param2,
-                        objectGet.param3,
-                        objectGet.param4,
-
+                // Construct the URL for the additional request
+                val additionalRequestUrl = "$serverUrl/$endpoint/?token=$token"
+                val customHttpClient = OkHttpClient.Builder()
+                    .readTimeout(30, TimeUnit.SECONDS) // Set your custom timeout here
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .connectionSpecs(
+                        listOf(
+                            ConnectionSpec.COMPATIBLE_TLS,
+                            ConnectionSpec.CLEARTEXT,
+                            ConnectionSpec.MODERN_TLS
+                        )
                     )
+                    .sslSocketFactory(sslContext.socketFactory, trustAllCertificates)
+                    .hostnameVerifier { _, _ -> true } // Bypass hostname verification for self-signed certificates
+                    .build()
+
+                // Create a new request using the additional URL
+                val additionalRequest = Retrofit.Builder()
+                    .baseUrl(additionalRequestUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(customHttpClient)
+                    .build()
+
+                val service = additionalRequest.create(ApiService::class.java)
+                val headers = "$token"
+
+                val listOfRequests = EndpointsLists.requestsList + EndpointsLists.parametersList +
+                        listOf<String>(ApiEndpoints.SEND_MESSAGE, ApiEndpoints.SEND_FILE_MESSAGE)
+
+                val response: Call<ResponseBody> = when (endpoint) {
+
+                    in listOfRequests -> {
+                        service.callRequest(
+                            headers,
+                            endpoint,
+                            objectGet.param1,
+                            objectGet.param2,
+                            objectGet.param3,
+                            objectGet.param4,
+
+                            )
+                    }
+
+                    else -> {
+                        Log.e(TAG, "Endpoint not supported: $endpoint")
+                        AppLogger.log("Endpoint not supported: $endpoint")
+                        return@withContext ""
+                    }
                 }
 
-                else -> {
-                    Log.e(TAG, "Endpoint not supported: $endpoint")
-                    return@withContext ""
+                // Execute the additional request
+
+                responseBody = response.execute().body()
+                if (responseBody != null) {
+                    val responseData = responseBody!!.string()
+                    println("Response from $endpoint: $responseData")
+                    AppLogger.log("Response from $endpoint: $responseData")
+                    responseData
+                } else {
+                    println("Response body is null for $endpoint")
+                    AppLogger.log("Response body is null for $endpoint")
+                    ""
                 }
-            }
-
-
-
-            // Execute the additional request
-
-            responseBody = response.execute().body()
-            if (responseBody != null) {
-                val responseData = responseBody!!.string()
-                println("Response from $endpoint: $responseData")
-                return@withContext responseData
-            } else {
-                println("Response body is null for $endpoint")
-                return@withContext ""
+            }catch (e: Exception) {
+                // Handle exceptions here
+                Log.e(TAG, "Request error", e)
+                AppLogger.log("Request error: ${e.message}")
+                ""
             }
         }
     }
@@ -307,6 +322,7 @@ object NanoHttpClient {
             }
         }catch (e:Exception){
             Log.e("OKWebsocket", "Exception at sending chunks")
+            AppLogger.log("Exception at sending chunks")
             e.printStackTrace()
         }
     }

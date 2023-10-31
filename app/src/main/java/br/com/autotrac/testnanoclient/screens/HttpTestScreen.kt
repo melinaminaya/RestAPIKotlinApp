@@ -7,16 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropDownToSet
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
@@ -43,7 +38,6 @@ import kotlinx.coroutines.launch
  * Tela de retorno de todas as requisições via HTTP.
  * @author Melina Minaya
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HttpTestScreen(
     popBackStack: () -> Unit,
@@ -83,19 +77,13 @@ fun HttpTestScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Requisições Http") },
-                navigationIcon = {
-                    IconButton(onClick = popBackStack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = popUpToLogin) {
-                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out")
-                    }
-                }
-            )
+            CustomTopAppBar(
+                title = "Requisições Http",
+                navigateToLogs = { },
+                onBackClick = {popBackStack()},
+                popUpToLogin = popUpToLogin,
+                isSocketOn = null) {
+            }
         }
     ) { contentPadding ->
 

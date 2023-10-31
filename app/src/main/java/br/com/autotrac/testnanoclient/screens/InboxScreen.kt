@@ -7,16 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,14 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InboxScreen(
     selectedTab: Int,
@@ -43,19 +37,13 @@ fun InboxScreen(
     val selectedTabIndex = rememberSaveable { mutableStateOf(selectedTab) }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Mensagens") },
-                navigationIcon = {
-                    IconButton(onClick = popBackStack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = popUpToLogin) {
-                        Icon(Icons.Filled.ExitToApp , contentDescription = "Log Out")
-                    }
-                }
-            )
+            CustomTopAppBar(
+                title = "Mensagens",
+                navigateToLogs = { },
+                popUpToLogin = popUpToLogin,
+                onBackClick = { popBackStack() },
+                isSocketOn = null
+            ){}
         }
     ) { it ->
         Column(
@@ -68,7 +56,9 @@ fun InboxScreen(
             val tabs = listOf("Inbox", "Outbox")
             TabRow(
                 selectedTabIndex = selectedTabIndex.value,
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.primary)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary)
             ) {
                 tabs.forEachIndexed { index, text ->
                     Tab(

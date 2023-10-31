@@ -6,29 +6,19 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,29 +27,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.NanoWebsocketClient.TAG
 import br.com.autotrac.testnanoclient.R
-import br.com.autotrac.testnanoclient.common.BadgeText
 import br.com.autotrac.testnanoclient.common.BlockingAlert
 import br.com.autotrac.testnanoclient.common.ButtonTicker
 import br.com.autotrac.testnanoclient.common.CustomAlert
+import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DefaultButton
-import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.common.ToggleCard
 import br.com.autotrac.testnanoclient.consts.ApiConstants
-import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.ResetDatabaseViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
@@ -71,7 +55,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigateToInbox: (Int, Boolean) -> Unit,
@@ -108,31 +91,13 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            modifier = Modifier
-                                .size(dimensionResource(id = R.dimen.image_size))
-                                .padding(dimensionResource(id = R.dimen.padding_small)),
-                            painter = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                                painterResource(R.drawable.ic_launcher_foreground) else
-                                painterResource(id = R.drawable.ic_launcher_foreground_legacy_foreground),
-                            contentDescription = null
-                        )
-                        Text(text = stringResource(R.string.app_name),
-                            style = MaterialTheme.typography.titleLarge)
-                    }
-                        },
-                actions = {
-                    // HTTP Icon
-                    BadgeText(text = "HTTP", isServiceOn = isSocketOn )
-
-                    IconButton(onClick = popUpToLogin) {
-                        Icon(Icons.Filled.ExitToApp , contentDescription = "Log Out")
-                    }
-                }
-            )
+            CustomTopAppBar(
+                title = null,
+                onBackClick = null,
+                navigateToLogs = {  },
+                popUpToLogin = popUpToLogin,
+                isSocketOn = isSocketOn
+            ) {}
         },
         snackbarHost = {
             SnackbarHost(

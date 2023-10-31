@@ -9,15 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.common.CustomTextFieldWithButton
+import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropDownToSet
 import br.com.autotrac.testnanoclient.common.DropdownCard
 import br.com.autotrac.testnanoclient.common.LoadingIcon
@@ -51,7 +46,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParametersScreen(
     popBackStack: () -> Unit,
@@ -162,19 +156,13 @@ fun ParametersScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Parâmetros") },
-                navigationIcon = {
-                    IconButton(onClick = popBackStack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = popUpToLogin) {
-                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out")
-                    }
-                }
-            )
+            CustomTopAppBar(
+                title = "Parâmetros",
+                navigateToLogs = {  },
+                popUpToLogin = popUpToLogin,
+                onBackClick = { popBackStack() },
+                isSocketOn = null) {
+            }
         }
     ) { contentPadding ->
         LazyColumn(

@@ -10,18 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,8 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.NanoWebsocketClient.TAG
 import br.com.autotrac.testnanoclient.ObservableUtil
+import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
+import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 import br.com.autotrac.testnanoclient.vm.FilePickerViewModel
 import br.com.autotrac.testnanoclient.vm.FormListViewModel
@@ -52,7 +48,6 @@ import kotlinx.coroutines.launch
  * Tela de envio de mensagens.
  * @author Melina Minaya
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SendMessageScreen(
     navigateToInbox: (Int, Boolean) -> Unit,
@@ -92,19 +87,13 @@ fun SendMessageScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Envio de Mensagem") },
-                navigationIcon = {
-                    IconButton(onClick = popBackStack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = popUpToLogin) {
-                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out")
-                    }
-                }
-            )
+            CustomTopAppBar(
+                title = "Envio de Mensagem",
+                navigateToLogs = {  },
+                popUpToLogin = popUpToLogin,
+                onBackClick = { popBackStack() },
+                isSocketOn = null
+            ) {}
         }
 
     ) { contentPadding ->
@@ -145,6 +134,7 @@ fun SendMessageScreen(
                            senderAccess.sendMessageToServer(message = dbMessageProcessed, context = context, selectedFileUri)
                            // e.g., call an API or perform any desired action
                            Log.d(TAG, "Sending message: $dbMessageProcessed")
+                           AppLogger.log("Sending message: $dbMessageProcessed")
 //                           if (response != null) {
 //                               // Navigate to the inbox screen when the response is not null
 //                               navigateToInbox(1, true)
@@ -155,6 +145,7 @@ fun SendMessageScreen(
                            // Handle any exceptions that might occur during the suspend function call
                            // e.g., connection error, timeout, etc.
                            Log.e(TAG, "Failed to send message: $e")
+                           AppLogger.log("Failed to send message: $e")
                            e.printStackTrace()
                        }
                    }

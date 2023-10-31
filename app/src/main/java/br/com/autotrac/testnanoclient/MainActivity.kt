@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.navigation.NavGraph
-import br.com.autotrac.testnanoclient.security.SSLSetup
 import br.com.autotrac.testnanoclient.vm.MessageViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 
@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     NanoApp()
+                    AppLogger.init(this)
                 }
             }
         }
