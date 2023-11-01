@@ -1,5 +1,7 @@
 package br.com.autotrac.testnanoclient.common
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -52,6 +54,15 @@ fun CustomTopAppBar(
     val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
     val selectedItem = remember { mutableStateOf(items[0]) }
     var drawerOpen by remember { mutableStateOf(false) }
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current
+    backDispatcher?.onBackPressedDispatcher?.addCallback(object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (drawerOpen) {
+                // Close the drawer if it's open
+                drawerOpen = false
+            }
+        }
+    })
 
     TopAppBar(
         title = {
@@ -78,8 +89,6 @@ fun CustomTopAppBar(
             if(onBackClick != null) IconButton(onClick = onBackClick ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
-
-
         },
         actions = {
             //HTTP Icon
@@ -115,11 +124,8 @@ fun CustomTopAppBar(
                Spacer(Modifier.height(12.dp))
 
                LogContent() // Include your log content composable
-
-
            }
        }
     }
-
 }
 
