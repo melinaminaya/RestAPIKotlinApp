@@ -74,7 +74,8 @@ fun OutboxScreen() {
                         Text(text = "File Name: $filePreviewName")
                     }
                 }
-            }
+            },
+            showMarkAsRead = false,
         )
     }
 }

@@ -90,7 +90,8 @@ fun MessageListScreen() {
                         Text(text = "File Name: $filePreviewName")
                     }
                 }
-            }
+            },
+            showMarkAsRead = true
         )
     }
 }
