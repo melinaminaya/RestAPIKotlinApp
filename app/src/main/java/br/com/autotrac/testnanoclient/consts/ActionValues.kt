@@ -91,6 +91,7 @@ object ActionValues {
      * @param Param4 Não utilizado.
      */
     const val SATELLITE_SIGNAL_CHANGED = 0x0B
+    const val SATELLITE_SIGNAL_CHANGED_OBSERVABLE = "SATELLITE_SIGNAL_CHANGED"
 
 
     /**

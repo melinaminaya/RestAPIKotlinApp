@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.consts.ActionValues
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
@@ -13,8 +14,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 
-class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
+class ParametersViewModel: ViewModel() {
 
     private val senderAccess = MessageSenderAccess()
     private var gson = Gson()
@@ -24,16 +27,11 @@ class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
     private val parameterListGet = EndpointsLists.parametersList.filter { it.startsWith("GET") }
     private val parameterLiveDataMap = HashMap<String, MutableLiveData<String>>()
 
-    private val _isBaptizedValue = MutableLiveData<String>("") // Initialize with default value
-    val isBaptizedValue: MutableLiveData<String> = _isBaptizedValue
-    private val parseOnMessage = ParseOnMessage()
-
     init {
         // Create MutableLiveData objects for each parameter and add them to the map
         for (parameter in parameterListGet) {
             parameterLiveDataMap[parameter] = MutableLiveData()
         }
-        parseOnMessage.setNotificationListener(this)
     }
 
     fun getParameterLiveData(parameter: String): MutableLiveData<String>? {
@@ -73,14 +71,5 @@ class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
         // Remove the message from the list of messages
         val parameterLiveData = parameterLiveDataMap[param]
         parameterLiveData?.value = value
-
-    }
-//    fun updateIsBaptizedValue(newValue: String) {
-//        _isBaptizedValue.value = newValue
-//    }
-
-    override fun onNotificationReceived(notification: ReceivedRequestResponse) {
-        _isBaptizedValue.value = notification.param3.toString()
-        Log.d("ONNOTIFICATION", "onNotificationReceived BAPTISM_STATUS: ${isBaptizedValue.value}")
     }
 }

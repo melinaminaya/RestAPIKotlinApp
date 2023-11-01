@@ -26,17 +26,7 @@ class ParseOnMessage {
     companion object {
         const val TAG = "ParseOnMessage"
     }
-    // Define a callback interface
-    interface NotificationListener {
-        fun onNotificationReceived(notification: ReceivedRequestResponse)
-    }
 
-    private var notificationListener: NotificationListener? = null
-
-    // Setter for the listener
-    fun setNotificationListener(listener: NotificationListener) {
-        notificationListener = listener
-    }
     fun parseMessage(message:String): ParseResult {
         try {
             val jsonElement = JsonParser.parseString(message)
@@ -53,9 +43,12 @@ class ParseOnMessage {
                     //TODO: Tratar recebimento de notificação, conforme cliente necessita.
                    val notificationType = notification.param2 ?: return ParseResult.Error("param2 is null") // Exit if param2 is null
                     if(notificationType.toString() == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
-//                        notificationListener?.onNotificationReceived(notification)
                         ObservableUtil.attachProperty(ActionValues.BAPTISM_STATUS_OBSERVABLE, notification.param3)
                     }
+                    if (notificationType.toString() == ActionValues.SATELLITE_SIGNAL_CHANGED_OBSERVABLE){
+                        ObservableUtil.attachProperty(ActionValues.SATELLITE_SIGNAL_CHANGED_OBSERVABLE, notification.param3)
+                    }
+
                     Log.d(Companion.TAG, "Received response relative to notification: $notification")
                     AppLogger.log("Received response relative to notification: $notification")
                     return ParseResult.Ok

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
+import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
 import br.com.autotrac.testnanoclient.common.CustomTextFieldWithButton
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropDownToSet
@@ -41,10 +41,13 @@ import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ParameterValues
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
+import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.vm.ParametersViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 
 @Composable
 fun ParametersScreen(
@@ -97,25 +100,37 @@ fun ParametersScreen(
    var baptismStarted by rememberSaveable { mutableStateOf(false) }
 //    val isBaptizedValueState by viewModel.isBaptizedValue.observeAsState(initial = isBaptizedValue)
 //    val baptismStatusState by viewModel.observeBaptismStatus().collectAsState(initial = "")
-    var baptismStatus by remember{ mutableStateOf( "") }
+    var baptismStatus by remember { mutableStateOf("") }
+    var satelliteSignal by rememberSaveable {
+        mutableStateOf(parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL])
+    }
+// Create a custom PropertyChangeListener
+    val propertyChangeListener = PropertyChangeListener { evt ->
+        evt?.let {
+            // Handle property changes here
+            if (evt.propertyName == ActionValues.SATELLITE_SIGNAL_CHANGED_OBSERVABLE) {
+                val newValue = evt.newValue.toString()
+                // Update the satelliteSignal Composable property
+                satelliteSignal = newValue.toDouble().toInt().toString()
+            }else if (evt.propertyName == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
+                val newValue = evt.newValue.toString()
+                // Update the baptismStatus Composable property
+                isBaptizedValue = ParameterHandler.convertIsBaptized(newValue)
+                if(isBaptizedValue != null) {
+                    baptismStatus = isBaptizedValue as String
+                }
+            }
+
+        }
+    }
+    addPropertyChangeListener(propertyChangeListener)
+
+
 
     LaunchedEffect(Unit) {
         viewModel.fetchParameters()
         if (enabled) {
             focusRequester.requestFocus()
-        }
-        launch(Dispatchers.IO) {
-            while (true) {
-                val valueBaptism =
-                    ObservableUtil.getValue(ActionValues.BAPTISM_STATUS_OBSERVABLE).toString()
-                val newBaptism = ParameterHandler.convertIsBaptized(
-                    valueBaptism
-                )
-                launch(Dispatchers.Main) {
-                    baptismStatus = newBaptism ?: "Processando..."
-                }
-                delay(1000)
-            }
         }
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED]) {
@@ -152,16 +167,20 @@ fun ParametersScreen(
         timeoutSendCellMsg =
             parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]
     }
+    LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]) {
+        satelliteSignal = parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]
+    }
 
 
     Scaffold(
         topBar = {
             CustomTopAppBar(
                 title = "Parâmetros",
-                navigateToLogs = {  },
+                navigateToLogs = { },
                 popUpToLogin = popUpToLogin,
                 onBackClick = { popBackStack() },
-                isSocketOn = null) {
+                isSocketOn = null
+            ) {
             }
         }
     ) { contentPadding ->
@@ -271,7 +290,8 @@ fun ParametersScreen(
                 DropdownCard(title = "Conexão Satelital") {
                     ModelRow(
                         title = "Sinal do MCT: ",
-                        status = ParameterHandler.convertMctSignal(parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]))
+                        status = ParameterHandler.convertMctSignal(satelliteSignal)
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
@@ -349,7 +369,7 @@ fun ParametersScreen(
                     ModelRow(
                         title = "Status da UC Móvel: ",
                         status = ParameterHandler.convertUcStatusValue(parameterValues[ApiEndpoints.GET_PARAM_UC_STATUS]))
-                    
+
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Subtipo da UC Móvel: ",
@@ -391,7 +411,7 @@ fun ParametersScreen(
                     ModelRow(
                         title = "Versão do Serviço: ",
                         status = parameterValues[ApiEndpoints.GET_PARAM_SERVICE_VERSION])
-                    
+
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Versão da Interface do Usuário: ",
