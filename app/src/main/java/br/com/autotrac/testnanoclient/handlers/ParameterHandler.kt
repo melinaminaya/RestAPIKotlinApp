@@ -253,5 +253,22 @@ class ParameterHandler {
                 }
             }
         }
+        fun convertMctParamNumber(value: Int): String? {
+            return value.let { intValue ->
+                when (intValue) {
+                    ParameterValues.MctM0M9Params.M0 -> "M0"
+                    ParameterValues.MctM0M9Params.M1 -> "M1"
+                    ParameterValues.MctM0M9Params.M2 -> "M2"
+                    ParameterValues.MctM0M9Params.M3 -> "M3"
+                    ParameterValues.MctM0M9Params.M4 -> "M4"
+                    ParameterValues.MctM0M9Params.M5 -> "M5"
+                    ParameterValues.MctM0M9Params.M6 -> "M6"
+                    ParameterValues.MctM0M9Params.M7 -> "M7"
+                    ParameterValues.MctM0M9Params.M8 -> "M8"
+                    ParameterValues.MctM0M9Params.M9 -> "M9"
+                    else -> null
+                }
+            }
+        }
     }
 }

@@ -210,4 +210,20 @@ class ParameterValues {
         /** Status desconhecido. */
         const val UNKNOWN = 3
     }
+
+    /**
+     * Identificadores dos parâmetros do MCT (number). Retornados pelo endpoint [ApiEndpoints.REQ_GET_MCT_PARAMETERS].
+     */
+    object MctM0M9Params {
+        const val M0 = 0
+        const val M1 = 1
+        const val M2 = 2
+        const val M3 = 3
+        const val M4 = 4
+        const val M5 = 5
+        const val M6 = 6
+        const val M7 = 7
+        const val M8 = 8
+        const val M9 = 9
+    }
 }

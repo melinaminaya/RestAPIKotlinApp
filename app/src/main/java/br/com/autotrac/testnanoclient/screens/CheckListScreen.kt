@@ -377,12 +377,9 @@ fun MctParametersCard(content: List<ParameterModel>?){
     if (content!= null){
         Spacer(modifier = Modifier.height(8.dp))
        content.forEach { param ->
+           val paramName = ParameterHandler.convertMctParamNumber(param.number)
             Text(
-                text = "Param Type: ${param.type}",
-                style = TextStyle(fontSize = 16.sp)
-            )
-            Text(
-                text = "${param.number}: ${param.value}",
+                text = "$paramName: ${param.value}",
                 style = TextStyle(fontSize = 14.sp)
             )
         }

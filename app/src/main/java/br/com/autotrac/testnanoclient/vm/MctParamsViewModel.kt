@@ -31,7 +31,7 @@ open class MctParamsViewModel: ViewModel() {
         val fetchedMessages: List<ParameterModel> = fetchDataFromDataSource()
         _currentDate.value = fetchedMessages
     }
-
+//TODO: Not deserializing into Int, yet deserializing into Double
     private suspend fun fetchDataFromDataSource(): List<ParameterModel> {
         delay(1000)
         val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_MCT_PARAMETERS)
