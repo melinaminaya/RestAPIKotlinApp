@@ -247,6 +247,7 @@ object NanoWebsocketClient{
                         val response = gson.toJson(myObject)
                         if (webSocketClient != null) {
                             webSocketClient!!.send(response)
+                            Log.d(TAG, "Sending chunk $chunkNumber of $totalChunks: $response")
                         }
 
                         chunkNumber++
@@ -264,6 +265,7 @@ object NanoWebsocketClient{
                     val response = gson.toJson(myObject)
                     if (webSocketClient != null) {
                         webSocketClient!!.send(response)
+                        Log.d(TAG, "Sending chunk $chunkNumber of $totalChunks: $response")
                     }
                     reader.close()
                     inputStream.close()

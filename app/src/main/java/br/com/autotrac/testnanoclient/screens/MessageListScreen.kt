@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,9 +46,16 @@ fun MessageListScreen() {
 
     Box {
         if (messagesList.value.isEmpty()) {
-            // Show the loading icon here
-            Column(verticalArrangement = Arrangement.Center) {
-                LoadingIcon(100)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (messagesState.isEmpty()) {
+                    Text(text = "Caixa de entrada vazia")
+                } else {
+                    LoadingIcon(25) // Loading spinner
+                }
             }
         } else {
             MessageListComposable(
@@ -62,9 +71,9 @@ fun MessageListScreen() {
                     showDialog.value = false
                 },
                 onRefresh = {
-                   coroutineScope.launch {
-                       viewModel.fetchMessages()
-                   }
+                    coroutineScope.launch {
+                        viewModel.fetchMessages()
+                    }
                 }
             )
         }

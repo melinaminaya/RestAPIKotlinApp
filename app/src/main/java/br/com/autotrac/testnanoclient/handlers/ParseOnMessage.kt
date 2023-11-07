@@ -129,6 +129,7 @@ class ParseOnMessage {
                         notification.param2!!,
                         objectReq
                     )
+                    ObservableUtil.attachProperty(ApiEndpoints.SEND_FILE_MESSAGE, notification.param2)
                     Log.d(Companion.TAG, "Received Sent Confirmation: $notification")
                     AppLogger.log("Received Sent Confirmation: $notification")
                     return ParseResult.Ok

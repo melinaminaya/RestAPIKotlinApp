@@ -4,18 +4,13 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
-import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
-import java.beans.PropertyChangeEvent
-import java.beans.PropertyChangeListener
 
 class ParametersViewModel: ViewModel() {
 

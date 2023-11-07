@@ -44,8 +44,6 @@ open class MessageViewModel (
         _contentResolver.value = contentResolver
     }
 
-
-    // Function to fetch messages
     suspend fun fetchMessages() {
         senderAccess.sendRequest(
             ApiEndpoints.REQ_MESSAGE_LIST, 0,

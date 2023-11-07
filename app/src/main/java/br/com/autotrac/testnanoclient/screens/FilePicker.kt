@@ -11,6 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -26,12 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.LoadingIcon
@@ -117,11 +115,7 @@ fun FilePicker(
         modifier = Modifier.padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = selectedFileUri?.let { uri -> uri.lastPathSegment ?: "File" } ?: " ",
-            style = TextStyle(fontSize = 16.sp, color = Color.Gray),
-            modifier = Modifier.weight(1f)
-        )
+        Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
@@ -161,14 +155,24 @@ fun FilePicker(
                                     if (responseSendMessage != null) {
                                         showSnackbar = true
                                         if (navigateToInbox != null) {
+                                            loadingScreen = false
                                             navigateToInbox(1, true)
+
                                         }
                                     }
                                 } else {
                                     fileProcessedDeferred.await()
                                 }
                             } else {
-                                onSendMessage()
+                                responseSendMessage = onSendMessage()
+                                if (responseSendMessage != null) {
+                                    showSnackbar = true
+                                    if (navigateToInbox != null) {
+                                        loadingScreen = false
+                                        navigateToInbox(1, true)
+
+                                    }
+                                }
                             }
 //                            //TODO: Wait for the onSendMessage response OK to redirect.
 //                            if (navigateToInbox != null) {
