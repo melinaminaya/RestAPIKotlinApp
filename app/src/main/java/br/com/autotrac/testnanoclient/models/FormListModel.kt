@@ -1,4 +1,4 @@
-package br.com.autotrac.testnanoclient.dataRemote
+package br.com.autotrac.testnanoclient.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty

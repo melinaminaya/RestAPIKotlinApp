@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.NanoHttpClient
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult

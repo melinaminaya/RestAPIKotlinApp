@@ -72,13 +72,17 @@ function findElementWithText(parentElement, searchText) {
 //Remove all unnecessary links
 var elementsToRemove = [
     "br.com.autotrac.testnanoclient",
-    "br.com.autotrac.testnanoclient.handlers",
+    "br.com.autotrac.testnanoclient.adapter",
     "br.com.autotrac.testnanoclient.common",
+    "br.com.autotrac.testnanoclient.data",
+    "br.com.autotrac.testnanoclient.handlers",
+    "bt.com.autotrac.testnanoclient.logger",
     "br.com.autotrac.testnanoclient.navigation", 
     "br.com.autotrac.testnanoclient.screens",
     "br.com.autotrac.testnanoclient.security",
     "br.com.autotrac.testnanoclient.ui.theme",
-    "br.com.autotrac.testnanoclient.vm"
+    "br.com.autotrac.testnanoclient.vm",
+    
 ];
 
 elementsToRemove.forEach(function(elementText) {
@@ -99,7 +103,7 @@ elementsToRemove.forEach(function(elementText) {
 //Replace link names
 var myMap = new Map();
 myMap.set('br.com.autotrac.testnanoclient.consts', 'Constantes');
-myMap.set('br.com.autotrac.testnanoclient.dataRemote', 'DataClasses');
+myMap.set('br.com.autotrac.testnanoclient.models', 'Models');
 myMap.set('br.com.autotrac.testnanoclient.retrofit', 'Endpoint Genérico');
 myMap.set('br.com.autotrac.testnanoclient.requestObjects', 'Objetos das Requisições')
 myMap.forEach(function(elementText, key){

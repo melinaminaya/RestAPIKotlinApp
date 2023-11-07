@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationForm
+import br.com.autotrac.testnanoclient.models.IntegrationForm
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature

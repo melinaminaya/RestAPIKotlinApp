@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -27,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.NanoWebsocketClient.TAG
 import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.BlockingAlert
@@ -74,7 +73,8 @@ fun HomeScreen(
     val isServiceOn = rememberSaveable{ mutableStateOf(false) }
     val isMobileCommunicatorOn = rememberSaveable{ mutableStateOf(false) }
     val showDialogService = rememberSaveable { mutableStateOf(false) }
-    var isApiOn = appViewModel.isApiOn
+    val isApiOnVal by appViewModel.isApiOn.observeAsState(false)
+    var isApiOn by rememberSaveable{mutableStateOf(isApiOnVal)}
     val isSocketOn by httpViewModel.isSocketOn.observeAsState(false)
     val showDialogApi = rememberSaveable { mutableStateOf(false) }
     val scope = CoroutineScope(Dispatchers.Main)
@@ -87,6 +87,13 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit){
         appViewModel.startCheckingApiStatus()
+    }
+    if(isSocketOn){
+        isServiceOn.value = true
+    }
+    LaunchedEffect(isApiOnVal){
+        isApiOn = isApiOnVal
+        isServiceOn.value = isApiOnVal
     }
 
     Scaffold(
@@ -267,55 +274,16 @@ fun HomeScreen(
                         isChecked = isApiOn,
                         onCheckedChange = { isChecked ->
                             if (isServiceOn.value) {
-                                appViewModel.isApiOn = isChecked
+                                isApiOn = isChecked
 
                                 if (isChecked) {
                                     isLoadingApiOn.value = true
-                                    val thread = Thread {
-                                        try {
-                                            NanoWebsocketClient.connect()
-                                            Thread.sleep(5000) //while isLoadingApiOn with BlockingAlert finishes
-                                            if (NanoWebsocketClient.isWebSocketConnected()) {
-                                                coroutineScope.launch {
-                                                    snackbarHostState.showSnackbar(
-                                                        message = "Websocket conectado com sucesso",
-                                                        actionLabel = "OK",
-                                                        duration = SnackbarDuration.Short
-                                                    )
-                                                }
-                                                Log.i(TAG, "NanoWebSocket Started")
-                                                appViewModel.isApiOn = true
-                                                NanoWebsocketClient.sendMessageFromClient()
-                                            }else{
-                                                coroutineScope.launch {
-                                                    snackbarHostState.showSnackbar(
-                                                        message = "Não foi possível conectar ao servidor",
-                                                        actionLabel = "OK",
-                                                        duration = SnackbarDuration.Short
-                                                    )
-                                                }
-                                                Log.i(TAG, "NanoWebSocket Disconnected")
-                                                appViewModel.isApiOn = false
-                                            }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    }
-                                    thread.start()
+                                    appViewModel.connectToWebSocket(snackbarHostState, coroutineScope)
                                 } else {
-                                    val thread = Thread {
-                                        try {
-                                            NanoWebsocketClient.disconnect()
-                                            Log.i(TAG, "NanoWebSocket Disconnected")
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    }
-                                    thread.start()
+                                    appViewModel.disconnectWebsocket()
                                 }
                             } else {
                                 showDialogService.value = true
-
                             }
 
                         },

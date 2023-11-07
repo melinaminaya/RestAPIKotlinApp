@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,8 +27,8 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -47,10 +46,7 @@ fun CustomTopAppBar(
     isSocketOn: Boolean?,
     content: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    // icons to mimic drawer destinations
+
     val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
     val selectedItem = remember { mutableStateOf(items[0]) }
     var drawerOpen by remember { mutableStateOf(false) }
@@ -63,6 +59,12 @@ fun CustomTopAppBar(
             }
         }
     })
+    var isSocketOnRemember by rememberSaveable {
+        mutableStateOf(isSocketOn)
+    }
+    LaunchedEffect(isSocketOn){
+        isSocketOnRemember = isSocketOn
+    }
 
     TopAppBar(
         title = {
@@ -92,8 +94,8 @@ fun CustomTopAppBar(
         },
         actions = {
             //HTTP Icon
-            isSocketOn?.let {
-                BadgeText(text = "HTTP", isServiceOn = isSocketOn)
+            isSocketOnRemember?.let {
+                BadgeText(text = "HTTP", isServiceOn = it)
             }
             IconButton(
                 onClick = {

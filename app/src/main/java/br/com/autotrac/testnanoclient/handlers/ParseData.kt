@@ -1,6 +1,6 @@
 package br.com.autotrac.testnanoclient.handlers
 
-import br.com.autotrac.testnanoclient.dataRemote.FilterModel
+import br.com.autotrac.testnanoclient.models.FilterModel
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 

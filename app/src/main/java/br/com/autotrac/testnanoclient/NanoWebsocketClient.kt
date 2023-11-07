@@ -8,7 +8,7 @@ import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiConstants
 import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.requestObjects.SendObject
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
@@ -175,7 +175,7 @@ object NanoWebsocketClient{
      * [ActionValues.SYSTEM_RESOURCE_REQ_STATUS] : [ActionValues.ValuesSysResourceReqParam1]
      * e [ActionValues.ValuesSysResourceStatusParam2]
      *
-     * [ActionValues.FORM_RECEIVED] e [ActionValues.FORM_DELETED] : [br.com.autotrac.testnanoclient.dataRemote.IntegrationForm.code]
+     * [ActionValues.FORM_RECEIVED] e [ActionValues.FORM_DELETED] : [br.com.autotrac.testnanoclient.models.IntegrationForm.code]
      */
     fun sendMessageFromClient() {
         val notificationSubscription =

@@ -3,7 +3,7 @@ package br.com.autotrac.testnanoclient.handlers
 import android.content.Context
 import android.net.Uri
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 
 /**
  * Classe para acessar externamente o Websocket Client.

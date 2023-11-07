@@ -1,4 +1,4 @@
-package br.com.autotrac.testnanoclient.dataRemote
+package br.com.autotrac.testnanoclient.models
 
 /**
  * Objeto de envio de filtro de mensagens para receber a lista de mensagens

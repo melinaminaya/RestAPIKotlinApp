@@ -13,8 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.navigation.NavGraph
-import br.com.autotrac.testnanoclient.vm.MessageViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
+import br.com.autotrac.testnanoclient.vm.AppViewModel
 
 /**
  * Inicialização do app teste.
@@ -22,7 +22,8 @@ import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
  * @author Melina Minaya
  */
 class MainActivity : ComponentActivity() {
-    private val viewModel: MessageViewModel by viewModels()
+    private val viewModel: AppViewModel by viewModels()
+    private var appData: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,14 +38,26 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        appData = savedInstanceState?.getString("appData")
+        viewModel.isApiOn.observe(this) { isConnected ->
+            if (isConnected) {
+                // WebSocket is connected, update UI or perform actions
+            } else {
+                // WebSocket is disconnected, update UI or perform actions
+            }
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
         // Close the connection
-        NanoWebsocketClient.disconnect()
+//        NanoWebsocketClient.disconnect()
         // Close the HTTP client
 //        NanoHttpClient.client.dispatcher.cancelAll()
 
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        appData?.let { outState.putString("appData", it) }
     }
 
     override fun onResume() {

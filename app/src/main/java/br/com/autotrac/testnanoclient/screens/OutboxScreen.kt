@@ -22,7 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.common.Alert
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.common.MessageListComposable
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.vm.MessageViewModel
 import kotlinx.coroutines.launch
 

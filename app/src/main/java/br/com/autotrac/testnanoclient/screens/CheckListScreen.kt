@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -44,10 +43,10 @@ import br.com.autotrac.testnanoclient.common.DropdownCard
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.CheckList
-import br.com.autotrac.testnanoclient.dataRemote.LastPosition
-import br.com.autotrac.testnanoclient.dataRemote.ParameterModel
-import br.com.autotrac.testnanoclient.dataRemote.PositionHistory
+import br.com.autotrac.testnanoclient.models.CheckList
+import br.com.autotrac.testnanoclient.models.LastPosition
+import br.com.autotrac.testnanoclient.models.ParameterModel
+import br.com.autotrac.testnanoclient.models.PositionHistory
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
 import br.com.autotrac.testnanoclient.vm.CheckListViewModel
 import br.com.autotrac.testnanoclient.vm.CurrentDateViewModel

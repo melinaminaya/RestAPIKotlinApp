@@ -50,13 +50,14 @@ fun ButtonTicker(
     val httpTestViewModel: HttpTestViewModel = viewModel()
     val count by httpTestViewModel.reqMessageCount.observeAsState("")
     val messagesCount = rememberSaveable{ mutableStateOf(count) }
-    val appViewModel:AppViewModel = AppViewModel()
+    val appViewModel:AppViewModel = viewModel()
 
-    val isApiOn = appViewModel.isApiOn
+    val isApiOn = appViewModel.isApiOn.observeAsState(false)
+//    val isApiOn = appViewModel.isApiOn
     LaunchedEffect(Unit) {
         while (true) {
             //Checa a contagem de mensagens
-            if (isApiOn) {
+            if (isApiOn.value) {
                 NanoWebsocketClient.startSendingRequests()
                 delay(20000)
             } else {

@@ -35,7 +35,7 @@ import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.common.ShowSnackbar
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.vm.FilePickerViewModel
 import br.com.autotrac.testnanoclient.vm.PermissionState
 import kotlinx.coroutines.CompletableDeferred

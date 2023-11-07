@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.LastPosition
-import br.com.autotrac.testnanoclient.dataRemote.PositionHistory
+import br.com.autotrac.testnanoclient.models.LastPosition
+import br.com.autotrac.testnanoclient.models.PositionHistory
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature

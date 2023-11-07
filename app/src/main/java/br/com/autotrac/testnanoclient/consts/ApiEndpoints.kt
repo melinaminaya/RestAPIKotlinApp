@@ -20,11 +20,11 @@ class ApiEndpoints {
          *
          * Exemplo de requisição com Endpoint: {"param1":"NOTIFICATION","param2":[22,7,10,18,21,24,15,9,8,11,5,23,4,3]}
          *
-         * @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse].
+         * @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse].
          *
          * @param param1 Pode ser [NOTIFICATION], [REQUEST], [PARAMETER],
 
-         * @see br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse
+         * @see br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
          */
         const val NOTIFICATION = "NOTIFICATION"
 
@@ -33,8 +33,8 @@ class ApiEndpoints {
          *
          * Exemplo de requisição com Endpoint: {"param1":"REQUEST","param2":"REQ_MESSAGE_COUNT","param3":{"param1":"false","param2":"3"},"param4":0}
          *
-         * @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse].
-         * @see br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse
+         * @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse].
+         * @see br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
          */
         const val REQUEST = "REQUEST"
 
@@ -43,8 +43,8 @@ class ApiEndpoints {
          *
          * Exemplo de requisição com Endpoint: {"param1":"PARAMETER","param2":"SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S","param3":{"param1":"10"}}
          *
-         *  @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse].
-         *  @see br.com.autotrac.testnanoclient.dataRemote.ReceivedRequestResponse
+         *  @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse].
+         *  @see br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
          */
         const val PARAMETER = "PARAMETER"
 
@@ -52,13 +52,13 @@ class ApiEndpoints {
         /**
          * Endpoint Específico de requisição de lista de mensagens de acordo com filtro especificado.
          * Filtro contém:
-         * @param param1 [br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage.code] - indica se as mensagens de envio ou retorno devem ser filtradas.
+         * @param param1 [br.com.autotrac.testnanoclient.models.IntegrationMessage.code] - indica se as mensagens de envio ou retorno devem ser filtradas.
          *
          * Se este parâmetro for igual a 0, ele será ignorado. Se for diferente de 0, os demais filtros serão ignorados e somente a mensagem com o código especificado será retornada.
-         * @param param2 [br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage.isForward] - indica se as mensagens de envio ou retorno devem ser filtradas.
+         * @param param2 [br.com.autotrac.testnanoclient.models.IntegrationMessage.isForward] - indica se as mensagens de envio ou retorno devem ser filtradas.
          *
          * Se true indica que as mensagens de envio serão filtradas. Se false as mensagens de retorno serão filtradas. Este parâmetro só é considerado se p_msgCode for igual a 0.
-         * @param param3 [br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage.msgStatusNum] - status das mensagens a serem filtradas.
+         * @param param3 [br.com.autotrac.testnanoclient.models.IntegrationMessage.msgStatusNum] - status das mensagens a serem filtradas.
          * @see [ActionValues.MessageStatusValues]
          *
          * Este parâmetro só é considerado se p_msgCode for igual a 0.
@@ -159,7 +159,7 @@ class ApiEndpoints {
          * Endpoint Específico.
          *
          * Realiza as consultas necessárias para a realização do checkList.
-         * @return Retorna um objeto do tipo [br.com.autotrac.testnanoclient.dataRemote.CheckList]
+         * @return Retorna um objeto do tipo [br.com.autotrac.testnanoclient.models.CheckList]
          * Com valores a seguir:
          *
          * Cellular Status - não implementado
@@ -206,7 +206,7 @@ class ApiEndpoints {
 
         /**
          * Endpoint específico de requisição de parâmetros do MCT.
-         * @return Lista de parâmetros no seguinte modelo: [br.com.autotrac.testnanoclient.dataRemote.ParameterModel].
+         * @return Lista de parâmetros no seguinte modelo: [br.com.autotrac.testnanoclient.models.ParameterModel].
          */
         const val REQ_GET_MCT_PARAMETERS = "REQ_GET_MCT_PARAMETERS"
 

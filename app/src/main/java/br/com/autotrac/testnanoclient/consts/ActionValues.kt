@@ -12,7 +12,7 @@ object ActionValues {
      * @param Param2 Não utilizado.
      * @param Param3 Não utilizado.
      * @param Param4 Não utilizado.
-     * @see br.com.autotrac.testnanoclient.dataRemote.IntegrationForm.code
+     * @see br.com.autotrac.testnanoclient.models.IntegrationForm.code
      */
     const val FORM_RECEIVED = 0x03
 
@@ -22,7 +22,7 @@ object ActionValues {
      * @param Param2 Não utilizado.
      * @param Param3 Não utilizado.
      * @param Param4 Não utilizado.
-     * @see br.com.autotrac.testnanoclient.dataRemote.IntegrationForm.code
+     * @see br.com.autotrac.testnanoclient.models.IntegrationForm.code
      */
     const val FORM_DELETED = 0x04
 

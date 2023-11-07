@@ -1,6 +1,5 @@
 package br.com.autotrac.testnanoclient.common
 
-import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.compose.animation.core.animateFloatAsState
@@ -30,8 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
-import java.time.format.DateTimeFormatter
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import java.util.Locale
 
 

@@ -7,7 +7,7 @@ import android.util.Log
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiConstants
 import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.requestObjects.SendObject
@@ -65,7 +65,7 @@ object NanoHttpClient {
      * Método para envio de todas as requisições, menos a de mensagens longas [ApiEndpoints.SEND_FILE_MESSAGE].
      * @see sendFileChunksHttp
      *
-     * O [br.com.autotrac.testnanoclient.dataRemote.RequestObject] é distribuído em queries na requisição HTTP.
+     * O [br.com.autotrac.testnanoclient.requestObjects.RequestObject] é distribuído em queries na requisição HTTP.
      */
     suspend fun sendGetRequestHttp( endpoint: String, objectGet: RequestObject): String {
         val token = NanoWebsocketClient.requestAuthorizationToken()
