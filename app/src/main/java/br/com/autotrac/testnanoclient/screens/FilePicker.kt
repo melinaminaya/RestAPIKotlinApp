@@ -193,7 +193,7 @@ fun FilePicker(
             ) {
                 if (loadingScreen) {
                     // Show the circular progress indicator while loading is true
-                    LoadingIcon(25)
+                    LoadingIcon(25, null)
                 } else {
                     // Show the "Enviar" button text when loading is false
                     Text("Enviar")

@@ -223,7 +223,7 @@ fun ParametersScreen(
                             text = parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER].toString(),
                             style = TextStyle(fontSize = 14.sp)
                         )
-                    } ?: LoadingIcon(size = 25)
+                    } ?: LoadingIcon(size = 25, null)
                 }
             }
             item {
@@ -508,7 +508,7 @@ fun ParametersScreen(
                                 text = listApps,
                                 style = TextStyle(fontSize = 14.sp)
                             )
-                        } ?: LoadingIcon(size = 25)
+                        } ?: LoadingIcon(size = 25, null)
                     }
                 }
             }

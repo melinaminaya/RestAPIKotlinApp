@@ -32,7 +32,7 @@ fun OutboxScreen() {
 
     val viewModel: MessageViewModel = viewModel()
     val showDialog = remember { mutableStateOf(false) }
-    val messagesState by viewModel.outboxMessages.observeAsState(emptyList())
+    val messagesState by viewModel.outboxMessages.observeAsState(null)
     val messagesList = rememberSaveable{ mutableStateOf(messagesState) }
     var clickedMessage = remember { mutableStateOf<IntegrationMessage?>(null) }
     val coroutineScope = rememberCoroutineScope()
@@ -45,59 +45,67 @@ fun OutboxScreen() {
     }
 
     Box {
-        if (messagesList.value.isEmpty()) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (messagesState.isEmpty()) {
-                    Text(text = "Caixa de entrada vazia")
-                } else {
-                    LoadingIcon(25) // Loading spinner
+        when {
+            messagesState == null -> {
+                LoadingIcon(size = 50, 16)
+            }
+
+            messagesState!!.isEmpty() -> {
+                // Empty state
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Caixa de saída vazia")
                 }
             }
-        } else {
-            MessageListComposable(
-                messages = messagesList.value,
-                onMessageDelete = { message ->
-                    viewModel.deleteMessageOutbox(message)
-                },
-                onMessageClick = { message ->
-                    showDialog.value = true
-                    clickedMessage.value = message
-                },
-                onDialogDismiss = {
-                    showDialog.value = false
-                },
-                onRefresh = {
-                    coroutineScope.launch {
-                        viewModel.fetchOutboxMessages()
-                    }
-                }
-            )
-            if (showDialog.value) {
-                Alert(
-                    onDismissRequest = { showDialog.value = false },
-                    onClick = {
-//                viewModel.confirmMessageRead()
-                        showDialog.value = false
-                    },
-                    title = "MsgCode: ${clickedMessage.value?.code}",
-                    content = {
-                        Column {
-                            Text(text = clickedMessage.value?.body ?: "")
-                            val filePreviewName = clickedMessage.value?.outOfBandFilename
-                            if (!filePreviewName.isNullOrEmpty()) {
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(text = "File Name: $filePreviewName")
+
+            else -> {
+                messagesList.value?.let {
+                    MessageListComposable(
+                        messages = it,
+                        onMessageDelete = { message ->
+                            viewModel.deleteMessageOutbox(message)
+                        },
+                        onMessageClick = { message ->
+                            showDialog.value = true
+                            clickedMessage.value = message
+                        },
+                        onDialogDismiss = {
+                            showDialog.value = false
+                        },
+                        onRefresh = {
+                            coroutineScope.launch {
+                                viewModel.fetchOutboxMessages()
                             }
                         }
-                    },
-                    showMarkAsRead = false,
-                )
+                    )
+                }
             }
         }
+        if (showDialog.value) {
+            Alert(
+                onDismissRequest = { showDialog.value = false },
+                onClick = {
+//                viewModel.confirmMessageRead()
+                    showDialog.value = false
+                },
+                title = "MsgCode: ${clickedMessage.value?.code}",
+                content = {
+                    Column {
+                        Text(text = clickedMessage.value?.body ?: "")
+                        val filePreviewName = clickedMessage.value?.outOfBandFilename
+                        if (!filePreviewName.isNullOrEmpty()) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = "File Name: $filePreviewName")
+                        }
+                    }
+                },
+                showMarkAsRead = false,
+            )
+        }
+
     }
 }
 

@@ -39,7 +39,7 @@ fun ModelRow(title: String, status: String?) {
                     .wrapContentWidth()
             )
         }else{
-            LoadingIcon(25)
+            LoadingIcon(25, null)
         }
     }
 }

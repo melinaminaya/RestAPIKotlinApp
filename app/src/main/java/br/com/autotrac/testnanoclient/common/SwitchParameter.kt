@@ -46,7 +46,7 @@ fun SwitchParameter(
             )
 
         } else {
-            LoadingIcon(25)
+            LoadingIcon(25, null)
         }
 
     }
