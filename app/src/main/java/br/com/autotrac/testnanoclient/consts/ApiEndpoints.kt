@@ -67,6 +67,7 @@ class ApiEndpoints {
 
         //Constante interna deste app.
         const val REQ_MESSAGE_LIST_INBOX = "REQ_MESSAGE_LIST_INBOX"
+
         //Constante interna deste app.
         const val REQ_MESSAGE_LIST_OUTBOX = "REQ_MESSAGE_LIST_OUTBOX"
 
@@ -286,13 +287,15 @@ class ApiEndpoints {
          * Intervalo, em segundos, entre comunicações com o dispositivo de comunicação alternativo.
          * Refere-se ao intervalo entre verificações de novas mensagens junto ao dispositivo de comunicação alternativo.
          */
-        const val GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S = "GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S"
+        const val GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S =
+            "GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S"
 
         /**
          * Enpoint específico para alterar o intervalo entre verificações de novas mensagens junto ao dispositivo de comunicação alternativo.
          *  O intervalo recomendado é 10 segundos.
          */
-        const val SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S = "SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S"
+        const val SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S =
+            "SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S"
 
         /**
          * Versão de firmware do dispositivo de comunicação alternativo, por exemplo: MCT, ACU2, Iridium, etc
@@ -303,7 +306,8 @@ class ApiEndpoints {
          * Endereço do dispositivo de comunicação alternativo.
          * O dispositivo de comunicação alternativo geralmente é um dispositivo de comunicação satelital.
          */
-        const val GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS = "GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS"
+        const val GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS =
+            "GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS"
 
         /**
          * Endereço IP da rede Celular do dispositivo.
@@ -402,6 +406,8 @@ class ApiEndpoints {
          * ** Aplicável apenas a produtos que possuem comunicação celular.**
          *
          * A data da última comunicação é baseada na última troca de mensagem ou posição.
+         * Retorna em TimeStamp  (segundos desde 01/01/1970 00:00:00 GMT) da última mensagem
+         * /posição trocada na rede celular.
          */
         const val GET_PARAM_LAST_CELL_COMM_TIME = "GET_PARAM_LAST_CELL_COMM_TIME"
 
@@ -414,6 +420,8 @@ class ApiEndpoints {
         /**
          * Data/hora (GMT) da última comunicação via rede satelital.
          * A data da última comunicação é baseada na última troca de mensagem ou posição.
+         * Retorna em TimeStamp (segundos desde 01/01/1970 00:00:00 GMT) da última mensagem
+         * /posição trocada na rede satelital.
          */
         const val GET_PARAM_LAST_SAT_COMM_TIME = "GET_PARAM_LAST_SAT_COMM_TIME"
 
@@ -427,7 +435,8 @@ class ApiEndpoints {
          * Indica se o uso da VPN pelo serviço de comunicação é permitido ou não.
          * @see ParameterValues.VpnDisableValues
          */
-        const val GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION = "GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION"
+        const val GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION =
+            "GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION"
 
         /**
          * Endpoint específico para habilitar ou desabilitar o uso da VPN.
@@ -436,13 +445,15 @@ class ApiEndpoints {
          *  Ao final do uso da VPN em modo desabilitado,  deve ser novamente habilitado (configurando o valor como 0), se desejado.
          *  @see ParameterValues.VpnDisableValues
          */
-        const val SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION = "SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION"
+        const val SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION =
+            "SET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION"
 
         /**
          * Indica se o uso do WiFi pelo serviço de comunicação é permitido ou não.
          * @see ParameterValues.WifiDisableValues
          */
-        const val GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION = "GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION"
+        const val GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION =
+            "GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION"
 
         /**
          * Enpoint específico para habilitar ou desabilitar o uso do WiFi.
@@ -452,7 +463,8 @@ class ApiEndpoints {
          *  Ao final do uso do WiFi, deve ser reconfigurado para o valor 0.
          *  @see ParameterValues.WifiDisableValues
          */
-        const val SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION = "SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION"
+        const val SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION =
+            "SET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION"
 
         /**
          * Diretório base onde os arquivos de mensagens longas (Out Of Band) serão armazenados.

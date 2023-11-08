@@ -78,7 +78,7 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
                         )
                     }
                     Log.i(NanoWebsocketClient.TAG, "NanoWebSocket Disconnected")
-                    callback.onConnectionSuccess()
+                    callback.onConnectionFailure()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -100,22 +100,19 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
         }
         thread.start()
     }
-    // This method will be called when the ViewModel is about to be cleared (e.g., when the activity is destroyed)
-    override fun onCleared() {
-        super.onCleared()
-
-        // Save the WebSocket connection status to the SavedStateHandle
-        state["isApiOn"] = _isApiOn.value
-//        state["isDisconnectionSuccessful"] = _isDisconnectionSuccessful
-    }
-    fun connectToWebSocket(snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope) {
+    fun connectToWebSocket(snackbarHostState: SnackbarHostState,
+                           coroutineScope: CoroutineScope,
+    ) {
         connectToWebSocketIn(snackbarHostState, coroutineScope, object : WebSocketConnectionCallback {
             override fun onConnectionSuccess() {
-                _isApiOn.value = true
+                viewModelScope.launch {
+                    _isApiOn.value = true
+                }
             }
-
             override fun onConnectionFailure() {
-                _isApiOn.value = false
+                viewModelScope.launch {
+                    _isApiOn.value = false
+                }
             }
         })
     }
@@ -131,5 +128,12 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
                 // Handle disconnection failure
             }
         })
+    }
+    // This method will be called when the ViewModel is about to be cleared (e.g., when the activity is destroyed)
+    override fun onCleared() {
+        super.onCleared()
+        // Save the WebSocket connection status to the SavedStateHandle
+        state["isApiOn"] = _isApiOn.value
+//        state["isDisconnectionSuccessful"] = _isDisconnectionSuccessful
     }
 }

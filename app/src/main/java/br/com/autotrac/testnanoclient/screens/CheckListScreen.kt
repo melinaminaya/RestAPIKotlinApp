@@ -48,6 +48,7 @@ import br.com.autotrac.testnanoclient.models.LastPosition
 import br.com.autotrac.testnanoclient.models.ParameterModel
 import br.com.autotrac.testnanoclient.models.PositionHistory
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
+import br.com.autotrac.testnanoclient.handlers.ParseData
 import br.com.autotrac.testnanoclient.vm.CheckListViewModel
 import br.com.autotrac.testnanoclient.vm.CurrentDateViewModel
 import br.com.autotrac.testnanoclient.vm.LastPositionViewModel
@@ -447,7 +448,7 @@ fun PositionLastCard(content: LastPosition?){
             style = TextStyle(fontSize = 14.sp)
         )
         Text(
-            text = "PositionTime: ${content.positionTime}",
+            text = "PositionTime: ${ParseData.convertFromTimeStamp(content.positionTime)}",
             style = TextStyle(fontSize = 14.sp)
         )
 

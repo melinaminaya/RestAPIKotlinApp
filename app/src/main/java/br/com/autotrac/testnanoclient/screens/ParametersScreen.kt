@@ -27,7 +27,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
 import br.com.autotrac.testnanoclient.common.CustomTextFieldWithButton
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
@@ -41,12 +40,8 @@ import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ParameterValues
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
-import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
+import br.com.autotrac.testnanoclient.handlers.ParseData
 import br.com.autotrac.testnanoclient.vm.ParametersViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 
 @Composable
@@ -86,18 +81,18 @@ fun ParametersScreen(
     }
 
     var extDevCommType by rememberSaveable {
-        mutableStateOf( parameterValues[ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE])
+        mutableStateOf(parameterValues[ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE])
     }
     var outOfBandMsg by rememberSaveable {
-        mutableStateOf( parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH] )
+        mutableStateOf(parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH])
     }
     var timeoutSendCellMsg by rememberSaveable {
-        mutableStateOf( parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG] )
+        mutableStateOf(parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG])
     }
     var isBaptizedValue by rememberSaveable {
-        mutableStateOf( parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED] )
+        mutableStateOf(parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED])
     }
-   var baptismStarted by rememberSaveable { mutableStateOf(false) }
+    var baptismStarted by rememberSaveable { mutableStateOf(false) }
 //    val isBaptizedValueState by viewModel.isBaptizedValue.observeAsState(initial = isBaptizedValue)
 //    val baptismStatusState by viewModel.observeBaptismStatus().collectAsState(initial = "")
     var baptismStatus by remember { mutableStateOf("") }
@@ -112,11 +107,11 @@ fun ParametersScreen(
                 val newValue = evt.newValue.toString()
                 // Update the satelliteSignal Composable property
                 satelliteSignal = newValue.toDouble().toInt().toString()
-            }else if (evt.propertyName == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
+            } else if (evt.propertyName == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
                 val newValue = evt.newValue.toString()
                 // Update the baptismStatus Composable property
                 isBaptizedValue = ParameterHandler.convertIsBaptized(newValue)
-                if(isBaptizedValue != null) {
+                if (isBaptizedValue != null) {
                     baptismStatus = isBaptizedValue as String
                 }
             }
@@ -134,8 +129,9 @@ fun ParametersScreen(
         }
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED]) {
-        isBaptizedValue = ParameterHandler.convertIsBaptized( parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED])
-        if(isBaptizedValue != null) {
+        isBaptizedValue =
+            ParameterHandler.convertIsBaptized(parameterValues[ApiEndpoints.GET_PARAM_IS_BAPTIZED])
+        if (isBaptizedValue != null) {
             baptismStatus = isBaptizedValue as String
         }
         Log.d("BAPTISM_STATUS", "BAPTISM_STATUS no PARAM: $baptismStatus")
@@ -203,7 +199,7 @@ fun ParametersScreen(
 //                        BaptismView(wifiSSIDText, enabled, focusRequester, viewModel)
                         CustomTextFieldWithButton(
                             title = "Batizar",
-                            text = wifiSSIDText ?: "" ,
+                            text = wifiSSIDText ?: "",
                             onTextChange = { wifiSSIDText = it },
                             onSaveClick = {
                                 viewModel.setParam(
@@ -218,7 +214,7 @@ fun ParametersScreen(
             }
             item {
                 DropdownCard(title = "Account Number") {
-                    parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER]?.let{
+                    parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER]?.let {
                         Text(
                             text = parameterValues[ApiEndpoints.GET_PARAM_ACCOUNT_NUMBER].toString(),
                             style = TextStyle(fontSize = 14.sp)
@@ -230,7 +226,7 @@ fun ParametersScreen(
                 DropdownCard(title = "Alternative Communication Device") {
                     Column {
                         CustomTextFieldWithButton(
-                            title ="Intervalo de tempo, em segundos, entre cada ciclo de troca de pacotes com o Mct.",
+                            title = "Intervalo de tempo, em segundos, entre cada ciclo de troca de pacotes com o Mct.",
                             text = altCommDevText,
                             onTextChange = { altCommDevText = it }
                         ) {
@@ -242,41 +238,49 @@ fun ParametersScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                         ModelRow(
                             title = "Versão de Firmware:",
-                            status = parameterValues[ApiEndpoints.GET_PARAM_ALT_COMM_FIRMWARE_VERSION])
+                            status = parameterValues[ApiEndpoints.GET_PARAM_ALT_COMM_FIRMWARE_VERSION]
+                        )
 
                         Spacer(modifier = Modifier.height(4.dp))
                         ModelRow(
                             title = "Endereço do dispositivo de comunicação alternativo:",
-                            status = parameterValues[ApiEndpoints.GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS] )
+                            status = parameterValues[ApiEndpoints.GET_PARAM_ALTERNATIVE_COMM_DEVICE_ADDRESS]
+                        )
                     }
                 }
             }
             item {
                 DropdownCard(title = "Conexão Celular") {
                     ModelRow(
-                        title ="Ip Local de Conexão Celular:" ,
-                       status =parameterValues[ApiEndpoints.GET_PARAM_CELL_IP_ADDRESS] )
+                        title = "Ip Local de Conexão Celular:",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_CELL_IP_ADDRESS]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Sinal Celular:",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_HAS_CELLULAR_SIGNAL] )
+                        status = parameterValues[ApiEndpoints.GET_PARAM_HAS_CELLULAR_SIGNAL]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Última mensagem/posição trocada na rede celular: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_LAST_CELL_COMM_TIME])
+                        status = ParseData.convertFromTimeStamp(
+                            parameterValues[ApiEndpoints.GET_PARAM_LAST_CELL_COMM_TIME]
+                        ).toString()
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Último status da conexão via rede celular:  ",
-                        status = ParameterHandler.convertConnectionTypes(parameterValues[ApiEndpoints.GET_PARAM_LAST_CELL_CONNECTION_STATUS]))
+                        status = ParameterHandler.convertConnectionTypes(parameterValues[ApiEndpoints.GET_PARAM_LAST_CELL_CONNECTION_STATUS])
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
 
                     CustomTextFieldWithButton(
-                        title ="Intervalo de tempo para tentativas de envio em rede celular: " ,
-                        text = timeoutSendCellMsg ,
+                        title = "Intervalo de tempo para tentativas de envio em rede celular: ",
+                        text = timeoutSendCellMsg,
                         onTextChange = { timeoutSendCellMsg = it }
                     ) {
                         viewModel.setParam(
@@ -296,33 +300,40 @@ fun ParametersScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Última mensagem/posição trocada na rede satelital: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_LAST_SAT_COMM_TIME])
+                        status = ParseData.convertFromTimeStamp(
+                            parameterValues[ApiEndpoints.GET_PARAM_LAST_SAT_COMM_TIME]
+                        ).toString()
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Último status da conexão via rede satelital: ",
-                        status = ParameterHandler.convertConnectionTypes(parameterValues[ApiEndpoints.GET_PARAM_LAST_SAT_CONNECTION_STATUS]))
+                        status = ParameterHandler.convertConnectionTypes(parameterValues[ApiEndpoints.GET_PARAM_LAST_SAT_CONNECTION_STATUS])
+                    )
                 }
             }
             item {
                 DropdownCard(title = "Diretórios") {
                     ModelRow(
                         title = "Diretório de Logs do Cliente:  ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_CLIENT_LOGS_DIRECTORY])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_CLIENT_LOGS_DIRECTORY]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Status de envio de log: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_FTP_LOGS_STATUS])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_FTP_LOGS_STATUS]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Diretório de arquivos de mensagens longas: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH] )
+                        status = parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH]
+                    )
                     CustomTextFieldWithButton(
                         title = "Diretório de arquivos de mensagens longas: ",
-                        text = outOfBandMsg ,
-                        onTextChange ={outOfBandMsg = it},
+                        text = outOfBandMsg,
+                        onTextChange = { outOfBandMsg = it },
                         onSaveClick = {
                             viewModel.setParam(
                                 ApiEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH,
@@ -333,23 +344,24 @@ fun ParametersScreen(
                 }
             }
             item {
-
                 DropdownCard(title = "Identificação do aparelho móvel") {
                     ModelRow(
                         title = "Modelo do Aparelho Móvel: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_COMM_UNIT_DEVICE_TYPE])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_COMM_UNIT_DEVICE_TYPE]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Canal de comunicação atual: ",
-                        status = ParameterHandler.convertCommMode(parameterValues[ApiEndpoints.GET_PARAM_CURRENT_COMM_MODE]))
+                        status = ParameterHandler.convertCommMode(parameterValues[ApiEndpoints.GET_PARAM_CURRENT_COMM_MODE])
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     DropDownToSet(
                         title = "Tipo de comunicação a ser utilizado com o dispositivo externo: ",
                         previousText = extDevCommType,
-                        onTextChange = {item->
-                           extDevCommType  = item
+                        onTextChange = { item ->
+                            extDevCommType = item
                             viewModel.setParam(
                                 ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE,
                                 item
@@ -363,76 +375,90 @@ fun ParametersScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Número da UC: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_UC_ADDRESS])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_UC_ADDRESS]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Status da UC Móvel: ",
-                        status = ParameterHandler.convertUcStatusValue(parameterValues[ApiEndpoints.GET_PARAM_UC_STATUS]))
+                        status = ParameterHandler.convertUcStatusValue(parameterValues[ApiEndpoints.GET_PARAM_UC_STATUS])
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Subtipo da UC Móvel: ",
-                        status = ParameterHandler.convertUcSubtype(parameterValues[ApiEndpoints.GET_PARAM_UC_SUBTYPE]))
+                        status = ParameterHandler.convertUcSubtype(parameterValues[ApiEndpoints.GET_PARAM_UC_SUBTYPE])
+                    )
                 }
             }
             item {
                 DropdownCard(title = "Software/Hardware") {
                     ModelRow(
                         title = "Status de Atualização de Software: ",
-                        status = ParameterHandler.convertUpdateRequests(parameterValues[ApiEndpoints.GET_PARAM_HAS_UPDATE_PENDING]))
+                        status = ParameterHandler.convertUpdateRequests(parameterValues[ApiEndpoints.GET_PARAM_HAS_UPDATE_PENDING])
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
-                        title = "Firware de Conversores Homologados: " ,
-                        status = parameterValues[ApiEndpoints.GET_PARAM_HOM_WIFI_SERIAL_DEV_FW_VERSIONLIST])
+                        title = "Firware de Conversores Homologados: ",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_HOM_WIFI_SERIAL_DEV_FW_VERSIONLIST]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
-                        title ="Controle de Wifi, GPRS, GPS e Modo Avião (Habilitados): " ,
-                        status = ParameterHandler.getFormattedRadioOptions(parameterValues[ApiEndpoints.GET_PARAM_HW_CONTROL_DISABLE]?.toLong()))
+                        title = "Controle de Wifi, GPRS, GPS e Modo Avião (Habilitados): ",
+                        status = ParameterHandler.getFormattedRadioOptions(parameterValues[ApiEndpoints.GET_PARAM_HW_CONTROL_DISABLE]?.toLong())
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
-                        title ="ICCID do SimCard1: " ,
-                        status = parameterValues[ApiEndpoints.GET_PARAM_ICCID1])
+                        title = "ICCID do SimCard1: ",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_ICCID1]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
-                        title ="Número Serial: " ,
-                        status = parameterValues[ApiEndpoints.GET_PARAM_IMEI1])
+                        title = "Número Serial: ",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_IMEI1]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
-                        title = "Provedor de SimCard: " ,
-                        status = parameterValues[ApiEndpoints.GET_PARAM_PHONE_PROVIDER_NAME] )
+                        title = "Provedor de SimCard: ",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_PHONE_PROVIDER_NAME]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Versão do Serviço: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_SERVICE_VERSION])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_SERVICE_VERSION]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Versão da Interface do Usuário: ",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_USER_INTERFACE_VERSION])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_USER_INTERFACE_VERSION]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Serial do Conversor WIFI:",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_WIFI_CONVERTER_SERIAL_NUMBER])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_WIFI_CONVERTER_SERIAL_NUMBER]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
                         title = "Versão do Firmware do Conversor WIFI",
-                        status = parameterValues[ApiEndpoints.GET_PARAM_WIFI_SERIAL_DEV_FIRMWARE_VERSION])
+                        status = parameterValues[ApiEndpoints.GET_PARAM_WIFI_SERIAL_DEV_FIRMWARE_VERSION]
+                    )
                 }
             }
             item {
                 DropdownCard(title = "Relatório de Dispositivo Externo") {
                     ModelRow(
-                        title = "Status da ignição:" ,
-                        status = ParameterHandler.convertIgnition(parameterValues[ApiEndpoints.GET_PARAM_IGNITION_STATUS]))
+                        title = "Status da ignição:",
+                        status = ParameterHandler.convertIgnition(parameterValues[ApiEndpoints.GET_PARAM_IGNITION_STATUS])
+                    )
                 }
             }
             item {
@@ -463,7 +489,9 @@ fun ParametersScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                         ModelRow(
                             title = "Status da Conexão da VPN",
-                            status = ParameterHandler.convertVPNConnectionStatus(ApiEndpoints.GET_PARAM_VPN_CONNECTION_STATUS) ?: "N/A" )
+                            status = ParameterHandler.convertVPNConnectionStatus(ApiEndpoints.GET_PARAM_VPN_CONNECTION_STATUS)
+                                ?: "N/A"
+                        )
 
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -492,8 +520,9 @@ fun ParametersScreen(
 
                         Spacer(modifier = Modifier.height(4.dp))
                         ModelRow(
-                            title ="IP da rede WIFI:" ,
-                            status = parameterValues[ApiEndpoints.GET_PARAM_WIFI_IP_ADDRESS])
+                            title = "IP da rede WIFI:",
+                            status = parameterValues[ApiEndpoints.GET_PARAM_WIFI_IP_ADDRESS]
+                        )
                     }
                 }
             }
@@ -515,13 +544,15 @@ fun ParametersScreen(
             item {
                 DropdownCard(title = "Servidor (AMH)") {
                     ModelRow(
-                        title = "Endereço primário do servidor: " ,
-                        status = parameterValues[ApiEndpoints.GET_PARAM_SERVER_IP1])
+                        title = "Endereço primário do servidor: ",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_SERVER_IP1]
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     ModelRow(
-                        title = "Porta primária do servidor: " ,
-                        status = parameterValues[ApiEndpoints.GET_PARAM_SERVER_PORT1])
+                        title = "Porta primária do servidor: ",
+                        status = parameterValues[ApiEndpoints.GET_PARAM_SERVER_PORT1]
+                    )
                 }
             }
         }

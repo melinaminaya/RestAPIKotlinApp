@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    //Affects the screen rotation
     override fun onDestroy() {
         super.onDestroy()
         // Close the connection
@@ -67,6 +68,9 @@ class MainActivity : ComponentActivity() {
          * quando o app é fechado e reiniciado.
          */
 //        NanoWebsocketClient.connect()
+    }
+    override fun onPause() {
+        super.onPause()
     }
 }
 

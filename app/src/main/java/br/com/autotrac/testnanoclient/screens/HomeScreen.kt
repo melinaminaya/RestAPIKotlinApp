@@ -70,30 +70,32 @@ fun HomeScreen(
     val httpViewModel = viewModel<HttpTestViewModel>()
     val appViewModel = viewModel<AppViewModel>()
     val resetDbResponse by viewModel.resetDatabaseResponse.observeAsState("")
-    val isServiceOn = rememberSaveable{ mutableStateOf(false) }
-    val isMobileCommunicatorOn = rememberSaveable{ mutableStateOf(false) }
+    val isServiceOn = rememberSaveable { mutableStateOf(false) }
+    val isMobileCommunicatorOn = rememberSaveable { mutableStateOf(false) }
     val showDialogService = rememberSaveable { mutableStateOf(false) }
     val isApiOnVal by appViewModel.isApiOn.observeAsState(false)
-    var isApiOn by rememberSaveable{mutableStateOf(isApiOnVal)}
+    var isApiOn by remember { mutableStateOf(isApiOnVal) }
     val isSocketOn by httpViewModel.isSocketOn.observeAsState(false)
     val showDialogApi = rememberSaveable { mutableStateOf(false) }
     val scope = CoroutineScope(Dispatchers.Main)
-    var isLoadingServiceOn =  remember{ mutableStateOf(false) }
-    var isLoadingServiceOff =  remember{ mutableStateOf(false) }
-    var isLoadingApiOn =  remember{ mutableStateOf(false) }
+    var isLoadingServiceOn = remember { mutableStateOf(false) }
+    var isLoadingServiceOff = remember { mutableStateOf(false) }
+    var isLoadingApiOn = remember { mutableStateOf(false) }
     val handler = Handler(Looper.getMainLooper())
     // To show a Snackbar
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         appViewModel.startCheckingApiStatus()
     }
-    if(isSocketOn){
-        isServiceOn.value = true
-    }
-    LaunchedEffect(isApiOnVal){
+    LaunchedEffect(isApiOnVal) {
         isApiOn = isApiOnVal
-        isServiceOn.value = isApiOnVal
+        if (isApiOn) {
+            isServiceOn.value = isApiOn
+        }
+    }
+    if (isSocketOn) {
+        isServiceOn.value = true
     }
 
     Scaffold(
@@ -101,7 +103,7 @@ fun HomeScreen(
             CustomTopAppBar(
                 title = null,
                 onBackClick = null,
-                navigateToLogs = {  },
+                navigateToLogs = { },
                 popUpToLogin = popUpToLogin,
                 isSocketOn = isSocketOn
             ) {}
@@ -148,7 +150,7 @@ fun HomeScreen(
                                         Log.i(TAG, "Service Started")
                                     } catch (e: Exception) {
                                         e.printStackTrace()
-                                    }finally {
+                                    } finally {
 
 
                                     }
@@ -216,7 +218,7 @@ fun HomeScreen(
                                         Log.i(TAG, "Mobile Communicator Started")
                                     } catch (e: Exception) {
                                         e.printStackTrace()
-                                    }finally {
+                                    } finally {
 //                                        isLoading = false
                                     }
                                 }
@@ -274,11 +276,11 @@ fun HomeScreen(
                         isChecked = isApiOn,
                         onCheckedChange = { isChecked ->
                             if (isServiceOn.value) {
-                                isApiOn = isChecked
-
                                 if (isChecked) {
                                     isLoadingApiOn.value = true
-                                    appViewModel.connectToWebSocket(snackbarHostState, coroutineScope)
+                                    appViewModel.connectToWebSocket(snackbarHostState,
+                                        coroutineScope,
+                                    )
                                 } else {
                                     appViewModel.disconnectWebsocket()
                                 }
@@ -430,17 +432,23 @@ fun HomeScreen(
             }
         }
         if (isLoadingServiceOn.value) {
-            BlockingAlert(message =  "Aguarde o processo de inicialização...", durationMillis = 8000 ){
+            BlockingAlert(
+                message = "Aguarde o processo de inicialização...",
+                durationMillis = 8000
+            ) {
                 isLoadingServiceOn.value = false
             }
         }
-        if (isLoadingServiceOff.value){
-            BlockingAlert(message =  "Aguarde o processo de finalização...", durationMillis =19000 ){
+        if (isLoadingServiceOff.value) {
+            BlockingAlert(
+                message = "Aguarde o processo de finalização...",
+                durationMillis = 19000
+            ) {
                 isLoadingServiceOff.value = false
             }
         }
-        if (isLoadingApiOn.value){
-            BlockingAlert(message =  "Conectando à Api...", durationMillis = 5000 ){
+        if (isLoadingApiOn.value) {
+            BlockingAlert(message = "Conectando à Api...", durationMillis = 5000) {
                 isLoadingApiOn.value = false
             }
         }
@@ -456,14 +464,14 @@ private fun DefaultPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                navigateToInbox = { _,_ -> },
+                navigateToInbox = { _, _ -> },
                 navigateToSendMessage = {},
                 navigateToCheckList = {},
                 navigateToParameters = {},
                 navigateToHttpTest = {},
                 popBackStack = {},
                 popUpToLogin = {})
-               // messageViewModel = {})
+            // messageViewModel = {})
         }
     }
 }

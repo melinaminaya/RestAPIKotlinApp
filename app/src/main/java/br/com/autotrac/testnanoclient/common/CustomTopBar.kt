@@ -28,7 +28,6 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -44,14 +43,14 @@ fun CustomTopAppBar(
     navigateToLogs: () -> Unit,
     popUpToLogin: () -> Unit,
     isSocketOn: Boolean?,
-    content: () -> Unit
+    content: () -> Unit,
 ) {
 
     val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
     val selectedItem = remember { mutableStateOf(items[0]) }
     var drawerOpen by remember { mutableStateOf(false) }
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current
-    backDispatcher?.onBackPressedDispatcher?.addCallback(object: OnBackPressedCallback(true) {
+    backDispatcher?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             if (drawerOpen) {
                 // Close the drawer if it's open
@@ -59,10 +58,10 @@ fun CustomTopAppBar(
             }
         }
     })
-    var isSocketOnRemember by rememberSaveable {
+    var isSocketOnRemember by remember {
         mutableStateOf(isSocketOn)
     }
-    LaunchedEffect(isSocketOn){
+    LaunchedEffect(isSocketOn) {
         isSocketOnRemember = isSocketOn
     }
 
@@ -82,13 +81,13 @@ fun CustomTopAppBar(
 //                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
 //                        painterResource(R.drawable.ic_launcher_foreground) else
 //                        painterResource(id = R.drawable.ic_launcher_foreground_legacy_foreground),
-                        painterResource( R.mipmap.autotrac_logo),
+                    painterResource(R.mipmap.autotrac_logo),
                     contentDescription = null
                 )
             }
         },
         navigationIcon = {
-            if(onBackClick != null) IconButton(onClick = onBackClick ) {
+            if (onBackClick != null) IconButton(onClick = onBackClick) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         },
@@ -99,7 +98,7 @@ fun CustomTopAppBar(
             }
             IconButton(
                 onClick = {
-                          drawerOpen = !drawerOpen
+                    drawerOpen = !drawerOpen
                 },
                 content = {
                     Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
@@ -108,26 +107,26 @@ fun CustomTopAppBar(
         }
     )
     Box {
-       if(drawerOpen) {
-           ModalDrawerSheet{
-               Spacer(Modifier.height(12.dp))
-               NavigationDrawerItem(
-                   icon = { Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out") },
-                   label = { Text("Log Out") },
-                   selected = selectedItem.value == selectedItem.value,
-                   onClick = {
-                       drawerOpen = false
-                       popUpToLogin()
-                   },
-                   modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-               )
-               Spacer(Modifier.height(12.dp))
-               Divider()
-               Spacer(Modifier.height(12.dp))
+        if (drawerOpen) {
+            ModalDrawerSheet {
+                Spacer(Modifier.height(12.dp))
+                NavigationDrawerItem(
+                    icon = { Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out") },
+                    label = { Text("Log Out") },
+                    selected = selectedItem.value == selectedItem.value,
+                    onClick = {
+                        drawerOpen = false
+                        popUpToLogin()
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+                Spacer(Modifier.height(12.dp))
+                Divider()
+                Spacer(Modifier.height(12.dp))
 
-               LogContent() // Include your log content composable
-           }
-       }
+                LogContent() // Include your log content composable
+            }
+        }
     }
 }
 
