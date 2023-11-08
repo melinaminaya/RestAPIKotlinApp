@@ -55,7 +55,8 @@ fun FilePicker(
     selectedFileStringPicker: (Uri?) -> Unit,
     selectedFileName: (String) -> Unit,
     navigateToInbox: ((Int, Boolean) -> Unit)?,
-    snackbarHost:SnackbarHostState?
+    snackbarHost:SnackbarHostState?,
+    addFile:(Uri?) -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -80,6 +81,7 @@ fun FilePicker(
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()) { uri ->
         selectedFileUri = uri
+        addFile(uri)
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(

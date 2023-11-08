@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
@@ -36,43 +37,39 @@ fun CustomAttachFile(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
     ) {
-        if (fileList != null) {
-            for (item in fileList) {
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_attach_file_24),
-                            contentDescription = "Attach File",
-                        )
-                        Text(
-                            text = getFileNameFromUri(item, context),
-                            style = TextStyle(fontSize = 16.sp, color = Color.Gray),
-                            modifier = Modifier.weight(1f)
-                        )
+        items(fileList ?: emptyList()) { item ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_attach_file_24),
+                    contentDescription = "Attach File",
+                )
+                Text(
+                    text = getFileNameFromUri(item, context),
+                    style = TextStyle(fontSize = 16.sp, color = Color.Gray),
+                    modifier = Modifier.weight(1f)
+                )
 
-                        Button(
-                            onClick = {
-                                //                        selectedFileName = null // Clear the selected file
-                                deletedFileName(item)
-                            },
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        ) {
-                            Icon(Icons.Filled.Delete, contentDescription ="Remove File" )
-                        }
-                    }
-
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Rest of your content goes here
-                    // ...
-
+                Button(
+                    onClick = {
+                        //                        selectedFileName = null // Clear the selected file
+                        deletedFileName(item)
+                    },
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Icon(Icons.Filled.Delete, contentDescription ="Remove File" )
                 }
             }
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Rest of your content goes here
+            // ...
+
         }
     }
 }

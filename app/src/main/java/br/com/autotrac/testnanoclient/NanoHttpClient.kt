@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.ConnectionSpec
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -58,9 +59,6 @@ object NanoHttpClient {
     var webSocket:WebSocket? = null
     val maxChunkSize = 8192
 
-
-
-
     /**
      * Método para envio de todas as requisições, menos a de mensagens longas [ApiEndpoints.SEND_FILE_MESSAGE].
      * @see sendFileChunksHttp
@@ -82,7 +80,7 @@ object NanoHttpClient {
 
                 // Construct the URL for the additional request
                 val additionalRequestUrl = "$serverUrl/$endpoint/?token=$token"
-                val customHttpClient = OkHttpClient.Builder()
+                val customHttpClient = client
                     .readTimeout(30, TimeUnit.SECONDS) // Set your custom timeout here
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .connectTimeout(30, TimeUnit.SECONDS)

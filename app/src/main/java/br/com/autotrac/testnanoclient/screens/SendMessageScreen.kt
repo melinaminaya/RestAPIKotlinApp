@@ -54,14 +54,14 @@ fun SendMessageScreen(
     navigateToInbox: (Int, Boolean) -> Unit,
     popBackStack: () -> Unit,
     popUpToLogin: () -> Unit,
-    ) {
+) {
     val viewModel: FormListViewModel = viewModel()
     val senderAccess = MessageSenderAccess()
     var viewModelFilePicker: FilePickerViewModel = viewModel()
     val selectedFileString by viewModelFilePicker.fileProcessedString.observeAsState()
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
     var selectedFileName by remember { mutableStateOf<String?>("") }
-    var response by remember { mutableStateOf("")}
+    var response by remember { mutableStateOf("") }
     val fileList = remember { mutableStateListOf<Uri>() }
     val propertyChangeListener = PropertyChangeListener { evt ->
         evt?.let {
@@ -69,7 +69,7 @@ fun SendMessageScreen(
             if (evt.propertyName == ApiEndpoints.SEND_MESSAGE) {
                 val newValue = evt.newValue.toString()
                 response = newValue.toDouble().toInt().toString()
-            }else if (evt.propertyName == ApiEndpoints.SEND_FILE_MESSAGE) {
+            } else if (evt.propertyName == ApiEndpoints.SEND_FILE_MESSAGE) {
                 val newValue = evt.newValue.toString()
                 response = newValue
             }
@@ -82,17 +82,13 @@ fun SendMessageScreen(
     }
     LaunchedEffect(selectedFileString) {
         selectedFileUri = selectedFileString
-        selectedFileString?.let {
-            //Enquanto mandar apenas um arquivo por ver manter o clear da lista.
-            fileList.clear()
-            fileList.add(it)
-        }
+
     }
-    val messageText= remember { mutableStateOf("") }
+    val messageText = remember { mutableStateOf("") }
     val mascaras by viewModel.formList.observeAsState(emptyList())
     val defaultMascaraOption = "Mensagem Livre"
 
-    val selectedMascara =  remember{ mutableStateOf(defaultMascaraOption)}
+    val selectedMascara = remember { mutableStateOf(defaultMascaraOption) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,7 +98,7 @@ fun SendMessageScreen(
         topBar = {
             CustomTopAppBar(
                 title = "Envio de Mensagem",
-                navigateToLogs = {  },
+                navigateToLogs = { },
                 popUpToLogin = popUpToLogin,
                 onBackClick = { popBackStack() },
                 isSocketOn = null
@@ -116,31 +112,32 @@ fun SendMessageScreen(
                 .padding(contentPadding)
         ) {
 
-           MascaraDropdownMenu(
-               mascaras = mascaras,
-               selectedMascara = selectedMascara.value
-           ) { mascara ->
-               messageText.value = mascara.definition
-           }
+            MascaraDropdownMenu(
+                mascaras = mascaras,
+                selectedMascara = selectedMascara.value
+            ) { mascara ->
+                messageText.value = mascara.definition
+            }
 
-           Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             // Separate composable for the TextField
-           MessageTextField(
+            MessageTextField(
                 messageText = messageText,
                 onMessageTextChanged = { messageText.value = it }
-           )
-           Spacer(modifier = Modifier.height(16.dp))
-           FilePicker(
-               selectedFileStringPicker = {
-                   selectedFileUri = it
-               },
-               selectedFileName = {
-                     selectedFileName = it
-               },
-               buttonSend = true,
-               onSendMessage = {
-                   coroutineScope.launch(Dispatchers.IO) {
-                       val dbMessageProcessed = messageOnPattern(messageText.value, selectedFileUri, selectedFileName)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            FilePicker(
+                selectedFileStringPicker = {
+                    selectedFileUri = it
+                },
+                selectedFileName = {
+                    selectedFileName = it
+                },
+                buttonSend = true,
+                onSendMessage = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        val dbMessageProcessed =
+                            messageOnPattern(messageText.value, selectedFileUri, selectedFileName)
 //                       onSendMessage(dbMessageProcessed)
 //                       val filePath = getFilePathFromUri(selectedFileUri!!)
                         try {
@@ -168,7 +165,14 @@ fun SendMessageScreen(
                     return@FilePicker response
                 },
                 navigateToInbox = navigateToInbox,
-                snackbarHost = snackbarHostState
+                snackbarHost = snackbarHostState,
+                addFile = {
+                    //TODO: send many files at the same time, then there will be no need to clear List.
+                    fileList.clear()
+                    if (it != null) {
+                        fileList.add(it)
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -178,8 +182,11 @@ fun SendMessageScreen(
                     .padding(16.dp),
                 style = TextStyle(color = Color.Black)
             )
-            CustomAttachFile(fileList = fileList, deletedFileName = {fileList.remove(it)})
-
+            CustomAttachFile(fileList = fileList,
+                deletedFileName = {
+                    fileList.remove(it)
+                }
+            )
         }
     }
     fun getFilePathFromUri(uri: Uri): String? {
@@ -206,7 +213,7 @@ private fun DefaultPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SendMessageScreen(
-                navigateToInbox = { _,_ -> },
+                navigateToInbox = { _, _ -> },
                 popBackStack = {}
             ) {}
         }

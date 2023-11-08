@@ -1,23 +1,32 @@
 package br.com.autotrac.testnanoclient.screens
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.DropdownCard
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import com.google.gson.Gson
@@ -37,15 +46,17 @@ fun FilterSelectionBox(
     onParamsChanged: (String, String, String, String) -> Unit
 ){
     val scope = rememberCoroutineScope()
-    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
-    var selectedFileName by remember { mutableStateOf<String>("") }
-
     val context = LocalContext.current
     val gson = Gson()
+    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedFileName by remember { mutableStateOf<String>("") }
+    val fileList = remember { mutableStateListOf<Uri>() }
 
     LaunchedEffect(selectedFileName){
         if(selectedFileName != "") {
             onParamsChanged(param1, param2, selectedFileName, param4)
+            fileList.clear()
+            fileList.add(selectedFileUri!!)
         }
     }
 
@@ -502,12 +513,30 @@ fun FilterSelectionBox(
                         },
                         selectedFileName = {
                             selectedFileName = it
-
+                            selectedFileUri?.let { it1 -> fileList.add(it1) }
                         },
                         onSendMessage = {""},
                         navigateToInbox = null,
-                        snackbarHost = null
+                        snackbarHost = null,
+                        addFile = {}
                     )
+                    if(selectedFileUri != null){
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_attach_file_24),
+                                contentDescription = "Attach File",
+                            )
+                            Text(
+                                text = getFileNameFromUri(selectedFileUri!!, context),
+                                style = TextStyle(fontSize = 16.sp, color = Color.Gray),
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
                 }
 
                 else -> {

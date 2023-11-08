@@ -178,7 +178,7 @@ fun HomeScreen(
                                 thread.start()
                                 isApiOn = false
                                 isMobileCommunicatorOn.value = false
-
+                                httpViewModel.isSocketOn.value = false
                             }
                             isServiceOn.value = isChecked
                         },

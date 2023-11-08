@@ -135,5 +135,6 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
         // Save the WebSocket connection status to the SavedStateHandle
         state["isApiOn"] = _isApiOn.value
 //        state["isDisconnectionSuccessful"] = _isDisconnectionSuccessful
+        disconnectWebsocket()
     }
 }

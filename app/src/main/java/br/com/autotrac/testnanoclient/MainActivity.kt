@@ -47,15 +47,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    //Affects the screen rotation
-    override fun onDestroy() {
-        super.onDestroy()
-        // Close the connection
-//        NanoWebsocketClient.disconnect()
-        // Close the HTTP client
-//        NanoHttpClient.client.dispatcher.cancelAll()
 
-    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         appData?.let { outState.putString("appData", it) }
@@ -69,6 +61,12 @@ class MainActivity : ComponentActivity() {
          */
 //        NanoWebsocketClient.connect()
     }
+
+    //Affects the screen rotation
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+    //Affects the screen rotation
     override fun onPause() {
         super.onPause()
     }
