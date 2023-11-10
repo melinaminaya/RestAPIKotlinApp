@@ -66,8 +66,6 @@ fun ParametersScreen(
             parameterValues[ApiEndpoints.GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S]
         )
     }
-    var enabledAltCommDevText by rememberSaveable { mutableStateOf(false) }
-    val focusRequesterAltCommDevText = remember { FocusRequester() }
     var vpnDisableCommText by rememberSaveable {
         mutableStateOf(
             parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
@@ -165,7 +163,8 @@ fun ParametersScreen(
 
 
     Scaffold(topBar = {
-        CustomTopAppBar(title = "Parâmetros",
+        CustomTopAppBar(
+            title = "Parâmetros",
             navigateToLogs = { },
             popUpToLogin = popUpToLogin,
             onBackClick = { popBackStack() },
@@ -201,7 +200,10 @@ fun ParametersScreen(
 //                                baptismStarted = true
                             },
                             onCancelClick = {
-
+                                wifiSSIDText = ""
+                                viewModel.setParam(
+                                    ApiEndpoints.SET_PARAM_WIFI_SSID, wifiSSIDText ?: ""
+                                )
                             },
                             baptismStatus = baptismStatus
                         )

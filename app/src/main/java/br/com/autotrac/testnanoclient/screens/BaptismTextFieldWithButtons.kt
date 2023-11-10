@@ -124,8 +124,12 @@ fun BaptismTextFieldWithButtons(
             title = "Processando Batismo",
             text = baptismStatus,
             openDialog = processingStatus,
-            dismissAction = {
+            dismissActionWithDeBaptism = {
                 processingStatus = false
+                if (it) {
+                    editedText = ""
+                    onCancelClick()
+                }
             }
         )
     }

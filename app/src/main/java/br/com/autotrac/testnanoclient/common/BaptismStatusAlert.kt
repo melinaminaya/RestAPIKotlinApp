@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -22,27 +23,28 @@ fun BaptismStatusAlert(
     title: String,
     text: String,
     openDialog: Boolean,
-    dismissAction: () -> Unit,
+    dismissActionWithDeBaptism: (Boolean) -> Unit,
 ) {
     var openDialog by rememberSaveable { mutableStateOf(openDialog) }
     var counter by rememberSaveable { mutableStateOf(0) }
     var lastText by rememberSaveable { mutableStateOf(text) }
+    val updatedTextState = rememberUpdatedState(text)
 
     if (text != lastText) {
         counter = 0
         lastText = text
         if ((lastText == "Batizada" ||
-            lastText == "MCT não autorizado a se comunicar." ||
-            lastText == "Houve timeout no processo de batismo.")
+                    lastText == "MCT não autorizado a se comunicar." ||
+                    lastText == "Houve timeout no processo de batismo.")
             && openDialog
         ) {
             // dismiss the AlertDialog
             openDialog = false
             lastText = ""
-            dismissAction()
+            dismissActionWithDeBaptism(false)
         }
     }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(updatedTextState.value, openDialog) {
         while (openDialog) {
             delay(1000)
             counter++
@@ -57,7 +59,7 @@ fun BaptismStatusAlert(
             },
             text = {
                 Column(modifier = Modifier.padding(10.dp)) {
-                    Text(text = text, fontSize = 12.sp)
+                    Text(text = updatedTextState.value, fontSize = 12.sp)
                     Text(text = "Tempo de Espera: $counter", fontSize = 12.sp)
                 }
             },
@@ -67,7 +69,7 @@ fun BaptismStatusAlert(
                     onClick = {
                         openDialog = false
                         lastText = ""
-                        dismissAction()
+                        dismissActionWithDeBaptism(true)
                     }
                 ) {
                     Text(text = "Cancelar")
