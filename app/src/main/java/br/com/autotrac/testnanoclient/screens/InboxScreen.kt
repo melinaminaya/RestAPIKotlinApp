@@ -42,8 +42,9 @@ fun InboxScreen(
                 navigateToLogs = { },
                 popUpToLogin = popUpToLogin,
                 onBackClick = { popBackStack() },
-                isSocketOn = null
-            ){}
+                isSocketOn = null,
+                apiIcon = true
+            ) {}
         }
     ) { it ->
         Column(

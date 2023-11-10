@@ -59,7 +59,7 @@ import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 fun CheckListScreen(
     popBackStack: () -> Unit,
     popUpToLogin: () -> Unit,
-){
+) {
     val viewModel: CheckListViewModel = viewModel()
     val checkList by viewModel.checkList.observeAsState(emptyList())
     val currentDateViewModel: CurrentDateViewModel = viewModel()
@@ -85,10 +85,11 @@ fun CheckListScreen(
             CustomTopAppBar(
                 title = "CheckList",
                 navigateToLogs = { },
-                onBackClick = {popBackStack()},
+                onBackClick = { popBackStack() },
                 popUpToLogin = popUpToLogin,
-                isSocketOn = null) {
-            }
+                isSocketOn = null,
+                apiIcon = true,
+            ) {}
         }
     ) { contentPadding ->
         LazyColumn(
@@ -105,9 +106,11 @@ fun CheckListScreen(
             }
 
             item {
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = ApiEndpoints.REQ_GET_CURRENT_DATE,
@@ -153,9 +156,9 @@ fun CheckListScreen(
             item {
                 DropdownCard(title = ApiEndpoints.REQ_CONFIG_SERVICE_LOG) {
                     ConfigServiceLogCard(
-                       onSaveClick = { enableLog, maxFileCount, maxFileSize ->
-                           viewModel.sendConfigServiceLog(enableLog, maxFileCount, maxFileSize)
-                       }
+                        onSaveClick = { enableLog, maxFileCount, maxFileSize ->
+                            viewModel.sendConfigServiceLog(enableLog, maxFileCount, maxFileSize)
+                        }
                     )
                 }
             }
@@ -170,6 +173,7 @@ fun CheckListScreen(
     }
 
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
@@ -188,14 +192,15 @@ private fun DefaultPreview() {
 
 @Composable
 fun FileOperationCard(
-    onSaveClick: (Int, Int, String, Int) -> Unit
-){
+    onSaveClick: (Int, Int, String, Int) -> Unit,
+) {
     val listOfOptions = listOf(
         ParameterHandler.convertFileOperationParam2(ActionValues.FileOperationOptions.NO_OPTIONS),
         ParameterHandler.convertFileOperationParam2(ActionValues.FileOperationOptions.COPY_FILES),
         ParameterHandler.convertFileOperationParam2(ActionValues.FileOperationOptions.ZIP_COMPRESSION),
     )
-    val pathDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+    val pathDir =
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
 
     var filesOperation by rememberSaveable {
         mutableStateOf(ActionValues.FileOperationFiles.API_LOG.toString())
@@ -203,7 +208,7 @@ fun FileOperationCard(
     var optionsOperation by rememberSaveable {
         mutableStateOf(listOfOptions[2])
     }
-    var selectedOption:Int? by rememberSaveable {
+    var selectedOption: Int? by rememberSaveable {
         mutableStateOf(null)
     }
     var destinationOperation by rememberSaveable {
@@ -237,7 +242,7 @@ fun FileOperationCard(
             onTextChange = {
                 selectedOption = it.toInt()
             },
-            textStatus = optionsOperation ,
+            textStatus = optionsOperation,
             dropdownItems = listOfOptions
         )
 
@@ -264,7 +269,14 @@ fun FileOperationCard(
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onSaveClick(filesOperation.toInt(),selectedOption ?: 2 ,destinationOperation , timeoutMs.toInt()) },
+            onClick = {
+                onSaveClick(
+                    filesOperation.toInt(),
+                    selectedOption ?: 2,
+                    destinationOperation,
+                    timeoutMs.toInt()
+                )
+            },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Salvar")
@@ -272,10 +284,11 @@ fun FileOperationCard(
     }
 
 }
+
 @Composable
 fun ConfigServiceLogCard(
-    onSaveClick: (Boolean, Int, Long) -> Unit
-){
+    onSaveClick: (Boolean, Int, Long) -> Unit,
+) {
     val context = LocalContext.current.applicationContext
     val sharedPreferences = context.getSharedPreferences("ConfigState", Context.MODE_PRIVATE)
     var enableLog by rememberSaveable {
@@ -299,7 +312,7 @@ fun ConfigServiceLogCard(
                 checked = enableLog,
                 onCheckedChange = { enableLog = it }
             )
-           
+
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
@@ -347,7 +360,7 @@ fun ConfigServiceLogCard(
 //                val maxFileCountValue = maxFileCount.toIntOrNull() ?: 0
 //                val maxFileSizeValue = maxFileSize.toLongOrNull() ?: 0L
                 onSaveClick(enableLog, maxFileCount.toInt(), maxFileSize.toLong())
-                      },
+            },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Salvar")
@@ -355,8 +368,9 @@ fun ConfigServiceLogCard(
     }
 
 }
+
 @Composable
-fun PositionHistoryListCard(content:List<PositionHistory>?){
+fun PositionHistoryListCard(content: List<PositionHistory>?) {
     if (content != null) {
         Spacer(modifier = Modifier.height(8.dp))
         content.forEach { contentItem ->
@@ -372,12 +386,13 @@ fun PositionHistoryListCard(content:List<PositionHistory>?){
         )
     }
 }
+
 @Composable
-fun MctParametersCard(content: List<ParameterModel>?){
-    if (content!= null){
+fun MctParametersCard(content: List<ParameterModel>?) {
+    if (content != null) {
         Spacer(modifier = Modifier.height(8.dp))
-       content.forEach { param ->
-           val paramName = ParameterHandler.convertMctParamNumber(param.number)
+        content.forEach { param ->
+            val paramName = ParameterHandler.convertMctParamNumber(param.number)
             Text(
                 text = "$paramName: ${param.value}",
                 style = TextStyle(fontSize = 14.sp)
@@ -385,9 +400,10 @@ fun MctParametersCard(content: List<ParameterModel>?){
         }
     }
 }
+
 @Composable
-fun CheckListCard(content: List<CheckList>?){
-    if (content!=null){
+fun CheckListCard(content: List<CheckList>?) {
+    if (content != null) {
         Spacer(modifier = Modifier.height(8.dp))
         content.forEach { item ->
             Spacer(modifier = Modifier.height(8.dp))
@@ -435,10 +451,11 @@ fun CheckListCard(content: List<CheckList>?){
     }
 
 }
+
 @Composable
-fun PositionLastCard(content: LastPosition?){
+fun PositionLastCard(content: LastPosition?) {
     Spacer(modifier = Modifier.height(8.dp))
-    if(content!= null) {
+    if (content != null) {
         Text(
             text = "Code: ${content.code}",
             style = TextStyle(fontSize = 14.sp)
@@ -452,20 +469,21 @@ fun PositionLastCard(content: LastPosition?){
             style = TextStyle(fontSize = 14.sp)
         )
 
-    }else{
+    } else {
         LoadingIcon(25, null)
     }
 }
+
 @Composable
-fun PositionCountCard(content: String?){
+fun PositionCountCard(content: String?) {
     Spacer(modifier = Modifier.height(8.dp))
-    if(content!= null) {
+    if (content != null) {
         Text(
             text = content,
             style = TextStyle(fontSize = 14.sp)
         )
 
-    }else{
+    } else {
         LoadingIcon(25, null)
     }
 }

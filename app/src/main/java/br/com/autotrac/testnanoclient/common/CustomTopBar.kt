@@ -28,12 +28,15 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.R
+import br.com.autotrac.testnanoclient.vm.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,12 +46,18 @@ fun CustomTopAppBar(
     navigateToLogs: () -> Unit,
     popUpToLogin: () -> Unit,
     isSocketOn: Boolean?,
+    apiIcon:Boolean,
     content: () -> Unit,
 ) {
 
     val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
     val selectedItem = remember { mutableStateOf(items[0]) }
     var drawerOpen by remember { mutableStateOf(false) }
+
+    val appViewModel = viewModel<AppViewModel>()
+    val isApiOnVal by appViewModel.isApiOn.observeAsState(false)
+    var isApiOn by remember { mutableStateOf(isApiOnVal) }
+
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current
     backDispatcher?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -61,10 +70,15 @@ fun CustomTopAppBar(
     var isSocketOnRemember by remember {
         mutableStateOf(isSocketOn)
     }
+    LaunchedEffect(Unit) {
+        appViewModel.startCheckingApiStatus()
+    }
     LaunchedEffect(isSocketOn) {
         isSocketOnRemember = isSocketOn
     }
-
+    LaunchedEffect(isApiOnVal) {
+        isApiOn = isApiOnVal
+    }
     TopAppBar(
         title = {
             // Conditionally show a title or an icon
@@ -95,6 +109,9 @@ fun CustomTopAppBar(
             //HTTP Icon
             isSocketOnRemember?.let {
                 BadgeText(text = "HTTP", isServiceOn = it)
+            }
+            if (apiIcon){
+                BadgeText(text = "API", isServiceOn = isApiOn)
             }
             IconButton(
                 onClick = {

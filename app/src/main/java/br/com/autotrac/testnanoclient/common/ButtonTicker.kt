@@ -66,6 +66,7 @@ fun ButtonTicker(
             }
 
         }
+        messagesCount.value = count
     }
     LaunchedEffect(count){
         messagesCount.value = count

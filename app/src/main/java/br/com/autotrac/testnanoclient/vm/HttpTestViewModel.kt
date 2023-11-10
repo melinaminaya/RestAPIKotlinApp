@@ -18,7 +18,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-open class HttpTestViewModel: ViewModel() {
+open class HttpTestViewModel : ViewModel() {
 
     private var gson = Gson()
 
@@ -54,6 +54,7 @@ open class HttpTestViewModel: ViewModel() {
         if (fetchRequestResponse != "" && fetchRequestResponse != null) {
             // Request successful, process the response
             _isSocketOn.value = true
+            ObservableUtil.attachProperty("isSocketOn", _isSocketOn.value)
             val result =
                 parseOnMessage.parseMessage(fetchRequestResponse)
             if (result == ParseResult.Ok) {
@@ -135,6 +136,7 @@ open class HttpTestViewModel: ViewModel() {
                 }
 
             }
+
             else -> {
                 try {
                     val fetchRequestResponse: String = withContext(Dispatchers.IO) {
@@ -149,8 +151,5 @@ open class HttpTestViewModel: ViewModel() {
                 }
             }
         }
-
-        }
-
-
+    }
 }

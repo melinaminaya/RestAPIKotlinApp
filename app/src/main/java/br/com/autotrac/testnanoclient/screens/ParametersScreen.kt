@@ -144,70 +144,66 @@ fun ParametersScreen(
         altCommDevText = parameterValues[ApiEndpoints.GET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S]
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]) {
-        vpnDisableCommText =
-            parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
+        vpnDisableCommText = parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_VPN_COMMUNICATION]
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]) {
         wifiDisableCommText =
             parameterValues[ApiEndpoints.GET_PARAM_LOCAL_DISABLE_WIFI_COMMUNICATION]
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE]) {
-        extDevCommType =
-            parameterValues[ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE]
+        extDevCommType = parameterValues[ApiEndpoints.GET_PARAM_EXT_DEV_COMM_TYPE]
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH]) {
-        outOfBandMsg =
-            parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH]
+        outOfBandMsg = parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH]
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]) {
-        timeoutSendCellMsg =
-            parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]
+        timeoutSendCellMsg = parameterValues[ApiEndpoints.GET_PARAM_TIMEOUT_SEND_CELLULAR_MSG]
     }
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]) {
         satelliteSignal = parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]
     }
 
 
-    Scaffold(
-        topBar = {
-            CustomTopAppBar(
-                title = "Parâmetros",
-                navigateToLogs = { },
-                popUpToLogin = popUpToLogin,
-                onBackClick = { popBackStack() },
-                isSocketOn = null
-            ) {
-            }
-        }
-    ) { contentPadding ->
+    Scaffold(topBar = {
+        CustomTopAppBar(title = "Parâmetros",
+            navigateToLogs = { },
+            popUpToLogin = popUpToLogin,
+            onBackClick = { popBackStack() },
+            isSocketOn = null,
+            apiIcon = true
+        ) {}
+    }) { contentPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
 //            verticalArrangement = Arrangement.spacedBy(2.dp)
-        )
-        {
+        ) {
             item {
                 DropdownCard(title = "Batismo") {
                     Column {
                         ModelRow(
-                            title = "Status: ",
-                            status = baptismStatus
+                            title = "Status: ", status = baptismStatus
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
 //                        BaptismView(wifiSSIDText, enabled, focusRequester, viewModel)
-                        CustomTextFieldWithButton(
+                        BaptismTextFieldWithButtons(
                             title = "Batizar",
                             text = wifiSSIDText ?: "",
                             onTextChange = { wifiSSIDText = it },
                             onSaveClick = {
+                                it
+                                wifiSSIDText = it
                                 viewModel.setParam(
-                                    ApiEndpoints.SET_PARAM_WIFI_SSID,
-                                    wifiSSIDText ?: ""
+                                    ApiEndpoints.SET_PARAM_WIFI_SSID, wifiSSIDText ?: ""
                                 )
 //                                baptismStarted = true
-                            }
+                            },
+                            onCancelClick = {
+
+                            },
+                            baptismStatus = baptismStatus
                         )
                     }
                 }
@@ -225,11 +221,9 @@ fun ParametersScreen(
             item {
                 DropdownCard(title = "Alternative Communication Device") {
                     Column {
-                        CustomTextFieldWithButton(
-                            title = "Intervalo de tempo, em segundos, entre cada ciclo de troca de pacotes com o Mct.",
+                        CustomTextFieldWithButton(title = "Intervalo de tempo, em segundos, entre cada ciclo de troca de pacotes com o Mct.",
                             text = altCommDevText,
-                            onTextChange = { altCommDevText = it }
-                        ) {
+                            onTextChange = { altCommDevText = it }) {
                             viewModel.setParam(
                                 ApiEndpoints.SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S,
                                 altCommDevText!!
@@ -278,11 +272,9 @@ fun ParametersScreen(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    CustomTextFieldWithButton(
-                        title = "Intervalo de tempo para tentativas de envio em rede celular: ",
+                    CustomTextFieldWithButton(title = "Intervalo de tempo para tentativas de envio em rede celular: ",
                         text = timeoutSendCellMsg,
-                        onTextChange = { timeoutSendCellMsg = it }
-                    ) {
+                        onTextChange = { timeoutSendCellMsg = it }) {
                         viewModel.setParam(
                             ApiEndpoints.SET_PARAM_TIMEOUT_SEND_CELLULAR_MSG,
                             timeoutSendCellMsg ?: ""
@@ -330,17 +322,14 @@ fun ParametersScreen(
                         title = "Diretório de arquivos de mensagens longas: ",
                         status = parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH]
                     )
-                    CustomTextFieldWithButton(
-                        title = "Diretório de arquivos de mensagens longas: ",
+                    CustomTextFieldWithButton(title = "Diretório de arquivos de mensagens longas: ",
                         text = outOfBandMsg,
                         onTextChange = { outOfBandMsg = it },
                         onSaveClick = {
                             viewModel.setParam(
-                                ApiEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH,
-                                outOfBandMsg ?: ""
+                                ApiEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH, outOfBandMsg ?: ""
                             )
-                        }
-                    )
+                        })
                 }
             }
             item {
@@ -363,8 +352,7 @@ fun ParametersScreen(
                         onTextChange = { item ->
                             extDevCommType = item
                             viewModel.setParam(
-                                ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE,
-                                item
+                                ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE, item
                             )
                         },
                         textStatus = ParameterHandler.convertCommTypes(extDevCommType),
@@ -534,8 +522,7 @@ fun ParametersScreen(
                     ) {
                         parameterValues[ApiEndpoints.GET_PARAM_PROXY_APPS_ON_WHITE_LIST]?.let { listApps ->
                             Text(
-                                text = listApps,
-                                style = TextStyle(fontSize = 14.sp)
+                                text = listApps, style = TextStyle(fontSize = 14.sp)
                             )
                         } ?: LoadingIcon(size = 25, null)
                     }

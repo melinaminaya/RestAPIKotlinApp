@@ -82,7 +82,11 @@ fun SendMessageScreen(
     }
     LaunchedEffect(selectedFileString) {
         selectedFileUri = selectedFileString
-
+        selectedFileString?.let {
+            //Enquanto mandar apenas um arquivo por ver manter o clear da lista.
+            fileList.clear()
+            fileList.add(it)
+        }
     }
     val messageText = remember { mutableStateOf("") }
     val mascaras by viewModel.formList.observeAsState(emptyList())
@@ -101,7 +105,8 @@ fun SendMessageScreen(
                 navigateToLogs = { },
                 popUpToLogin = popUpToLogin,
                 onBackClick = { popBackStack() },
-                isSocketOn = null
+                isSocketOn = null,
+                apiIcon = true
             ) {}
         }
 

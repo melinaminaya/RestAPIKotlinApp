@@ -105,7 +105,8 @@ fun HomeScreen(
                 onBackClick = null,
                 navigateToLogs = { },
                 popUpToLogin = popUpToLogin,
-                isSocketOn = isSocketOn
+                isSocketOn = isSocketOn,
+                apiIcon = false,
             ) {}
         },
         snackbarHost = {
@@ -469,8 +470,8 @@ private fun DefaultPreview() {
                 navigateToCheckList = {},
                 navigateToParameters = {},
                 navigateToHttpTest = {},
-                popBackStack = {},
-                popUpToLogin = {})
+                popBackStack = {}
+            ) {}
             // messageViewModel = {})
         }
     }

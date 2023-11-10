@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropDownToSet
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
@@ -45,10 +46,14 @@ fun HttpTestScreen(
 ) {
     val viewModel: HttpTestViewModel = viewModel()
     val requestResponse by viewModel.responseRequest.observeAsState(initial = "")
+    val isSocketOn by viewModel.isSocketOn.observeAsState(false)
+    var isHttpOn by rememberSaveable {
+        mutableStateOf(ObservableUtil.getValue("isSocketOn").toString().toBoolean())
+    }
 
     val listOfOptions = EndpointsLists.requestsList + EndpointsLists.parametersList +
             listOf(
-                ApiEndpoints.SEND_MESSAGE ,
+                ApiEndpoints.SEND_MESSAGE,
                 ApiEndpoints.SEND_FILE_MESSAGE
             )
 
@@ -56,7 +61,7 @@ fun HttpTestScreen(
     var optionsOperation by rememberSaveable {
         mutableStateOf(listOfOptions[1])
     }
-    var selectedOption:Int by rememberSaveable {
+    var selectedOption: Int by rememberSaveable {
         mutableStateOf(1)
     }
     var param1 by remember { mutableStateOf("") }
@@ -69,21 +74,31 @@ fun HttpTestScreen(
         param3 = newParam3
         param4 = newParam4
     }
-    val requestObject= RequestObject(param1 = param1, param2 = param2, param3 = param3, param4 =  param4)
+
+    val requestObject =
+        RequestObject(param1 = param1, param2 = param2, param3 = param3, param4 = param4)
     val scope = rememberCoroutineScope()
     var parsedMessage: String? = null
     val gson: Gson = Gson()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.messageCountHttp()
+    }
+    LaunchedEffect(isSocketOn) {
+        isHttpOn = isSocketOn
+    }
 
     Scaffold(
         topBar = {
             CustomTopAppBar(
                 title = "Requisições Http",
                 navigateToLogs = { },
-                onBackClick = {popBackStack()},
+                onBackClick = { popBackStack() },
                 popUpToLogin = popUpToLogin,
-                isSocketOn = null) {
-            }
+                isSocketOn = isHttpOn,
+                apiIcon = false,
+            ) {}
         }
     ) { contentPadding ->
 
@@ -94,12 +109,13 @@ fun HttpTestScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             item {
-                Column (modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
-                ){
+                ) {
                     DropDownToSet(
                         title = "Opções de requisições",
                         previousText = optionsOperation,
@@ -123,11 +139,13 @@ fun HttpTestScreen(
                 }
             }
             item {
-                Row (modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically) {
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Button(
                         onClick = {
                             scope.launch {
@@ -153,7 +171,6 @@ fun HttpTestScreen(
             }
         }
     }
-
 }
 
 
