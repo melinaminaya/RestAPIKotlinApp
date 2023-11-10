@@ -162,16 +162,18 @@ fun ParametersScreen(
     }
 
 
-    Scaffold(topBar = {
-        CustomTopAppBar(
-            title = "Parâmetros",
-            navigateToLogs = { },
-            popUpToLogin = popUpToLogin,
-            onBackClick = { popBackStack() },
-            isSocketOn = null,
-            apiIcon = true
-        ) {}
-    }) { contentPadding ->
+    Scaffold(
+        topBar = {
+            CustomTopAppBar(
+                title = "Parâmetros",
+                navigateToLogs = { },
+                popUpToLogin = popUpToLogin,
+                onBackClick = { popBackStack() },
+                isSocketOn = null,
+                apiIcon = true,
+            ) {}
+        }
+    ) { contentPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -182,7 +184,8 @@ fun ParametersScreen(
                 DropdownCard(title = "Batismo") {
                     Column {
                         ModelRow(
-                            title = "Status: ", status = baptismStatus
+                            title = "Status: ",
+                            status = baptismStatus
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -202,7 +205,8 @@ fun ParametersScreen(
                             onCancelClick = {
                                 wifiSSIDText = ""
                                 viewModel.setParam(
-                                    ApiEndpoints.SET_PARAM_WIFI_SSID, wifiSSIDText ?: ""
+                                    ApiEndpoints.SET_PARAM_WIFI_SSID,
+                                    wifiSSIDText ?: ""
                                 )
                             },
                             baptismStatus = baptismStatus
@@ -223,7 +227,8 @@ fun ParametersScreen(
             item {
                 DropdownCard(title = "Alternative Communication Device") {
                     Column {
-                        CustomTextFieldWithButton(title = "Intervalo de tempo, em segundos, entre cada ciclo de troca de pacotes com o Mct.",
+                        CustomTextFieldWithButton(
+                            title = "Intervalo de tempo, em segundos, entre cada ciclo de troca de pacotes com o Mct.",
                             text = altCommDevText,
                             onTextChange = { altCommDevText = it }) {
                             viewModel.setParam(
@@ -274,7 +279,8 @@ fun ParametersScreen(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    CustomTextFieldWithButton(title = "Intervalo de tempo para tentativas de envio em rede celular: ",
+                    CustomTextFieldWithButton(
+                        title = "Intervalo de tempo para tentativas de envio em rede celular: ",
                         text = timeoutSendCellMsg,
                         onTextChange = { timeoutSendCellMsg = it }) {
                         viewModel.setParam(
@@ -324,14 +330,17 @@ fun ParametersScreen(
                         title = "Diretório de arquivos de mensagens longas: ",
                         status = parameterValues[ApiEndpoints.GET_PARAM_OUT_OF_BAND_MSG_PATH]
                     )
-                    CustomTextFieldWithButton(title = "Diretório de arquivos de mensagens longas: ",
+                    CustomTextFieldWithButton(
+                        title = "Diretório de arquivos de mensagens longas: ",
                         text = outOfBandMsg,
                         onTextChange = { outOfBandMsg = it },
                         onSaveClick = {
                             viewModel.setParam(
-                                ApiEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH, outOfBandMsg ?: ""
+                                ApiEndpoints.SET_PARAM_OUT_OF_BAND_MSG_PATH,
+                                outOfBandMsg ?: ""
                             )
-                        })
+                        }
+                    )
                 }
             }
             item {
@@ -354,7 +363,8 @@ fun ParametersScreen(
                         onTextChange = { item ->
                             extDevCommType = item
                             viewModel.setParam(
-                                ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE, item
+                                ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE,
+                                item
                             )
                         },
                         textStatus = ParameterHandler.convertCommTypes(extDevCommType),
@@ -524,7 +534,8 @@ fun ParametersScreen(
                     ) {
                         parameterValues[ApiEndpoints.GET_PARAM_PROXY_APPS_ON_WHITE_LIST]?.let { listApps ->
                             Text(
-                                text = listApps, style = TextStyle(fontSize = 14.sp)
+                                text = listApps,
+                                style = TextStyle(fontSize = 14.sp)
                             )
                         } ?: LoadingIcon(size = 25, null)
                     }

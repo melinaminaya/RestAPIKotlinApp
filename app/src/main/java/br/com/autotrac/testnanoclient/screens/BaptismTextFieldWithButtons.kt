@@ -47,14 +47,15 @@ fun BaptismTextFieldWithButtons(
     val focusRequester = remember { FocusRequester() }
     // Track the processing status with a mutableStateOf
     var processingStatus by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
     // Update the isFocused state based on the focus state of the TextField
     SideEffect {
         CoroutineScope(Dispatchers.Main).launch {
             enabled = focusRequester.captureFocus()
         }
-    }
-    LaunchedEffect(focusRequester) {
-        focusRequester.requestFocus()
     }
 
     Row(
