@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
+open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
     // LiveData to observe WebSocket connection status
     private val _isApiOn = MutableLiveData<Boolean>()
     val isApiOn: LiveData<Boolean>
@@ -26,11 +26,13 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
 
     private val _logs = MutableStateFlow(emptyList<String>())
     val logs: Flow<List<String>> get() = _logs
+
     init {
         // Initialize the WebSocket connection status from the SavedStateHandle
         _isApiOn.value = state.get<Boolean>("isApiOn") ?: false
     }
-        fun startCheckingApiStatus() {
+
+    fun startCheckingApiStatus() {
         viewModelScope.launch {
             while (true) {
                 val isConnected = NanoWebsocketClient.isWebSocketConnected()
@@ -41,17 +43,20 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
             }
         }
     }
-    fun registerLogs(){
+
+    fun registerLogs() {
         viewModelScope.launch {
-         while (true) {
-             val fetchLogs: List<String> = AppLogger.getLogs()
-             _logs.value = fetchLogs
-             delay(1000)
-         }
+            while (true) {
+                val fetchLogs: List<String> = AppLogger.getLogs()
+                _logs.value = fetchLogs
+                delay(1000)
+            }
         }
     }
-    private fun connectToWebSocketIn(snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope,
-                           callback: WebSocketConnectionCallback
+
+    private fun connectToWebSocketIn(
+        snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope,
+        callback: WebSocketConnectionCallback,
     ) {
         val thread = Thread {
             try {
@@ -69,7 +74,7 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
                     Log.i(NanoWebsocketClient.TAG, "NanoWebSocket Started")
                     callback.onConnectionSuccess()
 
-                }else{
+                } else {
                     coroutineScope.launch {
                         snackbarHostState.showSnackbar(
                             message = "Não foi possível conectar ao servidor",
@@ -100,22 +105,29 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
         }
         thread.start()
     }
-    fun connectToWebSocket(snackbarHostState: SnackbarHostState,
-                           coroutineScope: CoroutineScope,
+
+    fun connectToWebSocket(
+        snackbarHostState: SnackbarHostState,
+        coroutineScope: CoroutineScope,
     ) {
-        connectToWebSocketIn(snackbarHostState, coroutineScope, object : WebSocketConnectionCallback {
-            override fun onConnectionSuccess() {
-                viewModelScope.launch {
-                    _isApiOn.value = true
+        connectToWebSocketIn(
+            snackbarHostState,
+            coroutineScope,
+            object : WebSocketConnectionCallback {
+                override fun onConnectionSuccess() {
+                    viewModelScope.launch {
+                        _isApiOn.value = true
+                    }
                 }
-            }
-            override fun onConnectionFailure() {
-                viewModelScope.launch {
-                    _isApiOn.value = false
+
+                override fun onConnectionFailure() {
+                    viewModelScope.launch {
+                        _isApiOn.value = false
+                    }
                 }
-            }
-        })
+            })
     }
+
     fun disconnectWebsocket() {
         disconnectWebsocketIn(object : WebSocketDisconnectionCallback {
             override fun onDisconnectionSuccess() {
@@ -129,12 +141,14 @@ open class AppViewModel(private val state: SavedStateHandle):ViewModel() {
             }
         })
     }
+
     // This method will be called when the ViewModel is about to be cleared (e.g., when the activity is destroyed)
     override fun onCleared() {
         super.onCleared()
         // Save the WebSocket connection status to the SavedStateHandle
         state["isApiOn"] = _isApiOn.value
 //        state["isDisconnectionSuccessful"] = _isDisconnectionSuccessful
-        disconnectWebsocket()
+        //This is closing when viewModel is changed
+//        disconnectWebsocket()
     }
 }

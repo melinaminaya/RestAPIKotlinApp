@@ -233,9 +233,13 @@ class ApiEndpoints {
          * Lista todas as posições do histórico de acordo com o filtro especificado.
          * @param param1 (posCode) - código da posição a ser retornada. Se este parâmetro for igual a 0, ele será ignorado.
          * Se for diferente de 0, os demais filtros serão ignorados e somente a mensagem com o código especificado será retornada.
-         * @param param2 (msgStatusNum) - status das mensagens a serem filtradas.
+         * @param param2 (msgStatusNum) - status das mensagens a serem filtradas. Este parâmetro só é considerado se [param1] (posCode) for igual a 0.
+         *
+         *
+         * **Atenção**: A lista de posições do histórico se baseia em mensagens da caixa de saída, portanto somente retornam posições
+         * especificadas com status de enviada ([ActionValues.MessageStatusValues.SENT]) ou a enviar ([ActionValues.MessageStatusValues.TO_SEND]).
+         *
          * @see ActionValues.MessageStatusValues
-         * Este parâmetro só é considerado se [param1] (posCode) for igual a 0.
          * */
         const val REQ_POSITION_HISTORY_LIST = "REQ_POSITION_HISTORY_LIST"
 
