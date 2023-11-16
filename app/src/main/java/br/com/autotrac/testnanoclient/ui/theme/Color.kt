@@ -68,3 +68,17 @@ val seed = Color(0xFF006399)
 val HighPriorityColor = Color(0xFFFF4646)
 val OrangeDanger = Color(0xFFFA5A27)
 val GreenLight =  Color(0xFF5CAB7D)
+
+val responseFirst = Color(0xEB75B9BE)
+val responseSecond = Color(0xE9A8CCC9)
+val responseThird = Color(0xE9B3D6C6)
+val responseFourth = Color(0xE8DCEAB2)
+val responseFifth = Color(0xEBC7D66D)
+
+val responseHttpColors = listOf(
+    responseFirst,
+    responseSecond,
+    responseThird,
+    responseFourth,
+    responseFifth
+)

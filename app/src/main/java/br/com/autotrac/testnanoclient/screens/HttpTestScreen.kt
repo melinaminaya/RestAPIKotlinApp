@@ -1,13 +1,19 @@
 package br.com.autotrac.testnanoclient.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,18 +27,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropDownToSet
+import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
+import br.com.autotrac.testnanoclient.ui.theme.responseHttpColors
 import br.com.autotrac.testnanoclient.vm.HttpTestViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -45,7 +57,7 @@ fun HttpTestScreen(
     popUpToLogin: () -> Unit,
 ) {
     val viewModel: HttpTestViewModel = viewModel()
-    val requestResponse by viewModel.responseRequest.observeAsState(initial = "")
+    val requestResponse by viewModel.responseRequest.observeAsState(initial = null)
     val isSocketOn by viewModel.isSocketOn.observeAsState(false)
     var isHttpOn by rememberSaveable {
         mutableStateOf(ObservableUtil.getValue("isSocketOn").toString().toBoolean())
@@ -81,12 +93,23 @@ fun HttpTestScreen(
     var parsedMessage: String? = null
     val gson: Gson = Gson()
     val context = LocalContext.current
+    val responseColors = responseHttpColors
+    var currentColorIndex by remember { mutableStateOf(0) }
+    val currentColor = responseColors[currentColorIndex % responseColors.size]
+    var isCardVisible by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+    var elapsedTime by remember { mutableStateOf(0) }
+    val coroutine = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.messageCountHttp()
     }
     LaunchedEffect(isSocketOn) {
         isHttpOn = isSocketOn
+    }
+    LaunchedEffect(requestResponse) {
+        isLoading = false
+        isCardVisible = true
     }
 
     Scaffold(
@@ -119,7 +142,10 @@ fun HttpTestScreen(
                     DropDownToSet(
                         title = "Opções de requisições",
                         previousText = optionsOperation,
-                        onTextChange = { selectedOption = it.toInt() },
+                        onTextChange = {
+                            selectedOption = it.toInt()
+                            isCardVisible = false
+                        },
                         textStatus = optionsOperation,
                         dropdownItems = listOfOptions
                     )
@@ -149,10 +175,20 @@ fun HttpTestScreen(
                     Button(
                         onClick = {
                             scope.launch {
+                                isLoading = true
+                                elapsedTime = 0
+                                coroutine.launch {
+                                    while (isLoading) {
+                                        delay(1000)
+                                        elapsedTime++
+                                    }
+                                }
+                                currentColorIndex++
                                 viewModel.fetchRequest(
                                     listOfOptions[selectedOption],
                                     requestObject, context
                                 )
+
                             }
                         },
                     ) {
@@ -161,17 +197,52 @@ fun HttpTestScreen(
                 }
             }
             item {
-                Text(
-                    text = requestResponse,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    style = TextStyle(color = androidx.compose.ui.graphics.Color.Black)
-                )
+                if (isLoading) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(all = 25.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        LoadingIcon(size = 25, padding = 0)
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = "Processando Requisição... ${elapsedTime}s")
+                    }
+                } else if (isCardVisible && (requestResponse != null)) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = currentColor),
+
+                        ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Resposta da requisição: ${listOfOptions[selectedOption]}",
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                            )
+                            Text(
+                                    text = (requestResponse!!.ifEmpty { "Null" }),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    style = TextStyle(color = Color.Black)
+                                )
+                        }
+                    }
+                }
             }
         }
     }
 }
-
 
 
