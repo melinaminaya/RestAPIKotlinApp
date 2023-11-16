@@ -18,7 +18,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,16 +28,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownToSet(
+fun DropDownToSetParamExtDev(
     title: String,
     previousText: String?,
     onTextChange: (String) -> Unit,
     textStatus: String?,
     dropdownItems: List<String?>,
 ) {
+
+    val viewModel: ParametersViewModel = viewModel()
+    val coroutine = rememberCoroutineScope()
     val dropdownExpanded = remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(textStatus) }
-    LaunchedEffect(textStatus){
+    LaunchedEffect(textStatus) {
         selectedOptionText = textStatus
     }
 
@@ -80,9 +82,16 @@ fun DropDownToSet(
                 dropdownItems.forEachIndexed() { index, selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectionOption!!
-                            onTextChange(index.toString())
-                            dropdownExpanded.value = false
+                            coroutine.launch {
+                                onTextChange(index.toString())
+                                val selectionValidated = viewModel.validateSelection()
+                                if (selectionValidated) {
+                                    selectedOptionText = selectionOption!!
+                                    dropdownExpanded.value = false
+                                } else {
+                                    dropdownExpanded.value = false
+                                }
+                            }
                         },
                         text = { Text(text = selectionOption ?: "N/A", fontSize = 14.sp) }
                     )

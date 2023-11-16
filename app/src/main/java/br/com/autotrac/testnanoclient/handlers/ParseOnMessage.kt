@@ -5,6 +5,7 @@ import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.consts.ResponseObjectReference
 import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
 import com.google.gson.Gson
@@ -39,7 +40,7 @@ class ParseOnMessage {
             val param1 = notification.param1 ?:  return ParseResult.Error("param1 is null") // Exit if param1 is null
 
             when (param1) {
-                ApiEndpoints.NOTIFICATION -> {
+                ResponseObjectReference.NOTIFICATION -> {
                     //TODO: Tratar recebimento de notificação, conforme cliente necessita.
                    val notificationType = notification.param2 ?: return ParseResult.Error("param2 is null") // Exit if param2 is null
                     if(notificationType.toString() == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
@@ -54,7 +55,7 @@ class ParseOnMessage {
                     return ParseResult.Ok
                 }
 
-                ApiEndpoints.REQUEST -> {
+                ResponseObjectReference.REQUEST -> {
                     val objectReq = notification.param4 ?: return ParseResult.Error("param4 is null") // Exit if param4 is null
                     when (notification.param2) {
                         ApiEndpoints.REQ_MESSAGE_LIST -> {
@@ -95,7 +96,7 @@ class ParseOnMessage {
                     return ParseResult.Ok
                 }
 
-                ApiEndpoints.PARAMETER -> {
+                ResponseObjectReference.PARAMETER -> {
                     val objectReq = notification.param3 ?: return ParseResult.Error("param3 is null")
                     when (notification.param2) {
                         in EndpointsLists.parametersList.filter { it.startsWith("GET") } -> {
@@ -106,8 +107,10 @@ class ParseOnMessage {
                         }
 
                         in EndpointsLists.parametersList.filter { it.startsWith("SET") } -> {
-                            //TODO: TO BE IMPLEMENTED
-
+                            ObservableUtil.attachProperty(
+                                notification.param2!!,
+                                objectReq
+                            )
                         }
                     }
                     Log.d(Companion.TAG, "Received ${notification.param2}: $notification")

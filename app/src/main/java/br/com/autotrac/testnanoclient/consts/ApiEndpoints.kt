@@ -15,39 +15,6 @@ class ApiEndpoints {
         /** Endpoint para envio de mensagem com arquivo. */
         const val SEND_FILE_MESSAGE = "SEND_FILE_MESSAGE"
 
-        /**
-         * Endpoint Geral de Eventos (Ações/Notificações).
-         *
-         * Exemplo de requisição com Endpoint: {"param1":"NOTIFICATION","param2":[22,7,10,18,21,24,15,9,8,11,5,23,4,3]}
-         *
-         * @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse].
-         *
-         * @param param1 Pode ser [NOTIFICATION], [REQUEST], [PARAMETER],
-
-         * @see br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
-         */
-        const val NOTIFICATION = "NOTIFICATION"
-
-        /**
-         * Endpoint Geral de Requisição.
-         *
-         * Exemplo de requisição com Endpoint: {"param1":"REQUEST","param2":"REQ_MESSAGE_COUNT","param3":{"param1":"false","param2":"3"},"param4":0}
-         *
-         * @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse].
-         * @see br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
-         */
-        const val REQUEST = "REQUEST"
-
-        /**
-         * Endpoint Geral de Requisição de Parâmetros.
-         *
-         * Exemplo de requisição com Endpoint: {"param1":"PARAMETER","param2":"SET_PARAM_ALT_COMM_DEVICE_POLL_INTERVAL_S","param3":{"param1":"10"}}
-         *
-         *  @return Resposta do Servidor do tipo [br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse].
-         *  @see br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
-         */
-        const val PARAMETER = "PARAMETER"
-
         //Endpoints Específicos
         /**
          * Endpoint Específico de requisição de lista de mensagens de acordo com filtro especificado.
@@ -273,9 +240,12 @@ class ApiEndpoints {
          *
          * Para sistemas que utilizam puramente o dispositivo de comunicação alternativa,
          * se for configurado um SSID, a associação com o dispositivo ocorre automaticamente em seguida.
+         * Ao configurar um SSID, o sistema verifica se a UC está habilitada para ser batizada, caso não esteja
+         * retorna [ApiResponses.UC_NOT_ENABLE] ou [ApiResponses.BAD_REQUEST].
          *
          * Caso o SSID fornecido seja vazio ("") e o sistema esteja associado a um dispositivo de comunicação alternativa,
          * a associação será desfeita.
+         *
          */
         const val SET_PARAM_WIFI_SSID = "SET_PARAM_WIFI_SSID"
 

@@ -3,8 +3,6 @@ package br.com.autotrac.testnanoclient.screens
 
 import android.content.Intent
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -71,7 +68,8 @@ fun HomeScreen(
     val appViewModel = viewModel<AppViewModel>()
     val resetDbResponse by viewModel.resetDatabaseResponse.observeAsState("")
     val isServiceOn = rememberSaveable { mutableStateOf(false) }
-    val isMobileCommunicatorOn = rememberSaveable { mutableStateOf(false) }
+    val isCommunicatorOn by appViewModel.isMobileCommunicatorOn.observeAsState(false)
+    var isMobileCommunicatorOn = rememberSaveable { mutableStateOf( isCommunicatorOn) }
     val showDialogService = rememberSaveable { mutableStateOf(false) }
     val isApiOnVal by appViewModel.isApiOn.observeAsState(false)
     var isApiOn by remember { mutableStateOf(isApiOnVal) }
@@ -81,18 +79,20 @@ fun HomeScreen(
     var isLoadingServiceOn = remember { mutableStateOf(false) }
     var isLoadingServiceOff = remember { mutableStateOf(false) }
     var isLoadingApiOn = remember { mutableStateOf(false) }
-    val handler = Handler(Looper.getMainLooper())
-    // To show a Snackbar
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         appViewModel.startCheckingApiStatus()
+        isMobileCommunicatorOn.value = appViewModel.checkMobileCommunicator()
     }
     LaunchedEffect(isApiOnVal) {
         isApiOn = isApiOnVal
         if (isApiOn) {
             isServiceOn.value = isApiOn
         }
+    }
+    LaunchedEffect(isCommunicatorOn){
+        isMobileCommunicatorOn.value = isCommunicatorOn
     }
     if (isSocketOn) {
         isServiceOn.value = true
@@ -178,7 +178,7 @@ fun HomeScreen(
                                 }
                                 thread.start()
                                 isApiOn = false
-                                isMobileCommunicatorOn.value = false
+                                appViewModel.setIsMobileCommunicatorOn(false)
                                 httpViewModel.isSocketOn.value = false
                             }
                             isServiceOn.value = isChecked
@@ -205,57 +205,9 @@ fun HomeScreen(
                             isMobileCommunicatorOn.value = isChecked
 
                             if (isChecked) {
-//                                isLoading = true
-                                val thread = Thread {
-                                    try {
-                                        val intent = Intent(ApiConstants.INTENT_SVC_START)
-                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            context.startForegroundService(intent)
-                                        } else {
-                                            context.startService(intent)
-                                        }
-                                        Log.i(TAG, "Mobile Communicator Started")
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    } finally {
-//                                        isLoading = false
-                                    }
-                                }
-                                thread.start()
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Módulo de Comunicação Conectado",
-                                        actionLabel = "OK",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
-
+                                appViewModel.connectCommunicator(context, coroutineScope, snackbarHostState)
                             } else {
-                                val thread = Thread {
-                                    try {
-                                        val intent = Intent(ApiConstants.INTENT_SVC_STOP)
-                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            context.startForegroundService(intent)
-                                        } else {
-                                            context.startService(intent)
-                                        }
-                                        Log.i(TAG, "Mobile Communicator Stopped")
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    }
-                                }
-                                thread.start()
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Módulo de Comunicação Desconectado",
-                                        actionLabel = "OK",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
+                                appViewModel.disconnectCommunicator(context, coroutineScope, snackbarHostState)
                             }
                         },
                         text = "Módulo de Comunicação",

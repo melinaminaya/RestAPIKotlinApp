@@ -7,6 +7,7 @@ import android.util.Log
 import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiConstants
+import br.com.autotrac.testnanoclient.consts.ResponseObjectReference
 import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
 import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
@@ -180,7 +181,7 @@ object NanoWebsocketClient{
     fun sendMessageFromClient() {
         val notificationSubscription =
             SendObject(
-                ApiEndpoints.NOTIFICATION,
+                ResponseObjectReference.NOTIFICATION,
                 listOf(
                     ActionValues.MESSAGE_STATUS, ActionValues.BAPTISM_STATUS,
                     ActionValues.COMMUNICATION_MODE_CHANGED, ActionValues.DATE_TIME_CHANGED,

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ModelRow(title: String, status: String?) {
+fun ModelRow(title: String, status: String?, condition:Boolean) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -30,7 +30,8 @@ fun ModelRow(title: String, status: String?) {
                 .wrapContentWidth(Alignment.Start)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        if(status != null) {
+
+        if(status != null && condition) {
             Text(
                 text = status,
                 style = TextStyle(fontSize = 14.sp),
@@ -38,8 +39,12 @@ fun ModelRow(title: String, status: String?) {
                     .weight(1f)
                     .wrapContentWidth()
             )
-        }else{
+        }else if(status == null && condition) {
             LoadingIcon(25, null)
+        }else{
+            Text(
+                text = "0",
+            )
         }
     }
 }

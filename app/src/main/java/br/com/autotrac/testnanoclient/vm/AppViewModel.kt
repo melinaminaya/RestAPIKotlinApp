@@ -1,5 +1,8 @@
 package br.com.autotrac.testnanoclient.vm
 
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -9,6 +12,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
+import br.com.autotrac.testnanoclient.ObservableUtil
+import br.com.autotrac.testnanoclient.consts.ApiConstants
 import br.com.autotrac.testnanoclient.data.WebSocketConnectionCallback
 import br.com.autotrac.testnanoclient.data.WebSocketDisconnectionCallback
 import br.com.autotrac.testnanoclient.logger.AppLogger
@@ -27,6 +32,10 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
     private val _logs = MutableStateFlow(emptyList<String>())
     val logs: Flow<List<String>> get() = _logs
 
+    private val _isMobileCommunicatorOn = MutableLiveData<Boolean>(false)
+    val isMobileCommunicatorOn: MutableLiveData<Boolean> get() = _isMobileCommunicatorOn
+
+
     init {
         // Initialize the WebSocket connection status from the SavedStateHandle
         _isApiOn.value = state.get<Boolean>("isApiOn") ?: false
@@ -42,6 +51,11 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
                 delay(60000) // Check every 5 seconds (adjust as needed)
             }
         }
+    }
+
+    fun setIsMobileCommunicatorOn(value: Boolean) {
+        _isMobileCommunicatorOn.value = value
+        ObservableUtil.attachProperty("isMobileCommunicatorOn", value)
     }
 
     fun registerLogs() {
@@ -150,5 +164,74 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
 //        state["isDisconnectionSuccessful"] = _isDisconnectionSuccessful
         //This is closing when viewModel is changed
 //        disconnectWebsocket()
+    }
+
+    fun connectCommunicator(
+        context: Context,
+        coroutineScope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+    ) {
+        val thread = Thread {
+            try {
+                val intent = Intent(ApiConstants.INTENT_SVC_START)
+                intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+                Log.i(NanoWebsocketClient.TAG, "Mobile Communicator Started")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+//                                        isLoading = false
+            }
+        }
+        thread.start()
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(
+                message = "Módulo de Comunicação Conectado",
+                actionLabel = "OK",
+                duration = SnackbarDuration.Short
+            )
+        }
+        setIsMobileCommunicatorOn(true)
+    }
+
+    fun disconnectCommunicator(
+        context: Context,
+        coroutineScope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+    ) {
+        val thread = Thread {
+            try {
+                val intent = Intent(ApiConstants.INTENT_SVC_STOP)
+                intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+                Log.i(NanoWebsocketClient.TAG, "Mobile Communicator Stopped")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        thread.start()
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(
+                message = "Módulo de Comunicação Desconectado",
+                actionLabel = "OK",
+                duration = SnackbarDuration.Short
+            )
+        }
+        setIsMobileCommunicatorOn(false)
+    }
+    fun checkMobileCommunicator(): Boolean {
+        val isMobCommOn = ObservableUtil.getValue("isMobileCommunicatorOn").toString().toBoolean()
+        _isMobileCommunicatorOn.value = isMobCommOn
+        return isMobCommOn
     }
 }

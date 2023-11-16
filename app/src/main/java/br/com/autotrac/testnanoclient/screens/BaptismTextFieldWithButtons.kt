@@ -1,5 +1,6 @@
 package br.com.autotrac.testnanoclient.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -7,12 +8,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -27,11 +32,18 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
+import br.com.autotrac.testnanoclient.ObservableUtil.removePropertyChangeListener
 import br.com.autotrac.testnanoclient.common.BaptismStatusAlert
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiResponses
 import br.com.autotrac.testnanoclient.ui.theme.HighPriorityColor
+import br.com.autotrac.testnanoclient.vm.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.beans.PropertyChangeListener
 
 @Composable
 fun BaptismTextFieldWithButtons(
@@ -41,12 +53,34 @@ fun BaptismTextFieldWithButtons(
     onTextChange: (String) -> Unit,
     onSaveClick: (String) -> Unit,
     onCancelClick: () -> Unit,
+    context: Context,
+    coroutineScope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
 ) {
+    val viewModel: AppViewModel = viewModel()
     var enabled by rememberSaveable { mutableStateOf(false) }
     var editedText by rememberSaveable { mutableStateOf(text ?: "") }
     val focusRequester = remember { FocusRequester() }
     // Track the processing status with a mutableStateOf
     var processingStatus by rememberSaveable { mutableStateOf(false) }
+    var setBaptismResponse by rememberSaveable { mutableStateOf("") }
+    var alertOnCommunicatorState by remember { mutableStateOf(false) }
+    val checkOn = viewModel.checkMobileCommunicator()
+    val propertyChangeListener = PropertyChangeListener { evt ->
+        evt?.let {
+            if (evt.propertyName == ApiEndpoints.SET_PARAM_WIFI_SSID) {
+                val newValue = evt.newValue.toString()
+                setBaptismResponse = newValue
+
+            }
+        }
+    }
+    addPropertyChangeListener(propertyChangeListener)
+    DisposableEffect(context) {
+        onDispose {
+            removePropertyChangeListener(propertyChangeListener)
+        }
+    }
 
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()
@@ -57,6 +91,25 @@ fun BaptismTextFieldWithButtons(
             enabled = focusRequester.captureFocus()
         }
     }
+    LaunchedEffect(setBaptismResponse){
+        if (setBaptismResponse != "" &&
+            (setBaptismResponse == ApiResponses.UC_NOT_ENABLE ||
+                    setBaptismResponse == ApiResponses.BAD_REQUEST ||
+                    setBaptismResponse == ApiResponses.ON_ERROR)
+        ) {
+            processingStatus = false
+//                    onCancelClick()
+
+            snackbarHostState.showSnackbar(
+                message = setBaptismResponse,
+                actionLabel = "OK",
+                duration = SnackbarDuration.Long
+            )
+
+        }else if(setBaptismResponse == ApiResponses.OK){
+            if (editedText != "") processingStatus = true
+        }
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -64,8 +117,9 @@ fun BaptismTextFieldWithButtons(
         TextField(
             value = editedText,
             onValueChange = {
-                editedText = it
-                onTextChange(it)
+                val formattedText = it.replace(" ", "").uppercase()
+                editedText = formattedText
+                onTextChange(formattedText)
             },
             label = { Text(text = title, fontSize = 14.sp) },
             modifier = Modifier
@@ -97,12 +151,11 @@ fun BaptismTextFieldWithButtons(
         if (enabled) {
             Button(
                 onClick = {
-                    onSaveClick(editedText)
-                    enabled = false
-                    if (editedText != "") {
-                        processingStatus = true
+                    if (checkOn) {
+                        onSaveClick(editedText)
+                    } else {
+                        alertOnCommunicatorState = true
                     }
-                    focusRequester.freeFocus()
                 },
             ) {
                 Text(text = "SALVAR", fontSize = 14.sp)
@@ -130,6 +183,35 @@ fun BaptismTextFieldWithButtons(
                 if (it) {
                     editedText = ""
                     onCancelClick()
+                }
+            }
+        )
+    }
+    if (alertOnCommunicatorState) {
+        AlertDialog(
+            onDismissRequest = { alertOnCommunicatorState = false },
+            text = {
+                Text(text = "Deseja ativar o módulo de comunicação para efetuar o batismo?")
+            },
+            confirmButton = {
+
+                Button(
+                    onClick = {
+                        viewModel.connectCommunicator(context, coroutineScope, snackbarHostState)
+                        alertOnCommunicatorState = false
+                    }
+                ) {
+                    Text(text = "Sim")
+                }
+
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        alertOnCommunicatorState = false
+                    }
+                ) {
+                    Text(text = "Cancelar")
                 }
             }
         )
