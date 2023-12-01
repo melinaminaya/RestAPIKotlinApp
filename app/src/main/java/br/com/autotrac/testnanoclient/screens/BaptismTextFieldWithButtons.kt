@@ -1,6 +1,7 @@
 package br.com.autotrac.testnanoclient.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
 import br.com.autotrac.testnanoclient.ObservableUtil.removePropertyChangeListener
 import br.com.autotrac.testnanoclient.common.BaptismStatusAlert
+import br.com.autotrac.testnanoclient.common.ShowSnackbarBaptism
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiResponses
 import br.com.autotrac.testnanoclient.ui.theme.HighPriorityColor
@@ -66,17 +68,74 @@ fun BaptismTextFieldWithButtons(
     var setBaptismResponse by rememberSaveable { mutableStateOf("") }
     var alertOnCommunicatorState by remember { mutableStateOf(false) }
     val checkOn = viewModel.checkMobileCommunicator()
+
+    fun checkResponse() {
+        when (setBaptismResponse) {
+            "" -> Unit // No action required if empty response
+            ApiResponses.UC_NOT_ENABLE, ApiResponses.BAD_REQUEST, ApiResponses.ON_ERROR -> {
+                processingStatus = false
+//            onCancelClick() // If you want to cancel on these errors
+                coroutineScope.launch {
+                    ShowSnackbarBaptism(
+                        snackbarHostState = snackbarHostState,
+                        message = setBaptismResponse,
+                        context = context,
+                    )
+                }
+            }
+
+            ApiResponses.OK -> {
+                processingStatus = editedText != ""
+            }
+
+            else -> {
+                Log.d(
+                    "Processing Status",
+                    "Unexpected response no Checkresponse: $setBaptismResponse"
+                )
+            }
+        }
+    }
+
     val propertyChangeListener = PropertyChangeListener { evt ->
         evt?.let {
             if (evt.propertyName == ApiEndpoints.SET_PARAM_WIFI_SSID) {
                 val newValue = evt.newValue.toString()
                 setBaptismResponse = newValue
-
+                checkResponse()
             }
         }
     }
-    addPropertyChangeListener(propertyChangeListener)
+
+    LaunchedEffect(setBaptismResponse) {
+        when (setBaptismResponse) {
+            "" -> Unit // No action required if empty response
+            ApiResponses.UC_NOT_ENABLE, ApiResponses.BAD_REQUEST, ApiResponses.ON_ERROR -> {
+                processingStatus = false
+//            onCancelClick() // If you want to cancel on these errors
+                ShowSnackbarBaptism(
+                    snackbarHostState = snackbarHostState,
+                    message = setBaptismResponse,
+                    context = context,
+                )
+            }
+
+            ApiResponses.OK -> {
+                if (editedText != "") {
+                    processingStatus = true
+                }
+            }
+
+            else -> {
+                Log.d(
+                    "Processing Status",
+                    "Unexpected response no Checkresponse: $setBaptismResponse"
+                )
+            }
+        }
+    }
     DisposableEffect(context) {
+        addPropertyChangeListener(propertyChangeListener)
         onDispose {
             removePropertyChangeListener(propertyChangeListener)
         }
@@ -91,25 +150,7 @@ fun BaptismTextFieldWithButtons(
             enabled = focusRequester.captureFocus()
         }
     }
-    LaunchedEffect(setBaptismResponse){
-        if (setBaptismResponse != "" &&
-            (setBaptismResponse == ApiResponses.UC_NOT_ENABLE ||
-                    setBaptismResponse == ApiResponses.BAD_REQUEST ||
-                    setBaptismResponse == ApiResponses.ON_ERROR)
-        ) {
-            processingStatus = false
-//                    onCancelClick()
 
-            snackbarHostState.showSnackbar(
-                message = setBaptismResponse,
-                actionLabel = "OK",
-                duration = SnackbarDuration.Long
-            )
-
-        }else if(setBaptismResponse == ApiResponses.OK){
-            if (editedText != "") processingStatus = true
-        }
-    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -153,6 +194,7 @@ fun BaptismTextFieldWithButtons(
                 onClick = {
                     if (checkOn) {
                         onSaveClick(editedText)
+                        checkResponse()
                     } else {
                         alertOnCommunicatorState = true
                     }
@@ -203,7 +245,6 @@ fun BaptismTextFieldWithButtons(
                 ) {
                     Text(text = "Sim")
                 }
-
             },
             dismissButton = {
                 Button(
