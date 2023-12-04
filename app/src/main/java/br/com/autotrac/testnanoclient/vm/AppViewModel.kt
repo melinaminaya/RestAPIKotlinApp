@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
 import br.com.autotrac.testnanoclient.ObservableUtil
+import br.com.autotrac.testnanoclient.common.showSnackbarSuspend
 import br.com.autotrac.testnanoclient.consts.ApiConstants
 import br.com.autotrac.testnanoclient.data.WebSocketConnectionCallback
 import br.com.autotrac.testnanoclient.data.WebSocketDisconnectionCallback
@@ -69,7 +70,9 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
     }
 
     private fun connectToWebSocketIn(
-        snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        coroutineScope: CoroutineScope,
+        context: Context,
         callback: WebSocketConnectionCallback,
     ) {
         val thread = Thread {
@@ -78,10 +81,12 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
                 Thread.sleep(5000) //while isLoadingApiOn with BlockingAlert finishes
                 if (NanoWebsocketClient.isWebSocketConnected()) {
                     coroutineScope.launch {
-                        snackbarHostState.showSnackbar(
+                        showSnackbarSuspend(
                             message = "Websocket conectado com sucesso",
-                            actionLabel = "OK",
-                            duration = SnackbarDuration.Short
+                            actionLabel = true,
+                            duration = SnackbarDuration.Short,
+                            context = context,
+                            snackbarHostState = snackbarHostState
                         )
                     }
                     NanoWebsocketClient.sendMessageFromClient()
@@ -90,10 +95,12 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
 
                 } else {
                     coroutineScope.launch {
-                        snackbarHostState.showSnackbar(
+                        showSnackbarSuspend(
                             message = "Não foi possível conectar ao servidor",
-                            actionLabel = "OK",
-                            duration = SnackbarDuration.Short
+                            actionLabel = true,
+                            duration = SnackbarDuration.Short,
+                            context = context,
+                            snackbarHostState = snackbarHostState
                         )
                     }
                     Log.i(NanoWebsocketClient.TAG, "NanoWebSocket Disconnected")
@@ -123,10 +130,12 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
     fun connectToWebSocket(
         snackbarHostState: SnackbarHostState,
         coroutineScope: CoroutineScope,
+        context: Context,
     ) {
         connectToWebSocketIn(
             snackbarHostState,
             coroutineScope,
+            context,
             object : WebSocketConnectionCallback {
                 override fun onConnectionSuccess() {
                     viewModelScope.launch {
@@ -190,10 +199,12 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
         }
         thread.start()
         coroutineScope.launch {
-            snackbarHostState.showSnackbar(
+            showSnackbarSuspend(
                 message = "Módulo de Comunicação Conectado",
-                actionLabel = "OK",
-                duration = SnackbarDuration.Short
+                actionLabel = true,
+                duration = SnackbarDuration.Short,
+                context = context,
+                snackbarHostState = snackbarHostState
             )
         }
         setIsMobileCommunicatorOn(true)
@@ -221,14 +232,17 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
         }
         thread.start()
         coroutineScope.launch {
-            snackbarHostState.showSnackbar(
+            showSnackbarSuspend(
                 message = "Módulo de Comunicação Desconectado",
-                actionLabel = "OK",
-                duration = SnackbarDuration.Short
+                actionLabel = true,
+                duration = SnackbarDuration.Short,
+                context = context,
+                snackbarHostState = snackbarHostState
             )
         }
         setIsMobileCommunicatorOn(false)
     }
+
     fun checkMobileCommunicator(): Boolean {
         val isMobCommOn = ObservableUtil.getValue("isMobileCommunicatorOn").toString().toBoolean()
         _isMobileCommunicatorOn.value = isMobCommOn

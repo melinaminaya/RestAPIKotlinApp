@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
 import br.com.autotrac.testnanoclient.ObservableUtil.removePropertyChangeListener
 import br.com.autotrac.testnanoclient.common.BaptismStatusAlert
-import br.com.autotrac.testnanoclient.common.ShowSnackbarBaptism
+import br.com.autotrac.testnanoclient.common.showSnackbarSuspend
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiResponses
 import br.com.autotrac.testnanoclient.ui.theme.HighPriorityColor
@@ -76,10 +76,12 @@ fun BaptismTextFieldWithButtons(
                 processingStatus = false
 //            onCancelClick() // If you want to cancel on these errors
                 coroutineScope.launch {
-                    ShowSnackbarBaptism(
+                    showSnackbarSuspend(
                         snackbarHostState = snackbarHostState,
                         message = setBaptismResponse,
                         context = context,
+                        actionLabel = true,
+                        duration = SnackbarDuration.Long
                     )
                 }
             }
@@ -113,10 +115,12 @@ fun BaptismTextFieldWithButtons(
             ApiResponses.UC_NOT_ENABLE, ApiResponses.BAD_REQUEST, ApiResponses.ON_ERROR -> {
                 processingStatus = false
 //            onCancelClick() // If you want to cancel on these errors
-                ShowSnackbarBaptism(
+                showSnackbarSuspend(
                     snackbarHostState = snackbarHostState,
                     message = setBaptismResponse,
                     context = context,
+                    actionLabel = true,
+                    duration = SnackbarDuration.Long
                 )
             }
 

@@ -55,12 +55,12 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navigateToInbox: (Int, Boolean) -> Unit,
     navigateToSendMessage: (String) -> Unit,
-    navigateToCheckList:(String) ->Unit,
+    navigateToCheckList: (String) -> Unit,
     navigateToParameters: (String) -> Unit,
     navigateToHttpTest: (String) -> Unit,
     popBackStack: () -> Unit,
     popUpToLogin: () -> Unit,
-   // messageViewModel: (MessageViewModel) -> Unit
+    // messageViewModel: (MessageViewModel) -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: ResetDatabaseViewModel = viewModel()
@@ -69,7 +69,7 @@ fun HomeScreen(
     val resetDbResponse by viewModel.resetDatabaseResponse.observeAsState("")
     val isServiceOn = rememberSaveable { mutableStateOf(false) }
     val isCommunicatorOn by appViewModel.isMobileCommunicatorOn.observeAsState(false)
-    var isMobileCommunicatorOn = rememberSaveable { mutableStateOf( isCommunicatorOn) }
+    var isMobileCommunicatorOn = rememberSaveable { mutableStateOf(isCommunicatorOn) }
     val showDialogService = rememberSaveable { mutableStateOf(false) }
     val isApiOnVal by appViewModel.isApiOn.observeAsState(false)
     var isApiOn by remember { mutableStateOf(isApiOnVal) }
@@ -91,7 +91,7 @@ fun HomeScreen(
             isServiceOn.value = isApiOn
         }
     }
-    LaunchedEffect(isCommunicatorOn){
+    LaunchedEffect(isCommunicatorOn) {
         isMobileCommunicatorOn.value = isCommunicatorOn
     }
     if (isSocketOn) {
@@ -205,9 +205,17 @@ fun HomeScreen(
                             isMobileCommunicatorOn.value = isChecked
 
                             if (isChecked) {
-                                appViewModel.connectCommunicator(context, coroutineScope, snackbarHostState)
+                                appViewModel.connectCommunicator(
+                                    context,
+                                    coroutineScope,
+                                    snackbarHostState
+                                )
                             } else {
-                                appViewModel.disconnectCommunicator(context, coroutineScope, snackbarHostState)
+                                appViewModel.disconnectCommunicator(
+                                    context,
+                                    coroutineScope,
+                                    snackbarHostState
+                                )
                             }
                         },
                         text = "Módulo de Comunicação",
@@ -231,8 +239,10 @@ fun HomeScreen(
                             if (isServiceOn.value) {
                                 if (isChecked) {
                                     isLoadingApiOn.value = true
-                                    appViewModel.connectToWebSocket(snackbarHostState,
+                                    appViewModel.connectToWebSocket(
+                                        snackbarHostState,
                                         coroutineScope,
+                                        context
                                     )
                                 } else {
                                     appViewModel.disconnectWebsocket()

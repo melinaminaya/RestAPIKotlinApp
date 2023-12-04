@@ -55,8 +55,8 @@ fun FilePicker(
     selectedFileStringPicker: (Uri?) -> Unit,
     selectedFileName: (String) -> Unit,
     navigateToInbox: ((Int, Boolean) -> Unit)?,
-    snackbarHost:SnackbarHostState?,
-    addFile:(Uri?) -> Unit
+    snackbarHost: SnackbarHostState?,
+    addFile: (Uri?) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -75,11 +75,12 @@ fun FilePicker(
     val requiredPermission = Manifest.permission.READ_EXTERNAL_STORAGE
 
     var fileProcessedDeferred = remember { CompletableDeferred<Boolean>() }
-    var showSnackbar by remember { mutableStateOf(false)}
-    var responseSendMessage by remember { mutableStateOf("")}
+    var showSnackbar by remember { mutableStateOf(false) }
+    var responseSendMessage by remember { mutableStateOf("") }
 
     val filePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()) { uri ->
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
         selectedFileUri = uri
         addFile(uri)
     }
@@ -127,6 +128,7 @@ fun FilePicker(
                         filePickerLauncher.launch("*/*")
                         Log.d("ExampleScreen", "Code requires permission")
                     }
+
                     PermissionState.NotRequested -> {
                         // Request the permission using the permission launcher
                         permissionLauncher.launch(requiredPermission)
@@ -144,7 +146,7 @@ fun FilePicker(
                 contentDescription = "Attach File"
             )
         }
-        if(buttonSend) {
+        if (buttonSend) {
             Button(
                 onClick = {
                     coroutineScope.launch {
@@ -153,7 +155,7 @@ fun FilePicker(
                         try {
                             if (selectedFileUri != null) {
                                 if (fileProcessed) {
-                                   responseSendMessage = onSendMessage()
+                                    responseSendMessage = onSendMessage()
                                     if (responseSendMessage != null) {
                                         showSnackbar = true
                                         if (navigateToInbox != null) {
@@ -223,13 +225,15 @@ fun FilePicker(
             selectedFileName(selectedFileNameString)
         }
     }
-    if(showSnackbar){
+    if (showSnackbar) {
         if (snackbarHost != null) {
             ShowSnackbar(
                 snackbarHostState = snackbarHost,
                 message = "Mensagem de Resposta: $responseSendMessage",
-                duration = SnackbarDuration.Short ,
-                coroutineScope = coroutineScope
+                duration = SnackbarDuration.Short,
+                coroutineScope = coroutineScope,
+                actionLabel = false,
+                context = context
             )
         }
     }
@@ -240,7 +244,11 @@ fun FilePicker(
  * Caso de exemplo a mensagem é enviada como texto, portanto seta o [IntegrationMessage.msgSubtype] == 0.
  * Caso a mensagem seja enviada como byteArray (Binária), seta o [IntegrationMessage.msgSubtype] == 1.
  */
-suspend fun messageOnPattern(value: String, selectedFileString: Uri?, selectedFileName: String?): IntegrationMessage {
+suspend fun messageOnPattern(
+    value: String,
+    selectedFileString: Uri?,
+    selectedFileName: String?,
+): IntegrationMessage {
     var isOutOfBandMessage = false
     if (selectedFileString != null) {
         isOutOfBandMessage = true
@@ -284,6 +292,7 @@ suspend fun messageOnPattern(value: String, selectedFileString: Uri?, selectedFi
         )
     }
 }
+
 fun getFileNameFromUri(uri: Uri, context: Context): String {
     val contentResolver = context.contentResolver
     var cursor: Cursor? = null
