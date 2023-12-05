@@ -20,13 +20,6 @@ object ParseData {
         return FilterModel(param1 = param1, param2 = param2, param3 = param3, param4 = null)
     }
 
-    fun convertFromTimeStampI(timeStamp: Long): Date {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Date.from(Instant.ofEpochMilli(timeStamp))
-        } else {
-            Date(timeStamp)
-        }
-    }
 
     fun convertFromTimeStamp(timeStamp: String?): Date? {
         return try {

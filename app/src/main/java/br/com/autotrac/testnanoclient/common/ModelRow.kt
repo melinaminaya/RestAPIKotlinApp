@@ -40,10 +40,16 @@ fun ModelRow(title: String, status: String?, condition:Boolean) {
                     .wrapContentWidth()
             )
         }else if(status == null && condition) {
+            //First Connection still delivers status null
             LoadingIcon(25, null)
         }else{
             Text(
                 text = "0",
+                style = TextStyle(fontSize = 14.sp),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .weight(2f)
+                    .wrapContentWidth(Alignment.Start)
             )
         }
     }

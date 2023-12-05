@@ -40,6 +40,14 @@ fun CheckListCard(content: List<CheckList>?) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
+                text = "Last Satellite Communication Date: ${item.lastCommSatellite} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Last Cellular Communication Date: ${item.lastCommCellular} ",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
                 text = "Service Version: ${item.serviceVersion} ",
                 modifier = Modifier.padding(bottom = 8.dp)
             )

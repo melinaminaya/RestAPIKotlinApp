@@ -148,6 +148,9 @@ class ParameterHandler {
             return listParametersCommType
         }
         fun convertMctSignal(value: String?): String? {
+            if (value != null && value.isEmpty()) {
+                return "null"
+            }
             return value?.toIntOrNull()?.let { intValue ->
                 when (intValue) {
                     ParameterValues.MctSignalValues.MCT_SIGNAL_OFF -> "Sem sinal"

@@ -335,6 +335,7 @@ class ApiEndpoints {
 
         /**
          * Indica se existe sinal de satélite.
+         * Se valor retornar vazio ou nulo indica que o parâmetro ainda não consta no banco.
          */
         const val GET_PARAM_HAS_SATELLITE_SIGNAL = "GET_PARAM_HAS_SATELLITE_SIGNAL"
 
@@ -380,7 +381,7 @@ class ApiEndpoints {
          * ** Aplicável apenas a produtos que possuem comunicação celular.**
          *
          * A data da última comunicação é baseada na última troca de mensagem ou posição.
-         * Retorna em TimeStamp  (segundos desde 01/01/1970 00:00:00 GMT) da última mensagem
+         * Retorna na formatação (dd/MM/yyyy HH:mm:ss) da última mensagem
          * /posição trocada na rede celular.
          */
         const val GET_PARAM_LAST_CELL_COMM_TIME = "GET_PARAM_LAST_CELL_COMM_TIME"
@@ -394,7 +395,7 @@ class ApiEndpoints {
         /**
          * Data/hora (GMT) da última comunicação via rede satelital.
          * A data da última comunicação é baseada na última troca de mensagem ou posição.
-         * Retorna em TimeStamp (segundos desde 01/01/1970 00:00:00 GMT) da última mensagem
+         * Retorna na formatação (dd/MM/yyyy HH:mm:ss) da última mensagem
          * /posição trocada na rede satelital.
          */
         const val GET_PARAM_LAST_SAT_COMM_TIME = "GET_PARAM_LAST_SAT_COMM_TIME"

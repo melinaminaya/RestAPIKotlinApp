@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * Objeto de retorno da requisição [br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQ_GET_CHECKLIST].
+ * @property LastGpsPosDate Data/Hora da última posição GPS, retorna no formato (DD/MM/YYYY HH:MM:SS).
+ * @property LastCommSatellite Data/Hora da útlima comunicação Satelite, retorna no formato (DD/MM/YYYY HH:MM:SS).
+ * @property LastCommCellular Data/Hora da útlima comunicação Celular, retorna no formato (DD/MM/YYYY HH:MM:SS).
  */
 data class CheckList(
 
