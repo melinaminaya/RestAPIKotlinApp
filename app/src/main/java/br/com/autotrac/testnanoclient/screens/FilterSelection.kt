@@ -371,8 +371,9 @@ fun FilterSelectionBox(
                         placeholder = {
                             Text(
                                 text = "Ver ActionValues.MessageStatusValues \n" +
-                                        "exemplo: 4 -> READ",
-                                color = androidx.compose.ui.graphics.Color.Gray,
+                                        "exemplo: 1 -> TO_SEND, " +
+                                        "2 -> SENT",
+                                color = Color.Gray,
                                 fontSize = 12.sp
                             )
                         }
