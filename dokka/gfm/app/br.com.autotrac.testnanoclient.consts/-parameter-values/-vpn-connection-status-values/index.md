@@ -10,7 +10,7 @@ Indica o status atual da conexão VPN (=0 desconectada, =1 conectada).
 
 | |
 |---|
-| [ApiEndpoints.Companion.GET_PARAM_VPN_CONNECTION_STATUS](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-v-p-n_-c-o-n-n-e-c-t-i-o-n_-s-t-a-t-u-s.md) |
+| [ApiEndpoints.GET_PARAM_VPN_CONNECTION_STATUS](../../-api-endpoints/-g-e-t_-p-a-r-a-m_-v-p-n_-c-o-n-n-e-c-t-i-o-n_-s-t-a-t-u-s.md) |
 
 ## Properties
 

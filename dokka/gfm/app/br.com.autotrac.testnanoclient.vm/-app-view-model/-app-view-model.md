@@ -3,4 +3,4 @@
 # AppViewModel
 
 [androidJvm]\
-constructor()
+constructor(state: [SavedStateHandle](https://developer.android.com/reference/kotlin/androidx/lifecycle/SavedStateHandle.html))

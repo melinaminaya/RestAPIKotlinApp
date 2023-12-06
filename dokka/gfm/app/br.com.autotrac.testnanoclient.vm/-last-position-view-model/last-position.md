@@ -3,4 +3,4 @@
 # lastPosition
 
 [androidJvm]\
-val [lastPosition](last-position.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[LastPosition](../../br.com.autotrac.testnanoclient.dataRemote/-last-position/index.md)&gt;
+val [lastPosition](last-position.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[LastPosition](../../br.com.autotrac.testnanoclient.models/-last-position/index.md)&gt;

@@ -37,8 +37,7 @@ object ActionValues {
 
     /**
      * Indica o status do processo de batismo.
-     * @param Param1 Status do processo de batismo. Ver [ValuesBaptismStatusParam1]
-     * @param Param2 Depende de Param1.
+     *
      * Se [ValuesBaptismStatusParam1.BAPTIZED],
      * [ValuesBaptismStatusParam1.WAITING_CONFIRMATION],
      * [ValuesBaptismStatusParam1.MCT_ADDR_RESPONSE] ou
@@ -46,8 +45,11 @@ object ActionValues {
      * Se [ValuesBaptismStatusParam1.NOT_BAPTIZED],
      * [ValuesBaptismStatusParam1.IN_BAPTISM_PROCESS],
      * [ValuesBaptismStatusParam1.BAPTISM_TIMED_OUT], Param2 Não utilizado.
-     * **Param3:** Não utilizado.
-     * **Param4:** Não utilizado.
+     *
+     * @param Param1 Status do processo de batismo. Ver [ValuesBaptismStatusParam1]
+     * @param Param2 Depende de Param1.
+     * @param Param3 Não utilizado.
+     * @param Param4 Não utilizado.
      */
     const val BAPTISM_STATUS = 0x07
     const val BAPTISM_STATUS_OBSERVABLE = "BAPTISM_STATUS"
@@ -55,6 +57,7 @@ object ActionValues {
     /**
      * Os arquivos de atualização foram baixados e estão prontos para iniciar
      * a atualização.
+     *
      * @param Param1 Não utilizado.
      * @param Param2 Não utilizado.
      * @param Param3 Indica a versão de atualização disponivel contida no nome do versionList.
@@ -83,12 +86,12 @@ object ActionValues {
     /**
      * Mudanca no sinal do satélite.
      * @param Param1 Status do sinal.
-     * @return 0: Sem sinal.
-     *
-     * 1: Com sinal.
      * @param Param2 Não utilizado.
      * @param Param3 Não utilizado.
      * @param Param4 Não utilizado.
+     * @return 0: Sem sinal.
+     *
+     * 1: Com sinal.
      */
     const val SATELLITE_SIGNAL_CHANGED = 0x0B
     const val SATELLITE_SIGNAL_CHANGED_OBSERVABLE = "SATELLITE_SIGNAL_CHANGED"

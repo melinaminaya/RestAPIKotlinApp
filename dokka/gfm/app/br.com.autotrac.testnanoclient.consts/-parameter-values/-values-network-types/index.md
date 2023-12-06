@@ -10,7 +10,7 @@ Tipos de redes de comunicação disponiveis.
 
 | |
 |---|
-| [ApiEndpoints.Companion.GET_PARAM_CURRENT_COMM_MODE](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-c-u-r-r-e-n-t_-c-o-m-m_-m-o-d-e.md) |
+| [ApiEndpoints.GET_PARAM_CURRENT_COMM_MODE](../../-api-endpoints/-g-e-t_-p-a-r-a-m_-c-u-r-r-e-n-t_-c-o-m-m_-m-o-d-e.md) |
 
 ## Properties
 

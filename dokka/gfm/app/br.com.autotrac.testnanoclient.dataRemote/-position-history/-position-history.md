@@ -1,6 +1,0 @@
-//[app](../../../index.md)/[br.com.autotrac.testnanoclient.dataRemote](../index.md)/[PositionHistory](index.md)/[PositionHistory](-position-history.md)
-
-# PositionHistory
-
-[androidJvm]\
-constructor(code: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, latitude: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, longitude: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, positionTime: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, speed: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, heading: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html)?, aging: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, reason: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, lastStatusTime: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, transmittedChannel: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, numMsgStatus: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?)

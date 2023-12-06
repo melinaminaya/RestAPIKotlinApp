@@ -3,4 +3,4 @@
 # parseMessageList
 
 [androidJvm]\
-fun [parseMessageList](parse-message-list.md)(json: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [FilterModel](../../br.com.autotrac.testnanoclient.dataRemote/-filter-model/index.md)
+fun [parseMessageList](parse-message-list.md)(json: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [FilterModel](../../br.com.autotrac.testnanoclient.models/-filter-model/index.md)

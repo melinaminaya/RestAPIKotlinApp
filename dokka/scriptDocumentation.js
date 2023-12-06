@@ -76,7 +76,7 @@ var elementsToRemove = [
     "br.com.autotrac.testnanoclient.common",
     "br.com.autotrac.testnanoclient.data",
     "br.com.autotrac.testnanoclient.handlers",
-    "bt.com.autotrac.testnanoclient.logger",
+    "br.com.autotrac.testnanoclient.logger",
     "br.com.autotrac.testnanoclient.navigation", 
     "br.com.autotrac.testnanoclient.screens",
     "br.com.autotrac.testnanoclient.security",
@@ -104,7 +104,7 @@ elementsToRemove.forEach(function(elementText) {
 var myMap = new Map();
 myMap.set('br.com.autotrac.testnanoclient.consts', 'Constantes');
 myMap.set('br.com.autotrac.testnanoclient.models', 'Models');
-myMap.set('br.com.autotrac.testnanoclient.retrofit', 'Endpoint Genérico');
+myMap.set('br.com.autotrac.testnanoclient.retrofit', 'Endpoint Genérico para chamadas HTTPS sem Websocket');
 myMap.set('br.com.autotrac.testnanoclient.requestObjects', 'Objetos das Requisições')
 myMap.forEach(function(elementText, key){
     var tableRowElements = document.querySelectorAll('div.table-row');

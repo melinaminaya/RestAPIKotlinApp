@@ -5,22 +5,16 @@ package br.com.autotrac.testnanoclient.consts
  * Cada parâmetro pode retornar um valor específico.
  * @author Melina Minaya
  */
-class ParameterValues {
-    companion object{
+object ParameterValues {
 
-
-
-        val listExtDevCommType = listOf(
-            ExternalDeviceCommunicationTypeValues.RS232,
-            ExternalDeviceCommunicationTypeValues.SOCKET,
-            ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_HOTSPOT,
-            ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET,
-            ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_HOTSPOT,
-            ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_CLIENT
-        )
-    }
-
-
+    val listExtDevCommType = listOf(
+        ExternalDeviceCommunicationTypeValues.RS232,
+        ExternalDeviceCommunicationTypeValues.SOCKET,
+        ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_HOTSPOT,
+        ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET,
+        ExternalDeviceCommunicationTypeValues.RS232_AND_SOCKET_WIFI_HOTSPOT,
+        ExternalDeviceCommunicationTypeValues.SOCKET_WIFI_CLIENT
+    )
 
     /**
      * Valores possíveis para os tipos de comunicação (meio físico) a ser
@@ -59,6 +53,7 @@ class ParameterValues {
          */
         const val RS232_AND_SOCKET_WIFI_CLIENT = 6
     }
+
     /**
      * Valores possíveis para o parâmetro:
      * @see ApiEndpoints.GET_PARAM_UC_SUBTYPE
@@ -130,6 +125,7 @@ class ParameterValues {
         /** Atulização baixada e pronta para atulizar após o boot do aparelho.  */
         const val WAITING_BOOT = 5
     }
+
     /**
      * Possíveis valores para [ApiEndpoints.GET_PARAM_HW_CONTROL_DISABLE].
      * Mapa de bits. Pode ser uma combinação de um dos valores.
@@ -174,6 +170,7 @@ class ParameterValues {
         const val ENABLE_VPN = 0
         const val DISABLE_VPN = 1
     }
+
     /**
      * Indica o status atual da conexão VPN (=0 desconectada, =1 conectada).
      *
@@ -200,13 +197,16 @@ class ParameterValues {
      * Valores possíveis para o status atualizado da Uc Móvel
      * após a tentativa de estabelecimento de comunicação via celular com o servidor.
      */
-    object UcStatusValues{
+    object UcStatusValues {
         /**UC habilitada, mas com a licença de uso Inativa, porque a senha foi alterada no servidor.*/
         const val INVALID_USER_OR_PASSWORD = 2
+
         /** Uc desabilitada. */
         const val UC_DISABLED = 1
+
         /** Uc habilitada e com a licença de uso ativada. */
         const val UC_ENABLED = 0
+
         /** Status desconhecido. */
         const val UNKNOWN = 3
     }

@@ -3,4 +3,4 @@
 # deleteMessageOutbox
 
 [androidJvm]\
-fun [deleteMessageOutbox](delete-message-outbox.md)(message: [IntegrationMessage](../../br.com.autotrac.testnanoclient.dataRemote/-integration-message/index.md))
+fun [deleteMessageOutbox](delete-message-outbox.md)(message: [IntegrationMessage](../../br.com.autotrac.testnanoclient.models/-integration-message/index.md))

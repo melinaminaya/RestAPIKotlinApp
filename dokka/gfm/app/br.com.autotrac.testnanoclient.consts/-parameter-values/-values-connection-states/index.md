@@ -10,7 +10,7 @@ Tipos possiveis de conexão.
 
 | |
 |---|
-| [ApiEndpoints.Companion.GET_PARAM_LAST_SAT_CONNECTION_STATUS](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-l-a-s-t_-s-a-t_-c-o-n-n-e-c-t-i-o-n_-s-t-a-t-u-s.md) |
+| [ApiEndpoints.GET_PARAM_LAST_SAT_CONNECTION_STATUS](../../-api-endpoints/-g-e-t_-p-a-r-a-m_-l-a-s-t_-s-a-t_-c-o-n-n-e-c-t-i-o-n_-s-t-a-t-u-s.md) |
 
 ## Properties
 

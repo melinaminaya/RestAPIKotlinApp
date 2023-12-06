@@ -10,7 +10,7 @@ Valores da requisição de última posição.
 
 | |
 |---|
-| [ApiEndpoints.Companion.REQ_GET_POSITION_LAST](../../-api-endpoints/-companion/-r-e-q_-g-e-t_-p-o-s-i-t-i-o-n_-l-a-s-t.md) |
+| [ApiEndpoints.REQ_GET_POSITION_LAST](../../-api-endpoints/-r-e-q_-g-e-t_-p-o-s-i-t-i-o-n_-l-a-s-t.md) |
 
 ## Properties
 

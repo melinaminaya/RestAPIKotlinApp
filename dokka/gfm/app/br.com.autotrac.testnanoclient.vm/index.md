@@ -6,7 +6,7 @@
 
 | Name | Summary |
 |---|---|
-| [AppViewModel](-app-view-model/index.md) | [androidJvm]<br>class [AppViewModel](-app-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
+| [AppViewModel](-app-view-model/index.md) | [androidJvm]<br>open class [AppViewModel](-app-view-model/index.md)(state: [SavedStateHandle](https://developer.android.com/reference/kotlin/androidx/lifecycle/SavedStateHandle.html)) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
 | [CheckListViewModel](-check-list-view-model/index.md) | [androidJvm]<br>open class [CheckListViewModel](-check-list-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
 | [CurrentDateViewModel](-current-date-view-model/index.md) | [androidJvm]<br>open class [CurrentDateViewModel](-current-date-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
 | [CustomDateDeserializer](-custom-date-deserializer/index.md) | [androidJvm]<br>class [CustomDateDeserializer](-custom-date-deserializer/index.md) : StdDeserializer&lt;[Date](https://developer.android.com/reference/kotlin/java/util/Date.html)&gt; |
@@ -16,6 +16,6 @@
 | [LastPositionViewModel](-last-position-view-model/index.md) | [androidJvm]<br>open class [LastPositionViewModel](-last-position-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
 | [MctParamsViewModel](-mct-params-view-model/index.md) | [androidJvm]<br>open class [MctParamsViewModel](-mct-params-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
 | [MessageViewModel](-message-view-model/index.md) | [androidJvm]<br>open class [MessageViewModel](-message-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
-| [ParametersViewModel](-parameters-view-model/index.md) | [androidJvm]<br>class [ParametersViewModel](-parameters-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html), [ParseOnMessage.NotificationListener](../br.com.autotrac.testnanoclient.handlers/-parse-on-message/-notification-listener/index.md) |
+| [ParametersViewModel](-parameters-view-model/index.md) | [androidJvm]<br>class [ParametersViewModel](-parameters-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |
 | [PermissionState](-permission-state/index.md) | [androidJvm]<br>sealed class [PermissionState](-permission-state/index.md) |
 | [ResetDatabaseViewModel](-reset-database-view-model/index.md) | [androidJvm]<br>open class [ResetDatabaseViewModel](-reset-database-view-model/index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html) |

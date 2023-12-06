@@ -6,4 +6,4 @@
 
 @[Composable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html)
 
-fun [SwipeItem](-swipe-item.md)(message: [IntegrationMessage](../br.com.autotrac.testnanoclient.dataRemote/-integration-message/index.md), onMessageDelete: () -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html), onMessageClick: () -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html))
+fun [SwipeItem](-swipe-item.md)(message: [IntegrationMessage](../br.com.autotrac.testnanoclient.models/-integration-message/index.md), onMessageDelete: () -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html), onMessageClick: () -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html))

@@ -1,8 +1,31 @@
 package br.com.autotrac.testnanoclient.consts
 
+/**
+ * Elementos de referência das requisições via Websocket.
+ * Esses elementos serão utilizados no Param1 de cada requisição.
+ * @author Melina Minaya
+ */
 object ResponseObjectReference {
     /**
-     * Endpoint Geral de Eventos (Ações/Notificações).
+     * Endpoint Geral de Configuração de Eventos (Ações/Notificações).
+     * Envia a lista de endpoint de notificações que desejam ser escutadas.
+     *
+     * [ActionValues.MESSAGE_STATUS] : retorna [ActionValues.MessageStatusValues]
+     *
+     * [ActionValues.COMMUNICATION_MODE_CHANGED] : [br.com.autotrac.testnanoclient.consts.ParameterValues.ValuesNetworkTypes]
+     *
+     * [ActionValues.FILE_OPERATION_STATUS] : [ActionValues.ValuesFileOperationStatusParam1]
+     *
+     * [ActionValues.IGNITION_STATUS] : [ActionValues.ValuesIgnitionStatusParam1]
+     *
+     * [ActionValues.NETWORK_CONNECTION_STATUS] : [br.com.autotrac.testnanoclient.consts.ParameterValues.ValuesNetworkTypes] e
+     * [br.com.autotrac.testnanoclient.consts.ParameterValues.ValuesConnectionStates]
+     *
+     * [ActionValues.SYSTEM_RESOURCE_REQ_STATUS] : [ActionValues.ValuesSysResourceReqParam1]
+     * e [ActionValues.ValuesSysResourceStatusParam2]
+     *
+     * [ActionValues.FORM_RECEIVED] e [ActionValues.FORM_DELETED] : [br.com.autotrac.testnanoclient.models.IntegrationForm.code]
+     *
      *
      * Exemplo de requisição com Endpoint: {"param1":"NOTIFICATION","param2":[22,7,10,18,21,24,15,9,8,11,5,23,4,3]}
      *

@@ -16,7 +16,7 @@ open class [CheckListViewModel](index.md) : [ViewModel](https://developer.androi
 | Name | Summary |
 |---|---|
 | [cellSignal](cell-signal.md) | [androidJvm]<br>val [cellSignal](cell-signal.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-| [checkList](check-list.md) | [androidJvm]<br>val [checkList](check-list.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[CheckList](../../br.com.autotrac.testnanoclient.dataRemote/-check-list/index.md)&gt;&gt; |
+| [checkList](check-list.md) | [androidJvm]<br>val [checkList](check-list.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[CheckList](../../br.com.autotrac.testnanoclient.models/-check-list/index.md)&gt;&gt; |
 | [wifiSignal](wifi-signal.md) | [androidJvm]<br>val [wifiSignal](wifi-signal.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
 
 ## Functions

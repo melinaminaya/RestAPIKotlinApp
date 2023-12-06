@@ -3,7 +3,7 @@
 # ParametersViewModel
 
 [androidJvm]\
-class [ParametersViewModel](index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html), [ParseOnMessage.NotificationListener](../../br.com.autotrac.testnanoclient.handlers/-parse-on-message/-notification-listener/index.md)
+class [ParametersViewModel](index.md) : [ViewModel](https://developer.android.com/reference/kotlin/androidx/lifecycle/ViewModel.html)
 
 ## Constructors
 
@@ -11,20 +11,14 @@ class [ParametersViewModel](index.md) : [ViewModel](https://developer.android.co
 |---|---|
 | [ParametersViewModel](-parameters-view-model.md) | [androidJvm]<br>constructor() |
 
-## Properties
-
-| Name | Summary |
-|---|---|
-| [isBaptizedValue](is-baptized-value.md) | [androidJvm]<br>val [isBaptizedValue](is-baptized-value.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-
 ## Functions
 
 | Name | Summary |
 |---|---|
 | [fetchParameters](fetch-parameters.md) | [androidJvm]<br>suspend fun [fetchParameters](fetch-parameters.md)() |
 | [getParameterLiveData](get-parameter-live-data.md) | [androidJvm]<br>fun [getParameterLiveData](get-parameter-live-data.md)(parameter: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;? |
-| [onNotificationReceived](on-notification-received.md) | [androidJvm]<br>open override fun [onNotificationReceived](on-notification-received.md)(notification: [ReceivedRequestResponse](../../br.com.autotrac.testnanoclient.requestObjects/-received-request-response/index.md)) |
 | [setParam](set-param.md) | [androidJvm]<br>fun [setParam](set-param.md)(param: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
+| [validateSelection](validate-selection.md) | [androidJvm]<br>suspend fun [validateSelection](validate-selection.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 
 ## Inherited functions
 
