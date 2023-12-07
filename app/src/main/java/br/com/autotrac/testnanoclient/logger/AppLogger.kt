@@ -7,6 +7,7 @@ import java.io.FileWriter
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 object AppLogger {
     private const val TAG = "AppLogger"
@@ -28,7 +29,7 @@ object AppLogger {
     }
 
     fun log(message: String) {
-        val logLine = "${SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())} $message"
+        val logLine = "${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())} $message"
         try {
             val logFile = logFile ?: return
             FileWriter(logFile, true).use { writer ->

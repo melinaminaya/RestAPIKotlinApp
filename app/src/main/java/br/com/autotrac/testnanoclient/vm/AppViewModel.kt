@@ -1,9 +1,11 @@
 package br.com.autotrac.testnanoclient.vm
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.LiveData
@@ -22,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
@@ -36,10 +39,19 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
     private val _isMobileCommunicatorOn = MutableLiveData<Boolean>(false)
     val isMobileCommunicatorOn: MutableLiveData<Boolean> get() = _isMobileCommunicatorOn
 
+    private val _permissionState = MutableStateFlow<PermissionState>(PermissionState.NotRequested)
+    val permissionState: StateFlow<PermissionState> = _permissionState
+
 
     init {
         // Initialize the WebSocket connection status from the SavedStateHandle
         _isApiOn.value = state.get<Boolean>("isApiOn") ?: false
+        //When init grant this permission to call the intents below
+    }
+
+    fun onPermissionGranted() {
+        // Perform actions when the permission is granted, e.g., call intents
+        _permissionState.value = PermissionState.Granted
     }
 
     fun startCheckingApiStatus() {
@@ -180,34 +192,56 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
         coroutineScope: CoroutineScope,
         snackbarHostState: SnackbarHostState,
     ) {
-        val thread = Thread {
-            try {
-                val intent = Intent(ApiConstants.INTENT_SVC_START)
-                intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(intent)
-                } else {
-                    context.startService(intent)
-                }
-                Log.i(NanoWebsocketClient.TAG, "Mobile Communicator Started")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
+        when (permissionState.value) {
+            PermissionState.Granted -> {
+                val thread = Thread {
+                    try {
+                        val intent = Intent(ApiConstants.INTENT_SVC_START)
+                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            context.startForegroundService(intent)
+                        } else {
+                            context.startService(intent)
+                        }
+                        Log.i(NanoWebsocketClient.TAG, "Mobile Communicator Started")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
 //                                        isLoading = false
+                    }
+                }
+                thread.start()
+                coroutineScope.launch {
+                    showSnackbarSuspend(
+                        message = "Módulo de Comunicação Conectado",
+                        actionLabel = true,
+                        duration = SnackbarDuration.Short,
+                        context = context,
+                        snackbarHostState = snackbarHostState
+                    )
+                }
+                setIsMobileCommunicatorOn(true)
+            }
+
+            else -> {
+                coroutineScope.launch {
+                    showSnackbarSuspend(
+                        message = "Módulo de Comunicação não conectado. Permissão de intent negada.",
+                        actionLabel = true,
+                        duration = SnackbarDuration.Long,
+                        context = context,
+                        snackbarHostState = snackbarHostState
+                    )
+                }
+                AppLogger.log("Permission QUERY_ALL_PACKAGES denied: ao iniciar comunicador")
+                Log.i(
+                    NanoWebsocketClient.TAG,
+                    "Permission QUERY_ALL_PACKAGES denied: ao iniciar comunicador"
+                )
             }
         }
-        thread.start()
-        coroutineScope.launch {
-            showSnackbarSuspend(
-                message = "Módulo de Comunicação Conectado",
-                actionLabel = true,
-                duration = SnackbarDuration.Short,
-                context = context,
-                snackbarHostState = snackbarHostState
-            )
-        }
-        setIsMobileCommunicatorOn(true)
+
     }
 
     fun disconnectCommunicator(
@@ -247,5 +281,57 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
         val isMobCommOn = ObservableUtil.getValue("isMobileCommunicatorOn").toString().toBoolean()
         _isMobileCommunicatorOn.value = isMobCommOn
         return isMobCommOn
+    }
+
+    fun connectService(context: Context) {
+        when (permissionState.value) {
+            PermissionState.Granted -> {
+                val thread = Thread {
+
+                    try {
+                        val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
+                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            context.startForegroundService(intent)
+                        } else {
+                            context.startService(intent)
+                        }
+                        Log.i(NanoWebsocketClient.TAG, "Service Started")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                    }
+                }
+                thread.start()
+            }
+
+            else -> {
+                Log.i(NanoWebsocketClient.TAG, "Permission QUERY_ALL_PACKAGES Denied")
+                AppLogger.log("Permission QUERY_ALL_PACKAGES Denied: ao iniciar o serviço")
+            }
+        }
+
+    }
+
+    fun disconnectService(context: Context) {
+        val thread = Thread {
+            try {
+                val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
+                intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
+                intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+                Log.i(NanoWebsocketClient.TAG, "Service Stopped")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        thread.start()
+        setIsMobileCommunicatorOn(false)
+        _isApiOn.value = false
     }
 }

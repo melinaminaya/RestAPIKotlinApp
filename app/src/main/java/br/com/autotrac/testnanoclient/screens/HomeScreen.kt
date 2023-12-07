@@ -1,9 +1,10 @@
 package br.com.autotrac.testnanoclient.screens
 
 
-import android.content.Intent
+import android.Manifest
 import android.os.Build
-import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,7 +33,6 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.autotrac.testnanoclient.NanoWebsocketClient.TAG
 import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.BlockingAlert
 import br.com.autotrac.testnanoclient.common.ButtonTicker
@@ -39,7 +40,6 @@ import br.com.autotrac.testnanoclient.common.CustomAlert
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DefaultButton
 import br.com.autotrac.testnanoclient.common.ToggleCard
-import br.com.autotrac.testnanoclient.consts.ApiConstants
 import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.ResetDatabaseViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
@@ -97,6 +97,23 @@ fun HomeScreen(
     if (isSocketOn) {
         isServiceOn.value = true
     }
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val requestPermissionLauncher =
+            rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    // Permission granted, you can proceed with your logic
+                    appViewModel.onPermissionGranted()
+                } else {
+                    // Permission denied, handle accordingly
+                }
+            }
+        // Request the permission when the HomeScreen is recomposed
+        DisposableEffect(Unit) {
+            requestPermissionLauncher.launch(Manifest.permission.QUERY_ALL_PACKAGES)
+            onDispose { /* clean-up, if needed */ }
+        }
+    }
+
 
     Scaffold(
         topBar = {
@@ -132,53 +149,14 @@ fun HomeScreen(
                     ToggleCard(
                         isChecked = isServiceOn.value,
                         onCheckedChange = { isChecked ->
-
-
                             if (isChecked) {
                                 isLoadingServiceOn.value = true
-
-                                val thread = Thread {
-
-                                    try {
-                                        val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
-                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            context.startForegroundService(intent)
-                                        } else {
-                                            context.startService(intent)
-                                        }
-                                        Log.i(TAG, "Service Started")
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    } finally {
-
-
-                                    }
-                                }
-                                thread.start()
-
+                                appViewModel.connectService(context)
 
                             } else {
                                 isLoadingServiceOff.value = true
-                                val thread = Thread {
-                                    try {
-                                        val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
-                                        intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            context.startForegroundService(intent)
-                                        } else {
-                                            context.startService(intent)
-                                        }
-                                        Log.i(TAG, "Service Stopped")
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    }
-                                }
-                                thread.start()
+                                appViewModel.disconnectService(context)
                                 isApiOn = false
-                                appViewModel.setIsMobileCommunicatorOn(false)
                                 httpViewModel.isSocketOn.value = false
                             }
                             isServiceOn.value = isChecked

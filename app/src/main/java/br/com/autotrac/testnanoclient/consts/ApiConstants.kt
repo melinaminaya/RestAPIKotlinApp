@@ -14,20 +14,20 @@ object ApiConstants {
     // private static final String INTENT_SVC_INIT = "br.com.autotrac.jATMobileCommSvc.Init";
     const val INTENT_SVC_INITIALIZE: String = "br.com.autotrac.jATMobileCommSvc.Initialize"
 
-    /** Intent utilizado para iniciar o funcionamento do serviço.
-     * package = "br.com.autotrac.jATMobileCommSvc.Start"
-     * */
-    const val INTENT_SVC_START: String = "br.com.autotrac.jATMobileCommSvc.Start"
-
-    /** Intent utilizado para parar o funcionamento do serviço.
-     * package = "br.com.autotrac.jATMobileCommSvc.Stop"
-     * */
-    const val INTENT_SVC_STOP: String = "br.com.autotrac.jATMobileCommSvc.Stop"
-
     /** Intent utilizado para finalizar o serviço.
      * package = "br.com.autotrac.jATMobileCommSvc.Finalize"
      * */
     const val INTENT_SVC_FINALIZE: String = "br.com.autotrac.jATMobileCommSvc.Finalize"
+
+    /** Intent utilizado para iniciar o funcionamento do modulo de comunicação.
+     * package = "br.com.autotrac.jATMobileCommSvc.Start"
+     * */
+    const val INTENT_SVC_START: String = "br.com.autotrac.jATMobileCommSvc.Start"
+
+    /** Intent utilizado para parar o funcionamento do módulo de comunicaçãp.
+     * package = "br.com.autotrac.jATMobileCommSvc.Stop"
+     * */
+    const val INTENT_SVC_STOP: String = "br.com.autotrac.jATMobileCommSvc.Stop"
 
     /** Package do serviço: br.com.autotrac.jatmobilecommsvc
      * */
