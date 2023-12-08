@@ -15,7 +15,7 @@ package br.com.autotrac.testnanoclient.requestObjects
 data class SendObject(val param1: String?, val param2: Any?)
 
 /**
- * O ReceivedRequestResponse refere-se ao objeto que é recebido pelo WebSocket ou requisições HTTP.
+ * O ReceivedRequestResponse refere-se ao objeto que é recebido pelo WebSocket ou requisições HTTPS.
  *
  * Exemplo de ReceivedRequestResponse(param1=REQUEST, param2=REQ_MESSAGE_COUNT, param3={param1=false, param2=3}, param4=0.0)
  *
@@ -38,7 +38,7 @@ data class ReceivedRequestResponse(
  * Objeto a ser enviado em [br.com.autotrac.testnanoclient.consts.ApiEndpoints.REQUEST] e
  * [br.com.autotrac.testnanoclient.consts.ApiEndpoints.PARAMETER] contendo os parâmetros
  * necessários para cada requisição ao servidor.
- * Ao enviar via WebSocket, o objeto somente é convertido para gson e encapsulado dentro do [SendObject].
+ * Ao enviar via WebSocket, o objeto somente é convertido para o formato JSON e encapsulado dentro do [SendObject].
  * Por meio de requisição HTTP, o objeto é distribuído nas 4 queries enviadas ao servidor.
  */
 data class RequestObject(val param1: Any?, val param2: Any?, val param3: Any?, val param4: Any?)

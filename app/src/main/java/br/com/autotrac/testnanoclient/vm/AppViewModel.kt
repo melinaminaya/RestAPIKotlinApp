@@ -198,7 +198,6 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
                     try {
                         val intent = Intent(ApiConstants.INTENT_SVC_START)
                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             context.startForegroundService(intent)
                         } else {
@@ -253,7 +252,6 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
             try {
                 val intent = Intent(ApiConstants.INTENT_SVC_STOP)
                 intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(intent)
                 } else {
@@ -291,7 +289,6 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
                     try {
                         val intent = Intent(ApiConstants.INTENT_SVC_INITIALIZE)
                         intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                        intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             context.startForegroundService(intent)
                         } else {
@@ -319,7 +316,6 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
             try {
                 val intent = Intent(ApiConstants.INTENT_SVC_FINALIZE)
                 intent.setPackage(ApiConstants.INTENT_SVC_PACKAGE_NAME)
-                intent.putExtra(ApiConstants.INTENT_ACTION_NEED_KNOX, true)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(intent)
                 } else {

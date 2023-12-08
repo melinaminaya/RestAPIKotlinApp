@@ -112,6 +112,8 @@ fun HomeScreen(
             requestPermissionLauncher.launch(Manifest.permission.QUERY_ALL_PACKAGES)
             onDispose { /* clean-up, if needed */ }
         }
+    }else{
+        appViewModel.onPermissionGranted()
     }
 
 
