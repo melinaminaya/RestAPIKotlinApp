@@ -14,7 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,7 +33,7 @@ fun OutboxScreen() {
     val viewModel: MessageViewModel = viewModel()
     val showDialog = remember { mutableStateOf(false) }
     val messagesState by viewModel.outboxMessages.observeAsState(null)
-    val messagesList = rememberSaveable{ mutableStateOf(messagesState) }
+    var messagesList by remember{ mutableStateOf(messagesState) }
     var clickedMessage = remember { mutableStateOf<IntegrationMessage?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -41,7 +41,7 @@ fun OutboxScreen() {
         viewModel.fetchOutboxMessages()
     }
     LaunchedEffect(messagesState){
-        messagesList.value = messagesState
+        messagesList = messagesState
     }
 
     Box {
@@ -62,11 +62,13 @@ fun OutboxScreen() {
             }
 
             else -> {
-                messagesList.value?.let {
+                messagesList?.let {
                     MessageListComposable(
                         messages = it,
                         onMessageDelete = { message ->
-                            viewModel.deleteMessageOutbox(message)
+                            coroutineScope.launch {
+                                viewModel.deleteMessageOutbox(message)
+                            }
                         },
                         onMessageClick = { message ->
                             showDialog.value = true
@@ -105,7 +107,6 @@ fun OutboxScreen() {
                 showMarkAsRead = false,
             )
         }
-
     }
 }
 

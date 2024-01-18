@@ -40,6 +40,7 @@ import br.com.autotrac.testnanoclient.common.CustomAlert
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DefaultButton
 import br.com.autotrac.testnanoclient.common.ToggleCard
+import br.com.autotrac.testnanoclient.handlers.NotificationHandler
 import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.ResetDatabaseViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
@@ -50,7 +51,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+/**
+ * HomeScreen - Tela inicial.
+ * @author Melina Minaya
+ */
 @Composable
 fun HomeScreen(
     navigateToInbox: (Int, Boolean) -> Unit,
@@ -80,6 +84,7 @@ fun HomeScreen(
     var isLoadingServiceOff = remember { mutableStateOf(false) }
     var isLoadingApiOn = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+    NotificationHandler(snackbarHostState = snackbarHostState)
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         appViewModel.startCheckingApiStatus()
@@ -97,7 +102,7 @@ fun HomeScreen(
     if (isSocketOn) {
         isServiceOn.value = true
     }
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val requestPermissionLauncher =
             rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 if (isGranted) {
@@ -112,7 +117,7 @@ fun HomeScreen(
             requestPermissionLauncher.launch(Manifest.permission.QUERY_ALL_PACKAGES)
             onDispose { /* clean-up, if needed */ }
         }
-    }else{
+    } else {
         appViewModel.onPermissionGranted()
     }
 
@@ -141,7 +146,7 @@ fun HomeScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            //Inicialização do Serviço.
+            //Start Autotrac CommSvc.
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -172,7 +177,7 @@ fun HomeScreen(
                     )
                 }
             }
-            //Inicializa o módulo de comunicação
+            //Start Autotrac Communication Module.
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -207,7 +212,7 @@ fun HomeScreen(
                     )
                 }
             }
-            //Inicialização do servidor da API.
+            //Start Autotrac Api Server.
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

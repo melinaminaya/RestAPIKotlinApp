@@ -52,7 +52,6 @@ object ActionValues {
      * @param Param4 Não utilizado.
      */
     const val BAPTISM_STATUS = 0x07
-    const val BAPTISM_STATUS_OBSERVABLE = "BAPTISM_STATUS"
 
     /**
      * Os arquivos de atualização foram baixados e estão prontos para iniciar
@@ -94,8 +93,6 @@ object ActionValues {
      * 1: Com sinal.
      */
     const val SATELLITE_SIGNAL_CHANGED = 0x0B
-    const val SATELLITE_SIGNAL_CHANGED_OBSERVABLE = "SATELLITE_SIGNAL_CHANGED"
-
 
     /**
      * Informa que os parâmetros do Mct (M0..M9) foram atualizados no banco de dados e

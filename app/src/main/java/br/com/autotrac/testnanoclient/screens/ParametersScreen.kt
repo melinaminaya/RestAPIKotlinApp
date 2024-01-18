@@ -31,6 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.autotrac.testnanoclient.ApiObservableConsts
 import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
 import br.com.autotrac.testnanoclient.common.Alert
 import br.com.autotrac.testnanoclient.common.CustomTextFieldWithButton
@@ -45,13 +46,17 @@ import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiResponses
 import br.com.autotrac.testnanoclient.consts.ParameterValues
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
+import br.com.autotrac.testnanoclient.handlers.NotificationHandler
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
-import br.com.autotrac.testnanoclient.handlers.ParseData
 import br.com.autotrac.testnanoclient.vm.ParametersViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.beans.PropertyChangeListener
 
+/**
+ * Parameters Screen - only available with API ON.
+ * @author Melina Minaya
+ */
 @Composable
 fun ParametersScreen(
     popBackStack: () -> Unit,
@@ -69,6 +74,7 @@ fun ParametersScreen(
     val context = LocalContext.current
     val coroutine = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    NotificationHandler(snackbarHostState = snackbarHostState)
     var wifiSSIDText by rememberSaveable { mutableStateOf(parameterValues[ApiEndpoints.GET_PARAM_WIFI_SSID]) }
     val enabled by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
@@ -118,11 +124,11 @@ fun ParametersScreen(
     val propertyChangeListener = PropertyChangeListener { evt ->
         evt?.let {
             // Handle property changes here
-            if (evt.propertyName == ActionValues.SATELLITE_SIGNAL_CHANGED_OBSERVABLE) {
+            if (evt.propertyName == ApiObservableConsts.SATELLITE_SIGNAL_CHANGED) {
                 val newValue = evt.newValue.toString()
                 // Update the satelliteSignal Composable property
                 satelliteSignal = newValue.toDouble().toInt().toString()
-            } else if (evt.propertyName == ActionValues.BAPTISM_STATUS_OBSERVABLE) {
+            } else if (evt.propertyName == ApiObservableConsts.BAPTISM_STATUS) {
                 val newValue = evt.newValue.toString()
                 // Update the baptismStatus Composable property
                 isBaptizedValue = ParameterHandler.convertIsBaptized(newValue)
@@ -150,8 +156,6 @@ fun ParametersScreen(
         }
     }
     addPropertyChangeListener(propertyChangeListener)
-
-
 
     LaunchedEffect(Unit) {
         viewModel.fetchParameters()
@@ -193,7 +197,6 @@ fun ParametersScreen(
     LaunchedEffect(parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]) {
         satelliteSignal = parameterValues[ApiEndpoints.GET_PARAM_HAS_SATELLITE_SIGNAL]
     }
-
 
     Scaffold(topBar = {
         CustomTopAppBar(

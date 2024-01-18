@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 import java.beans.PropertyChangeListener
 
 /**
- * Tela de envio de mensagens.
+ * Send Message Screen - only available with API ON.
  * @author Melina Minaya
  */
 @Composable

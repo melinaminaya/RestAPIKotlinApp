@@ -42,15 +42,13 @@ open class HttpTestViewModel : ViewModel() {
     suspend fun messageCountHttp() {
 
         val reqMessageCountFilter = RequestObject(false, 3, null, null)
-        var fetchRequestResponse: String = withContext(Dispatchers.IO) {
+        val fetchRequestResponse: String = withContext(Dispatchers.IO) {
             NanoHttpClient.sendGetRequestHttp(
                 ApiEndpoints.REQ_MESSAGE_COUNT,
                 reqMessageCountFilter
             )
         }
 
-        Log.d("HTTP GET request", "HTTP GET request: $fetchRequestResponse")
-        AppLogger.log("HTTP GET request: $fetchRequestResponse")
         if (fetchRequestResponse != "" && fetchRequestResponse != null) {
             // Request successful, process the response
             _isSocketOn.value = true

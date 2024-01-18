@@ -5,17 +5,17 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiConstants
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ResponseObjectReference
-import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
-import br.com.autotrac.testnanoclient.models.IntegrationMessage
-import br.com.autotrac.testnanoclient.requestObjects.RequestObject
-import br.com.autotrac.testnanoclient.requestObjects.SendObject
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
 import br.com.autotrac.testnanoclient.logger.AppLogger
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
+import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
+import br.com.autotrac.testnanoclient.requestObjects.SendObject
 import br.com.autotrac.testnanoclient.security.SSLSetup
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
@@ -24,7 +24,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
@@ -403,13 +402,8 @@ object NanoWebsocketClient{
             return null
         }
     }
-    fun isWebSocketConnected(): Boolean {
-        val sendObject =
-            SendObject(ApiEndpoints.REQ_MESSAGE_COUNT, RequestObject(false, 3, null, null))
-        val objectRequestJson = gson.toJson(sendObject)
-
-        AppLogger.log("isWebSocketConnected: $objectRequestJson")
-        return webSocketClient?.send(objectRequestJson) ?: false
+    fun isWebSocketConnected(): Boolean? {
+        return webSocketConnectionSubject.value
     }
     /**
      * Método fixo de requesição de mensagens a cada período de tempo.
@@ -420,16 +414,7 @@ object NanoWebsocketClient{
      * @param2:Int: número do status a ser filtrado.
      */
     fun startSendingRequests() {
-        val coroutineScope = CoroutineScope(Dispatchers.Default)
-
-        coroutineScope.launch {
-            while (true) {
-                // Send your request on the WebSocket
-                sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
-
-                delay(30000)
-            }
-        }
+        sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
     }
 }
 

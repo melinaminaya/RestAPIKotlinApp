@@ -78,5 +78,6 @@ object ApiResponses{
     const val PARAMS_INVALID_NOT_FOUND = "Request Params are invalid or not found."
     const val UC_NOT_ENABLE = "UC not enabled. Please enable it and try again."
     const val UC_BAPTIZED_UNABLE_TO_CHANGE_MODE = "UC is baptized and unable to change external device communication type. Please debaptize it and try again."
+    const val INVALID_HEADERS = "Invalid headers."
 }
 

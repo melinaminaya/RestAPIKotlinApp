@@ -10,12 +10,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +29,7 @@ import br.com.autotrac.testnanoclient.common.CustomTopAppBar
 import br.com.autotrac.testnanoclient.common.DropdownCard
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.handlers.NotificationHandler
 import br.com.autotrac.testnanoclient.models.LastPosition
 import br.com.autotrac.testnanoclient.models.ParameterModel
 import br.com.autotrac.testnanoclient.handlers.ParameterHandler
@@ -37,6 +40,10 @@ import br.com.autotrac.testnanoclient.vm.LastPositionViewModel
 import br.com.autotrac.testnanoclient.vm.MctParamsViewModel
 import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 
+/**
+ * Checklist screen - only available with API ON.
+ * @author Melina Minaya
+ */
 @Composable
 fun CheckListScreen(
     popBackStack: () -> Unit,
@@ -52,6 +59,8 @@ fun CheckListScreen(
     val positionHistoryList by lastPositionViewModel.positionHistoryList.observeAsState(emptyList())
     val mctParamsViewModel: MctParamsViewModel = viewModel()
     val mctParams by mctParamsViewModel.mctParams.observeAsState(emptyList())
+    val snackbarHostState = remember { SnackbarHostState() }
+    NotificationHandler(snackbarHostState = snackbarHostState)
 
     LaunchedEffect(Unit) {
         viewModel.fetchCheckList()

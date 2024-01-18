@@ -1,11 +1,9 @@
 package br.com.autotrac.testnanoclient.vm
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.LiveData
@@ -61,7 +59,7 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
                 if (isConnected != _isApiOn.value) {
                     _isApiOn.value = isConnected
                 }
-                delay(60000) // Check every 5 seconds (adjust as needed)
+                delay(60000) // Check every 1 min (adjust as needed)
             }
         }
     }
@@ -91,7 +89,7 @@ open class AppViewModel(private val state: SavedStateHandle) : ViewModel() {
             try {
                 NanoWebsocketClient.connect()
                 Thread.sleep(5000) //while isLoadingApiOn with BlockingAlert finishes
-                if (NanoWebsocketClient.isWebSocketConnected()) {
+                if (NanoWebsocketClient.isWebSocketConnected() == true) {
                     coroutineScope.launch {
                         showSnackbarSuspend(
                             message = "Websocket conectado com sucesso",

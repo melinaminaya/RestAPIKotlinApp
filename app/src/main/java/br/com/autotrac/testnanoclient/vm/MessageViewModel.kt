@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -26,83 +28,53 @@ import java.util.Locale
 open class MessageViewModel (
 ): ViewModel() {
 
-    private val _messages = MutableLiveData<List<IntegrationMessage>>()
-    val messages: MutableLiveData<List<IntegrationMessage>> get() = _messages
+    private var _messages = MutableStateFlow<List<IntegrationMessage>>(emptyList())
+    val messages: StateFlow<List<IntegrationMessage>> get() = _messages
 
-    private val _outboxMessages = MutableLiveData<List<IntegrationMessage>>()
+    private var _outboxMessages = MutableLiveData<List<IntegrationMessage>>()
     val outboxMessages: MutableLiveData<List<IntegrationMessage>> get() = _outboxMessages
 
     private val senderAccess = MessageSenderAccess()
     private val gson = Gson()
     private val mapper = ObjectMapper()
 
-    private val _contentResolver = MutableLiveData<ContentResolver>()
-    val contentResolverLiveData: LiveData<ContentResolver> = _contentResolver
-
-    // Function to set the contentResolver in the ViewModel
-    fun setContentResolver(contentResolver: ContentResolver) {
-        _contentResolver.value = contentResolver
-    }
-
     suspend fun fetchMessages() {
         senderAccess.sendRequest(
             ApiEndpoints.REQ_MESSAGE_LIST, 0,
             false, null, null)
-//        sendMessageAndWait("messageList")
-        // Replace with your logic to fetch messages from a data source
+        _messages.value = emptyList()
         val fetchedMessages: List<IntegrationMessage>? = fetchDataFromDataSource()
-        // Filter out messages that already exist in the current list
-        val newMessages = fetchedMessages?.filter { message ->
-            _messages.value?.none { it.code == message.code } ?: true
-        }
-        // Append the new messages to the existing list
-        _messages.value = _messages.value.orEmpty() + (newMessages ?: emptyList())
+        _messages.value = fetchedMessages ?: emptyList()
+        println("Current Messages: ${_messages.value.last()}")
 
     }
     suspend fun fetchOutboxMessages() {
         senderAccess.sendRequest(ApiEndpoints.REQ_MESSAGE_LIST, 0,
             true, null, null)
-
+        _outboxMessages.value = emptyList<IntegrationMessage>()
         val fetchedMessages: List<IntegrationMessage>? = fetchDataFromDataSourceOutbox()
         val newMessages = fetchedMessages?.filter { message ->
             _outboxMessages.value?.none { it.code == message.code } ?: true
         }
         _outboxMessages.value = (_outboxMessages.value.orEmpty()) + (newMessages ?: emptyList())
-
     }
 
     // Function to delete a message
-    fun deleteMessage(message: IntegrationMessage) {
-        // Replace with your logic to delete the message from a data source
+    suspend fun deleteMessage(message: IntegrationMessage) {
         deleteMessageFromDataSource(message)
-        // Remove the message from the list of messages
-        val currentMessages = _messages.value.orEmpty().toMutableList()
-        currentMessages.remove(message)
-        _messages.value = currentMessages
+        fetchMessages()
     }
 
-    fun deleteMessageOutbox(message: IntegrationMessage) {
-        // Replace with your logic to delete the message from a data source
+    suspend fun deleteMessageOutbox(message: IntegrationMessage) {
         deleteMessageFromDataSource(message)
-        // Remove the message from the list of messages
-        val currentMessages = _outboxMessages.value.orEmpty().toMutableList()
-        currentMessages.remove(message)
-        _outboxMessages.value = currentMessages
+        fetchOutboxMessages()
     }
     // Function to mark a message as read
-    fun markMessageAsRead(message: IntegrationMessage) {
-        // Replace with your logic to mark the message as read in a data source
+    suspend fun markMessageAsRead(message: IntegrationMessage) {
         markMessageAsReadInDataSource(message)
-        // Update the message status
-        val currentMessages = _messages.value.orEmpty().toMutableList()
-        val updatedMessage = message.copy(msgStatusNum =  4) // Assuming 4 represents "Lida"
-        val index = currentMessages.indexOf(message)
-        if (index != -1) {
-            currentMessages[index] = updatedMessage
-            _messages.value = currentMessages
-        }
+        fetchMessages()
     }
-    suspend fun fetchDataFromDataSource(): List<IntegrationMessage>? {
+    private suspend fun fetchDataFromDataSource(): List<IntegrationMessage>? {
         delay(500)
           val  valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_LIST_INBOX)
 

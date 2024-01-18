@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +32,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.autotrac.testnanoclient.ApiObservableConsts
 import br.com.autotrac.testnanoclient.NanoWebsocketClient
+import br.com.autotrac.testnanoclient.ObservableUtil
+import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.vm.AppViewModel
 import br.com.autotrac.testnanoclient.vm.HttpTestViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.beans.PropertyChangeListener
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,33 +56,50 @@ fun ButtonTicker(
 
     val httpTestViewModel: HttpTestViewModel = viewModel()
     val count by httpTestViewModel.reqMessageCount.observeAsState("")
-    val messagesCount = rememberSaveable{ mutableStateOf(count) }
-    val appViewModel:AppViewModel = viewModel()
-
+    val messagesCount = rememberSaveable { mutableStateOf(count) }
+    val appViewModel: AppViewModel = viewModel()
+    val scope = rememberCoroutineScope()
     val isApiOn = appViewModel.isApiOn.observeAsState(false)
-//    val isApiOn = appViewModel.isApiOn
-    LaunchedEffect(Unit) {
-        while (true) {
-            //Checa a contagem de mensagens
-            if (isApiOn.value) {
-                NanoWebsocketClient.startSendingRequests()
-                delay(20000)
-            } else {
-                httpTestViewModel.messageCountHttp()
-                delay(5000)
+    val propertyChangeListener = PropertyChangeListener { evt ->
+        evt?.let {
+            // Handle property changes here
+            if (evt.propertyName == ApiObservableConsts.MESSAGE_STATUS) {
+                if (evt.newValue is List<*> && (evt.newValue as List<*>).size >= 2) {
+                    val firstElement = (evt.newValue as List<*>)[0]
+                    if (firstElement == 3.0) {
+                        scope.launch {
+                            NanoWebsocketClient.startSendingRequests()
+                        }
+                    }
+                }
+            } else if (evt.propertyName == ApiEndpoints.REQ_MESSAGE_COUNT) {
+                val newValue = evt.newValue.toString()
+                messagesCount.value = newValue.toDouble().toInt().toString()
             }
-
         }
+    }
+    addPropertyChangeListener(propertyChangeListener)
+
+//
+    LaunchedEffect(Unit) {
+        //Checa a contagem de mensagens
+        if (isApiOn.value) {
+            NanoWebsocketClient.startSendingRequests()
+            messagesCount.value =
+                ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_COUNT).toString().toDouble()
+                    .toInt().toString()
+        } else {
+            while (!isApiOn.value) {
+                httpTestViewModel.messageCountHttp()
+                delay(60000)
+            }
+        }
+    }
+    LaunchedEffect(count) {
         messagesCount.value = count
     }
-    LaunchedEffect(count){
-        messagesCount.value = count
-
-    }
-
-
     Spacer(modifier = Modifier.height(5.dp))
-    Box (  modifier= modifier ) {
+    Box(modifier = modifier) {
         Card(
             onClick = onClick,
             modifier = modifier

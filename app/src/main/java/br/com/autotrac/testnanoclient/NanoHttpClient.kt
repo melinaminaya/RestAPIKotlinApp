@@ -4,18 +4,18 @@ import android.content.Context
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
-import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiConstants
-import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
-import br.com.autotrac.testnanoclient.models.IntegrationMessage
-import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
-import br.com.autotrac.testnanoclient.requestObjects.RequestObject
-import br.com.autotrac.testnanoclient.requestObjects.SendObject
-import br.com.autotrac.testnanoclient.retrofit.ApiService
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
 import br.com.autotrac.testnanoclient.logger.AppLogger
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
+import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
+import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
+import br.com.autotrac.testnanoclient.requestObjects.SendObject
+import br.com.autotrac.testnanoclient.retrofit.ApiService
 import br.com.autotrac.testnanoclient.security.SSLSetup
 import br.com.autotrac.testnanoclient.security.SSLSetup.trustAllCertificates
 import com.google.gson.Gson
@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.ConnectionSpec
-import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -134,8 +133,7 @@ object NanoHttpClient {
                 responseBody = response.execute().body()
                 if (responseBody != null) {
                     val responseData = responseBody!!.string()
-                    println("Response from $endpoint: $responseData")
-                    AppLogger.log("Response from $endpoint: $responseData")
+                    println("Response from HTTP $endpoint: $responseData")
                     responseData
                 } else {
                     println("Response body is null for $endpoint")

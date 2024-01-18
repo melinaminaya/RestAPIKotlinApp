@@ -7,25 +7,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import br.com.autotrac.testnanoclient.common.CustomTopAppBar
+import br.com.autotrac.testnanoclient.handlers.NotificationHandler
+import br.com.autotrac.testnanoclient.ui.theme.NanoClientKotlinTheme
 
-
+/**
+ * Messages Screen - only available with API ON.
+ * @author Melina Minaya
+ */
 @Composable
 fun InboxScreen(
     selectedTab: Int,
@@ -35,6 +40,8 @@ fun InboxScreen(
 //    messageViewModel: (MessageViewModel) -> Unit
 ) {
     val selectedTabIndex = rememberSaveable { mutableStateOf(selectedTab) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    NotificationHandler(snackbarHostState = snackbarHostState)
     Scaffold(
         topBar = {
             CustomTopAppBar(
@@ -92,7 +99,6 @@ private fun DefaultPreview() {
                 showDetails = true,
                 popBackStack = {},
                 popUpToLogin = {},
-                //messageViewModel = {}
             )
         }
     }

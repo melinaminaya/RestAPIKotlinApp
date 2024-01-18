@@ -20,6 +20,7 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,57 +38,86 @@ import java.util.Locale
 @Composable
 fun SwipeItem(
     message: IntegrationMessage,
-    onMessageDelete: () ->Unit,
-    onMessageClick:() ->Unit,
-){
+    onMessageDelete: () -> Unit,
+    onMessageClick: () -> Unit,
+) {
     val context = LocalContext.current
-    val status = when (message.msgStatusNum) {
-        0 -> "N/A"
-        1 -> "A enviar"
-        2 -> "Enviada"
-        3 -> "Não Lida"
-        4 -> "Lida"
-        5 -> "Not Processed"
-        6 -> "Transmitida"
-        7 -> "Mensagem Longa não processada"
-        8 -> "Transmitindo"
-        else -> "Erro"
+    var status by remember {
+        mutableStateOf(
+            when (message.msgStatusNum) {
+                0 -> "N/A"
+                1 -> "A enviar"
+                2 -> "Enviada"
+                3 -> "Não Lida"
+                4 -> "Lida"
+                5 -> "Not Processed"
+                6 -> "Transmitida"
+                7 -> "Mensagem Longa não processada"
+                8 -> "Transmitindo"
+                else -> "Erro"
+            }
+        )
     }
-    var dateFormat:SimpleDateFormat?
-    var formattedDate:String? = ""
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    LaunchedEffect(message) {
+        status = message.msgStatusNum.let {
+            when (message.msgStatusNum) {
+                0 -> "N/A"
+                1 -> "A enviar"
+                2 -> "Enviada"
+                3 -> "Não Lida"
+                4 -> "Lida"
+                5 -> "Not Processed"
+                6 -> "Transmitida"
+                7 -> "Mensagem Longa não processada"
+                8 -> "Transmitindo"
+                else -> "Erro"
+            }
+        }.toString()
+    }
+
+    var dateFormat: SimpleDateFormat?
+    var formattedDate: String? = ""
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         formattedDate = dateFormat.format(message.createdTime)
-    }else{
-        formattedDate = android.text.format.DateFormat.getDateFormat(context).format(message.createdTime)
+    } else {
+        formattedDate =
+            message.createdTime?.let {
+                android.text.format.DateFormat.getDateFormat(context).format(
+                    it
+                )
+            }
     }
     val hasTriedToDismiss = remember { mutableStateOf(false) }
     var hasConfirmedDismissal: Boolean by remember { mutableStateOf(false) }
     val dismissState = rememberDismissState(
         initialValue = DismissValue.Default,
-        confirmValueChange =  {
-            if (it == DismissValue.DismissedToStart) {
-                hasTriedToDismiss.value = true
-
-                hasConfirmedDismissal
+        confirmValueChange = {
+            if (it == DismissValue.DismissedToStart && !hasConfirmedDismissal) {
+//                hasTriedToDismiss.value = true
+                hasConfirmedDismissal = true
+                onMessageDelete()
+                true
             } else {
                 false
             }
-        }
+        },
     )
-    val dismissedToEnd = dismissState.isDismissed(DismissDirection.StartToEnd)
-    val dismissedToStart = dismissState.isDismissed(DismissDirection.EndToStart)
-    val isDismissed = (dismissedToEnd || dismissedToStart)
-
-    if (hasTriedToDismiss.value && !hasConfirmedDismissal) {
-        onMessageDelete()
-        hasConfirmedDismissal = true
+    var dismissStateVal by remember { mutableStateOf(dismissState) }
+    if (hasConfirmedDismissal) {
+        // Reset dismissState after the item has been deleted
+        LaunchedEffect(Unit) {
+            hasConfirmedDismissal = false
+            dismissState.snapTo(DismissValue.Default)
+            dismissState.reset()
+            dismissStateVal = dismissState
+        }
     }
     val degrees by animateFloatAsState(
         targetValue = if (dismissState.targetValue == DismissValue.Default) 0f else -45f, label = ""
     )
     SwipeToDismiss(
-        state = dismissState,
+        state = dismissStateVal,
         directions = setOf(DismissDirection.EndToStart),
         background = {
             RedBackground(degrees = degrees, onMessageDelete = { onMessageDelete() })
@@ -113,7 +143,9 @@ fun SwipeItem(
                             textAlign = TextAlign.Start
                         )
                         Spacer(modifier = Modifier.width(15.dp))
-                        Text(text = formattedDate, textAlign = TextAlign.End)
+                        if (formattedDate != null) {
+                            Text(text = formattedDate, textAlign = TextAlign.End)
+                        }
                     }
 
                     Row {
