@@ -3,4 +3,4 @@
 # markMessageAsRead
 
 [androidJvm]\
-fun [markMessageAsRead](mark-message-as-read.md)(message: [IntegrationMessage](../../br.com.autotrac.testnanoclient.dataRemote/-integration-message/index.md))
+fun [markMessageAsRead](mark-message-as-read.md)(message: [IntegrationMessage](../../br.com.autotrac.testnanoclient.models/-integration-message/index.md))

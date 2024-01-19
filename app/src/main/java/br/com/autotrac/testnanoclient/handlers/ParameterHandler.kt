@@ -148,6 +148,9 @@ class ParameterHandler {
             return listParametersCommType
         }
         fun convertMctSignal(value: String?): String? {
+            if (value != null && value.isEmpty()) {
+                return "null"
+            }
             return value?.toIntOrNull()?.let { intValue ->
                 when (intValue) {
                     ParameterValues.MctSignalValues.MCT_SIGNAL_OFF -> "Sem sinal"
@@ -249,6 +252,23 @@ class ParameterHandler {
                     ParameterValues.UcStatusValues.UC_DISABLED -> "UC Desabilitada"
                     ParameterValues.UcStatusValues.INVALID_USER_OR_PASSWORD -> "UC habilitada mas com licença de uso Inativa"
                     ParameterValues.UcStatusValues.UNKNOWN -> "Status desconhecido"
+                    else -> null
+                }
+            }
+        }
+        fun convertMctParamNumber(value: Int): String? {
+            return value.let { intValue ->
+                when (intValue) {
+                    ParameterValues.MctM0M9Params.M0 -> "M0"
+                    ParameterValues.MctM0M9Params.M1 -> "M1"
+                    ParameterValues.MctM0M9Params.M2 -> "M2"
+                    ParameterValues.MctM0M9Params.M3 -> "M3"
+                    ParameterValues.MctM0M9Params.M4 -> "M4"
+                    ParameterValues.MctM0M9Params.M5 -> "M5"
+                    ParameterValues.MctM0M9Params.M6 -> "M6"
+                    ParameterValues.MctM0M9Params.M7 -> "M7"
+                    ParameterValues.MctM0M9Params.M8 -> "M8"
+                    ParameterValues.MctM0M9Params.M9 -> "M9"
                     else -> null
                 }
             }

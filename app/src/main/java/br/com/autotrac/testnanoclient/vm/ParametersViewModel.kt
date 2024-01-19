@@ -1,20 +1,22 @@
 package br.com.autotrac.testnanoclient.vm
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
-import br.com.autotrac.testnanoclient.requestObjects.ReceivedRequestResponse
+import br.com.autotrac.testnanoclient.ObservableUtil.addPropertyChangeListener
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.consts.ApiResponses
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
-import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
+import java.beans.PropertyChangeListener
 
-class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
+class ParametersViewModel: ViewModel() {
 
     private val senderAccess = MessageSenderAccess()
     private var gson = Gson()
@@ -24,16 +26,11 @@ class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
     private val parameterListGet = EndpointsLists.parametersList.filter { it.startsWith("GET") }
     private val parameterLiveDataMap = HashMap<String, MutableLiveData<String>>()
 
-    private val _isBaptizedValue = MutableLiveData<String>("") // Initialize with default value
-    val isBaptizedValue: MutableLiveData<String> = _isBaptizedValue
-    private val parseOnMessage = ParseOnMessage()
-
     init {
         // Create MutableLiveData objects for each parameter and add them to the map
         for (parameter in parameterListGet) {
             parameterLiveDataMap[parameter] = MutableLiveData()
         }
-        parseOnMessage.setNotificationListener(this)
     }
 
     fun getParameterLiveData(parameter: String): MutableLiveData<String>? {
@@ -73,14 +70,23 @@ class ParametersViewModel: ViewModel(), ParseOnMessage.NotificationListener {
         // Remove the message from the list of messages
         val parameterLiveData = parameterLiveDataMap[param]
         parameterLiveData?.value = value
-
     }
-//    fun updateIsBaptizedValue(newValue: String) {
-//        _isBaptizedValue.value = newValue
-//    }
 
-    override fun onNotificationReceived(notification: ReceivedRequestResponse) {
-        _isBaptizedValue.value = notification.param3.toString()
-        Log.d("ONNOTIFICATION", "onNotificationReceived BAPTISM_STATUS: ${isBaptizedValue.value}")
+    suspend fun validateSelection(): Boolean {
+        val responseDeferred = CompletableDeferred<Boolean>()
+        val propertyChangeListener = PropertyChangeListener { evt ->
+            evt?.let {
+                if (evt.propertyName == ApiEndpoints.SET_PARAM_EXT_DEV_COMM_TYPE) {
+                    val newValue = evt.newValue.toString()
+                    if (newValue == ApiResponses.OK) {
+                        responseDeferred.complete(true)
+                    } else if (newValue == ApiResponses.UC_BAPTIZED_UNABLE_TO_CHANGE_MODE) {
+                        responseDeferred.complete(false)
+                    }
+                }
+            }
+        }
+        addPropertyChangeListener(propertyChangeListener)
+        return responseDeferred.await()
     }
 }

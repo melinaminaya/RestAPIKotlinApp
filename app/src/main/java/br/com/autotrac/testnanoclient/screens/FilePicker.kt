@@ -11,6 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -26,18 +27,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.autotrac.testnanoclient.R
 import br.com.autotrac.testnanoclient.common.LoadingIcon
 import br.com.autotrac.testnanoclient.common.ShowSnackbar
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.vm.FilePickerViewModel
 import br.com.autotrac.testnanoclient.vm.PermissionState
 import kotlinx.coroutines.CompletableDeferred
@@ -57,7 +55,8 @@ fun FilePicker(
     selectedFileStringPicker: (Uri?) -> Unit,
     selectedFileName: (String) -> Unit,
     navigateToInbox: ((Int, Boolean) -> Unit)?,
-    snackbarHost:SnackbarHostState?
+    snackbarHost: SnackbarHostState?,
+    addFile: (Uri?) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -76,12 +75,14 @@ fun FilePicker(
     val requiredPermission = Manifest.permission.READ_EXTERNAL_STORAGE
 
     var fileProcessedDeferred = remember { CompletableDeferred<Boolean>() }
-    var showSnackbar by remember { mutableStateOf(false)}
-    var responseSendMessage by remember { mutableStateOf("")}
+    var showSnackbar by remember { mutableStateOf(false) }
+    var responseSendMessage by remember { mutableStateOf("") }
 
     val filePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()) { uri ->
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
         selectedFileUri = uri
+        addFile(uri)
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -117,11 +118,7 @@ fun FilePicker(
         modifier = Modifier.padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = selectedFileUri?.let { uri -> uri.lastPathSegment ?: "File" } ?: " ",
-            style = TextStyle(fontSize = 16.sp, color = Color.Gray),
-            modifier = Modifier.weight(1f)
-        )
+        Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
@@ -131,6 +128,7 @@ fun FilePicker(
                         filePickerLauncher.launch("*/*")
                         Log.d("ExampleScreen", "Code requires permission")
                     }
+
                     PermissionState.NotRequested -> {
                         // Request the permission using the permission launcher
                         permissionLauncher.launch(requiredPermission)
@@ -148,7 +146,7 @@ fun FilePicker(
                 contentDescription = "Attach File"
             )
         }
-        if(buttonSend) {
+        if (buttonSend) {
             Button(
                 onClick = {
                     coroutineScope.launch {
@@ -157,18 +155,28 @@ fun FilePicker(
                         try {
                             if (selectedFileUri != null) {
                                 if (fileProcessed) {
-                                   responseSendMessage = onSendMessage()
+                                    responseSendMessage = onSendMessage()
                                     if (responseSendMessage != null) {
                                         showSnackbar = true
                                         if (navigateToInbox != null) {
+                                            loadingScreen = false
                                             navigateToInbox(1, true)
+
                                         }
                                     }
                                 } else {
                                     fileProcessedDeferred.await()
                                 }
                             } else {
-                                onSendMessage()
+                                responseSendMessage = onSendMessage()
+                                if (responseSendMessage != null) {
+                                    showSnackbar = true
+                                    if (navigateToInbox != null) {
+                                        loadingScreen = false
+                                        navigateToInbox(1, true)
+
+                                    }
+                                }
                             }
 //                            //TODO: Wait for the onSendMessage response OK to redirect.
 //                            if (navigateToInbox != null) {
@@ -189,7 +197,7 @@ fun FilePicker(
             ) {
                 if (loadingScreen) {
                     // Show the circular progress indicator while loading is true
-                    LoadingIcon(25)
+                    LoadingIcon(25, null)
                 } else {
                     // Show the "Enviar" button text when loading is false
                     Text("Enviar")
@@ -217,13 +225,15 @@ fun FilePicker(
             selectedFileName(selectedFileNameString)
         }
     }
-    if(showSnackbar){
+    if (showSnackbar) {
         if (snackbarHost != null) {
             ShowSnackbar(
                 snackbarHostState = snackbarHost,
                 message = "Mensagem de Resposta: $responseSendMessage",
-                duration = SnackbarDuration.Short ,
-                coroutineScope = coroutineScope
+                duration = SnackbarDuration.Short,
+                coroutineScope = coroutineScope,
+                actionLabel = false,
+                context = context
             )
         }
     }
@@ -234,7 +244,11 @@ fun FilePicker(
  * Caso de exemplo a mensagem é enviada como texto, portanto seta o [IntegrationMessage.msgSubtype] == 0.
  * Caso a mensagem seja enviada como byteArray (Binária), seta o [IntegrationMessage.msgSubtype] == 1.
  */
-suspend fun messageOnPattern(value: String, selectedFileString: Uri?, selectedFileName: String?): IntegrationMessage {
+suspend fun messageOnPattern(
+    value: String,
+    selectedFileString: Uri?,
+    selectedFileName: String?,
+): IntegrationMessage {
     var isOutOfBandMessage = false
     if (selectedFileString != null) {
         isOutOfBandMessage = true
@@ -278,6 +292,7 @@ suspend fun messageOnPattern(value: String, selectedFileString: Uri?, selectedFi
         )
     }
 }
+
 fun getFileNameFromUri(uri: Uri, context: Context): String {
     val contentResolver = context.contentResolver
     var cursor: Cursor? = null

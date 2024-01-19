@@ -15,9 +15,9 @@ open class [LastPositionViewModel](index.md) : [ViewModel](https://developer.and
 
 | Name | Summary |
 |---|---|
-| [lastPosition](last-position.md) | [androidJvm]<br>val [lastPosition](last-position.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[LastPosition](../../br.com.autotrac.testnanoclient.dataRemote/-last-position/index.md)&gt; |
+| [lastPosition](last-position.md) | [androidJvm]<br>val [lastPosition](last-position.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[LastPosition](../../br.com.autotrac.testnanoclient.models/-last-position/index.md)&gt; |
 | [positionHistoryCount](position-history-count.md) | [androidJvm]<br>val [positionHistoryCount](position-history-count.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-| [positionHistoryList](position-history-list.md) | [androidJvm]<br>val [positionHistoryList](position-history-list.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[PositionHistory](../../br.com.autotrac.testnanoclient.dataRemote/-position-history/index.md)&gt;&gt; |
+| [positionHistoryList](position-history-list.md) | [androidJvm]<br>val [positionHistoryList](position-history-list.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[PositionHistory](../../br.com.autotrac.testnanoclient.models/-position-history/index.md)&gt;&gt; |
 
 ## Functions
 

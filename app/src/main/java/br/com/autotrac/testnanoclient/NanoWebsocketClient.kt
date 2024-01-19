@@ -5,15 +5,17 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import br.com.autotrac.testnanoclient.consts.ActionValues
-import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.consts.ApiConstants
-import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
-import br.com.autotrac.testnanoclient.requestObjects.RequestObject
-import br.com.autotrac.testnanoclient.requestObjects.SendObject
+import br.com.autotrac.testnanoclient.consts.ApiEndpoints
+import br.com.autotrac.testnanoclient.consts.ResponseObjectReference
 import br.com.autotrac.testnanoclient.handlers.EndpointsLists
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
+import br.com.autotrac.testnanoclient.logger.AppLogger
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
+import br.com.autotrac.testnanoclient.requestObjects.ChunkObject
+import br.com.autotrac.testnanoclient.requestObjects.RequestObject
+import br.com.autotrac.testnanoclient.requestObjects.SendObject
 import br.com.autotrac.testnanoclient.security.SSLSetup
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
@@ -22,7 +24,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
@@ -88,41 +89,44 @@ object NanoWebsocketClient{
                     .hostnameVerifier { _, _ -> true }
                     .build()
                     .newWebSocket(request, object : WebSocketListener() {
-                    override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
-                        println("WebSocket connected")
-                        webSocketConnectionSubject.onNext(true)
-                    }
-
-                    override fun onMessage(webSocket: WebSocket, text: String) {
-                        val parseMessage = ParseOnMessage()
-                        val response = parseMessage.parseMessage(text)
-                        if (response == ParseResult.Ok) {
-                           sendMessage(NanoHTTPD.Response.Status.OK.toString())
-                        }else{
-                            sendMessage(NanoHTTPD.Response.Status.INTERNAL_ERROR.toString())
+                        override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
+                            println("WebSocket connected")
+                            AppLogger.log("WebSocket connected")
+                            webSocketConnectionSubject.onNext(true)
                         }
-                        responseListener = text
-                    }
 
-                    override fun onFailure(
-                        webSocket: WebSocket,
-                        t: Throwable,
-                        response: okhttp3.Response?,
-                    ) {
-                        Log.d(TAG, "WebSocket connection failed: ${t.message}")
-                        webSocketConnectionSubject.onNext(false)
-                        // Retry connection on failure
-//                    retryConnection()
-                        responseListener = t.toString()
-                    }
+                        override fun onMessage(webSocket: WebSocket, text: String) {
+                            val parseMessage = ParseOnMessage()
+                            val response = parseMessage.parseMessage(text)
+                            if (response == ParseResult.Ok) {
+                               sendMessage(NanoHTTPD.Response.Status.OK.toString())
+                            }else{
+                                sendMessage(NanoHTTPD.Response.Status.INTERNAL_ERROR.toString())
+                            }
+                            responseListener = text
+                        }
 
-                    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                        Log.d(TAG, "WebSocket connection closed: $reason")
-                        webSocketConnectionSubject.onNext(false)
-                        connectionDisposable!!.dispose()
-                        responseListener = code.toString()
-                    }
-                })
+                        override fun onFailure(
+                            webSocket: WebSocket,
+                            t: Throwable,
+                            response: okhttp3.Response?,
+                        ) {
+                            Log.d(TAG, "WebSocket connection failed: ${t.message}")
+                            AppLogger.log("WebSocket connection failed: ${t.message}")
+                            webSocketConnectionSubject.onNext(false)
+                            // Retry connection on failure
+    //                    retryConnection()
+                            responseListener = t.toString()
+                        }
+
+                        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                            Log.d(TAG, "WebSocket connection closed: $reason")
+                            AppLogger.log( "WebSocket connection closed: $reason")
+                            webSocketConnectionSubject.onNext(false)
+                            connectionDisposable!!.dispose()
+                            responseListener = code.toString()
+                        }
+                    })
             }
         }
     }
@@ -142,13 +146,15 @@ object NanoWebsocketClient{
                 // Connection successful, exit the retry loop
             } catch (e: IOException) {
                 Log.d(TAG, "Connection retry failed: " + e.message)
+                AppLogger.log("Connection retry failed: " + e.message)
             } catch (e: InterruptedException) {
                 Log.d(TAG, "Connection retry failed: " + e.message)
-
+                AppLogger.log("Connection retry failed: " + e.message)
             }
             retries++
         }
         Log.d(TAG, "Connection retries exhausted")
+        AppLogger.log("Connection retries exhausted")
 
     }
 
@@ -169,12 +175,12 @@ object NanoWebsocketClient{
      * [ActionValues.SYSTEM_RESOURCE_REQ_STATUS] : [ActionValues.ValuesSysResourceReqParam1]
      * e [ActionValues.ValuesSysResourceStatusParam2]
      *
-     * [ActionValues.FORM_RECEIVED] e [ActionValues.FORM_DELETED] : [br.com.autotrac.testnanoclient.dataRemote.IntegrationForm.code]
+     * [ActionValues.FORM_RECEIVED] e [ActionValues.FORM_DELETED] : [br.com.autotrac.testnanoclient.models.IntegrationForm.code]
      */
     fun sendMessageFromClient() {
         val notificationSubscription =
             SendObject(
-                ApiEndpoints.NOTIFICATION,
+                ResponseObjectReference.NOTIFICATION,
                 listOf(
                     ActionValues.MESSAGE_STATUS, ActionValues.BAPTISM_STATUS,
                     ActionValues.COMMUNICATION_MODE_CHANGED, ActionValues.DATE_TIME_CHANGED,
@@ -189,6 +195,7 @@ object NanoWebsocketClient{
         val objectJson = gson.toJson(notificationSubscription)
         webSocketClient!!.send(objectJson)
         Log.d(TAG, "Notification List: $objectJson")
+        AppLogger.log( "Notification List: $objectJson")
 //        sendMessageRequest("messageList", null, null, null)
         // Example: Send a binary message
 //        val binaryMessage = "Binary data".encodeUtf8()
@@ -240,6 +247,7 @@ object NanoWebsocketClient{
                         val response = gson.toJson(myObject)
                         if (webSocketClient != null) {
                             webSocketClient!!.send(response)
+                            Log.d(TAG, "Sending chunk $chunkNumber of $totalChunks: $response")
                         }
 
                         chunkNumber++
@@ -257,6 +265,7 @@ object NanoWebsocketClient{
                     val response = gson.toJson(myObject)
                     if (webSocketClient != null) {
                         webSocketClient!!.send(response)
+                        Log.d(TAG, "Sending chunk $chunkNumber of $totalChunks: $response")
                     }
                     reader.close()
                     inputStream.close()
@@ -277,6 +286,7 @@ object NanoWebsocketClient{
             }
         }catch (e:Exception){
             Log.e(TAG, "Exception at sending chunks")
+            AppLogger.log( "Exception at sending chunks: ${e.printStackTrace()}")
             e.printStackTrace()
 //            connect()
 //            sendDbMessage(message, fileUri, context)
@@ -301,31 +311,13 @@ object NanoWebsocketClient{
             webSocketClient?.send(objectRequestJson)
 
             Log.d(TAG, "request $param: $objectRequestJson")
+            AppLogger.log(  "request $param: $objectRequestJson")
         } catch (e: Exception) {
             Log.d(TAG, "Exception on $param: $e")
+            AppLogger.log( "Exception on $param: $e")
         }
     }
 
-    /**
-     * Método fixo de requesição de mensagens a cada período de tempo.
-     *
-     * REQ_MESSAGE_COUNT: Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
-     * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
-     * @param1:Boolean: True para mensagens de saída, False para mensagens de entrada (caixa de entrada).
-     * @param2:Int: número do status a ser filtrado.
-     */
-    fun startSendingRequests() {
-        val coroutineScope = CoroutineScope(Dispatchers.Default)
-
-        coroutineScope.launch {
-            while (true) {
-                // Send your request on the WebSocket
-                sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
-
-                delay(10000)
-            }
-        }
-    }
 
     fun disconnect() {
         webSocketClient?.close(1000, "Client disconnecting")
@@ -345,9 +337,9 @@ object NanoWebsocketClient{
                 null)
 
             val client = OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS) // Increase the timeout duration as needed
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS) // Increase the timeout duration as needed
+                .writeTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(120, TimeUnit.SECONDS)
                 .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS))
                 .sslSocketFactory(sslContext.socketFactory, SSLSetup.trustAllCertificates)
                 .hostnameVerifier { _, _ -> true }
@@ -383,29 +375,19 @@ object NanoWebsocketClient{
                     //                            val messageReceived = jsonResponse.optString("message")
 
                             Log.d(TAG, "Received token: $tokenReceived")
+                            AppLogger.log("Received token")
                     //                            Log.d(TAG, "Received message: $messageReceived")
-
                             tokenReceived
                         } else {
                             null
                         }
 
                     } else {
-                        if (retryCount < MAX_RETRIES) {
-                            retryCount++
-                            Thread.sleep(RETRY_DELAY_MS)
-                        } else {
-                            return null
-                        }
-                    }
-                } catch (e: IOException) {
-                    if (retryCount < MAX_RETRIES) {
-                        retryCount++
-                        e.printStackTrace()
-                        Thread.sleep(RETRY_DELAY_MS)
-                    } else {
                         return null
                     }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    return null
 
                 } catch (e: InterruptedException) {
                     // Interrupted while waiting, return null or throw an exception
@@ -420,12 +402,20 @@ object NanoWebsocketClient{
             return null
         }
     }
-    fun isWebSocketConnected(): Boolean {
-        val sendObject = SendObject(ApiEndpoints.REQ_MESSAGE_COUNT, RequestObject(false, 3, null, null))
-        val objectRequestJson = gson.toJson(sendObject)
-        return webSocketClient?.send(objectRequestJson) ?: false
+    fun isWebSocketConnected(): Boolean? {
+        return webSocketConnectionSubject.value
     }
-
+    /**
+     * Método fixo de requesição de mensagens a cada período de tempo.
+     *
+     * REQ_MESSAGE_COUNT: Contabiliza a quantidade de mensagens no banco de dados de acordo com o filtro especificado.
+     * Este método pode ser usado, por exemplo, para contabilizar a quantidade de mensagens a enviar.
+     * @param1:Boolean: True para mensagens de saída, False para mensagens de entrada (caixa de entrada).
+     * @param2:Int: número do status a ser filtrado.
+     */
+    fun startSendingRequests() {
+        sendMessageRequest(ApiEndpoints.REQ_MESSAGE_COUNT, false, 3, null, null)
+    }
 }
 
 

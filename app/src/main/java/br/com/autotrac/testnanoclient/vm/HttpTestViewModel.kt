@@ -8,16 +8,17 @@ import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.NanoHttpClient
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationMessage
+import br.com.autotrac.testnanoclient.models.IntegrationMessage
 import br.com.autotrac.testnanoclient.requestObjects.RequestObject
 import br.com.autotrac.testnanoclient.handlers.ParseOnMessage
 import br.com.autotrac.testnanoclient.handlers.ParseResult
+import br.com.autotrac.testnanoclient.logger.AppLogger
 import br.com.autotrac.testnanoclient.screens.messageOnPattern
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-open class HttpTestViewModel: ViewModel() {
+open class HttpTestViewModel : ViewModel() {
 
     private var gson = Gson()
 
@@ -32,7 +33,8 @@ open class HttpTestViewModel: ViewModel() {
 
     private val parseOnMessage: ParseOnMessage = ParseOnMessage()
 
-
+    private val _isSocketOn = MutableLiveData(false)
+    val isSocketOn: MutableLiveData<Boolean> get() = _isSocketOn
     /**
      * Método para retornar contagem de mensagens de acordo com o filtro especificado.
      * No caso abaixo, a requisição é feita para contagem de mensagens não lidas.
@@ -40,26 +42,31 @@ open class HttpTestViewModel: ViewModel() {
     suspend fun messageCountHttp() {
 
         val reqMessageCountFilter = RequestObject(false, 3, null, null)
-        var fetchRequestResponse: String = withContext(Dispatchers.IO) {
+        val fetchRequestResponse: String = withContext(Dispatchers.IO) {
             NanoHttpClient.sendGetRequestHttp(
                 ApiEndpoints.REQ_MESSAGE_COUNT,
                 reqMessageCountFilter
             )
         }
 
-        Log.d("HTTP GET request", "HTTP GET request: $fetchRequestResponse")
-        if (fetchRequestResponse != "") {
-
+        if (fetchRequestResponse != "" && fetchRequestResponse != null) {
             // Request successful, process the response
+            _isSocketOn.value = true
+            ObservableUtil.attachProperty("isSocketOn", _isSocketOn.value)
             val result =
                 parseOnMessage.parseMessage(fetchRequestResponse)
-            if (result == ParseResult.Ok){
-                val valueResponse =  ObservableUtil.transformJsonToInteger(ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_COUNT).toString()).toString()
+            if (result == ParseResult.Ok) {
+                val valueResponse = ObservableUtil.transformJsonToInteger(
+                    ObservableUtil.getValue(ApiEndpoints.REQ_MESSAGE_COUNT).toString()
+                ).toString()
                 _reqMessageCount.value = valueResponse
-            }else{
+            } else {
                 Log.e("ParseOnMessage", "Error on parse")
+                AppLogger.log("Error on parse in MessageCount - HttpTestViewModel.kt")
                 return
             }
+        } else {
+            _isSocketOn.value = false
         }
     }
 
@@ -127,6 +134,7 @@ open class HttpTestViewModel: ViewModel() {
                 }
 
             }
+
             else -> {
                 try {
                     val fetchRequestResponse: String = withContext(Dispatchers.IO) {
@@ -141,8 +149,5 @@ open class HttpTestViewModel: ViewModel() {
                 }
             }
         }
-
-        }
-
-
+    }
 }

@@ -15,8 +15,9 @@ open class [HttpTestViewModel](index.md) : [ViewModel](https://developer.android
 
 | Name | Summary |
 |---|---|
+| [isSocketOn](is-socket-on.md) | [androidJvm]<br>val [isSocketOn](is-socket-on.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)&gt; |
 | [reqMessageCount](req-message-count.md) | [androidJvm]<br>val [reqMessageCount](req-message-count.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-| [reqMessageList](req-message-list.md) | [androidJvm]<br>val [reqMessageList](req-message-list.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[IntegrationMessage](../../br.com.autotrac.testnanoclient.dataRemote/-integration-message/index.md)&gt;&gt; |
+| [reqMessageList](req-message-list.md) | [androidJvm]<br>val [reqMessageList](req-message-list.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[IntegrationMessage](../../br.com.autotrac.testnanoclient.models/-integration-message/index.md)&gt;&gt; |
 | [responseRequest](response-request.md) | [androidJvm]<br>val [responseRequest](response-request.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
 
 ## Functions

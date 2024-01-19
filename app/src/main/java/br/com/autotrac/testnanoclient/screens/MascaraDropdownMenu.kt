@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import br.com.autotrac.testnanoclient.dataRemote.IntegrationForm
+import br.com.autotrac.testnanoclient.models.IntegrationForm
 
 @Composable
 fun MascaraDropdownMenu(

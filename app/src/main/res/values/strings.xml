@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NanoClientKotlin</string>
+    <string name="app_name">TestNanoClient</string>
     <string name="item_name_1">ConnectToServer</string>
     <string name="item_name_2">Caixa de Entrada</string>
     <string name="item_description_1">Start Channel</string>

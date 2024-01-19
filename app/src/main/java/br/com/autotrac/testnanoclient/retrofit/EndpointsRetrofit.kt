@@ -10,7 +10,7 @@ import retrofit2.http.Query
 
 interface ApiService {
     /**
-     * Requisição Genérica de endpoints
+     * Requisição Genérica de endpoints por meio de chamadas HTTP.
      */
     @GET("/{endpoint}")
     fun callRequest(

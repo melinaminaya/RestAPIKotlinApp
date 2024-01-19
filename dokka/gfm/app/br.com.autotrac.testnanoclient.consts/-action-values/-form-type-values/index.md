@@ -10,7 +10,7 @@ Valores do tipo de formulário.
 
 | |
 |---|
-| [ApiEndpoints.Companion.REQ_FORM_LIST](../../-api-endpoints/-companion/-r-e-q_-f-o-r-m_-l-i-s-t.md) |
+| [ApiEndpoints.REQ_FORM_LIST](../../-api-endpoints/-r-e-q_-f-o-r-m_-l-i-s-t.md) |
 
 ## Properties
 

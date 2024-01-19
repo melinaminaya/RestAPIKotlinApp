@@ -15,7 +15,7 @@ open class [MctParamsViewModel](index.md) : [ViewModel](https://developer.androi
 
 | Name | Summary |
 |---|---|
-| [mctParams](mct-params.md) | [androidJvm]<br>val [mctParams](mct-params.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[ParameterModel](../../br.com.autotrac.testnanoclient.dataRemote/-parameter-model/index.md)&gt;&gt; |
+| [mctParams](mct-params.md) | [androidJvm]<br>val [mctParams](mct-params.md): [MutableLiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html)&lt;[List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[ParameterModel](../../br.com.autotrac.testnanoclient.models/-parameter-model/index.md)&gt;&gt; |
 
 ## Functions
 

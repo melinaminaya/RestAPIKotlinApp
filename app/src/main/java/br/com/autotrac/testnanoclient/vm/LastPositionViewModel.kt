@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ActionValues
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
-import br.com.autotrac.testnanoclient.dataRemote.LastPosition
-import br.com.autotrac.testnanoclient.dataRemote.PositionHistory
+import br.com.autotrac.testnanoclient.models.LastPosition
+import br.com.autotrac.testnanoclient.models.PositionHistory
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -16,7 +16,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.delay
 
 
-open class LastPositionViewModel: ViewModel() {
+open class LastPositionViewModel : ViewModel() {
 
     private val _lastPosition = MutableLiveData<LastPosition>()
     val lastPosition: MutableLiveData<LastPosition> get() = _lastPosition
@@ -37,8 +37,10 @@ open class LastPositionViewModel: ViewModel() {
 
     suspend fun fetchPositionLast() {
 
-        senderAccess.sendRequest(ApiEndpoints.REQ_GET_POSITION_LAST,
-            ActionValues.PositionSourceType.GPS , null, null, null)
+        senderAccess.sendRequest(
+            ApiEndpoints.REQ_GET_POSITION_LAST,
+            ActionValues.PositionSourceType.GPS, null, null, null
+        )
 
         val fetchedMessages: LastPosition? = fetchDataFromDataSource()
         _lastPosition.value = fetchedMessages
@@ -54,35 +56,38 @@ open class LastPositionViewModel: ViewModel() {
         val jsonOnLaunched = mapper.writeValueAsString(valueOnLaunched)
         return mapper.readValue(
             jsonOnLaunched,
-            LastPosition::class.java)
+            LastPosition::class.java
+        )
 
     }
 
     /**
      * Somente para o PrimeMobile:
      * MESSAGE_DUPLICATE	-5514
-        MESSAGE_TOO_BIG	-5531
-        NONE	0
-        NOT_PROCESSED	5
-        NOT_READ	3
-        NOT_READ_OUT_OF_BAND	7
-        OUT_OF_BAND_FILE_NOT_FOUND	-5561
-        READ	4
-        SENT	2
-        SERIAL_MESSAGE_CELL_NET_UNAVAILABLE	1001
-        SERIAL_MESSAGE_TOO_BIG_WAITING	1000
-        TO_SEND	1
-        TRANSMITTED	6
-        TRANSMITTING	8
-        UNKNOWN_ERROR	-5599
+    MESSAGE_TOO_BIG	-5531
+    NONE	0
+    NOT_PROCESSED	5
+    NOT_READ	3
+    NOT_READ_OUT_OF_BAND	7
+    OUT_OF_BAND_FILE_NOT_FOUND	-5561
+    READ	4
+    SENT	2
+    SERIAL_MESSAGE_CELL_NET_UNAVAILABLE	1001
+    SERIAL_MESSAGE_TOO_BIG_WAITING	1000
+    TO_SEND	1
+    TRANSMITTED	6
+    TRANSMITTING	8
+    UNKNOWN_ERROR	-5599
      */
 
     suspend fun fetchPositionHistoryCount() {
 
-        senderAccess.sendRequest(ApiEndpoints.REQ_POSITION_HISTORY_COUNT,2 ,
+        senderAccess.sendRequest(
+            ApiEndpoints.REQ_POSITION_HISTORY_COUNT, 2,
             null,
             null,
-            null)
+            null
+        )
 
         val fetchedMessages: String = fetchDataFromDataSourceCount()
         _positionHistoryCount.value = fetchedMessages
@@ -98,7 +103,8 @@ open class LastPositionViewModel: ViewModel() {
         val jsonOnLaunched = mapper.writeValueAsString(valueOnLaunched)
         return mapper.readValue(
             jsonOnLaunched,
-            String::class.java)
+            String::class.java
+        )
 
     }
 
@@ -107,14 +113,16 @@ open class LastPositionViewModel: ViewModel() {
      * Se este parâmetro for igual a 0, ele será ignorado.
      * Se for diferente de 0, os demais filtros serão ignorados e somente a mensagem com o código especificado será retornada.
      *
-     *@param2: msgStatusNum - é número do status a ser filtrado.
+     *@param2: msgStatusNum - é número do status a ser filtrado. Somente retorna mensagens com status de enviada ou a enviar.
      *@see ActionValues.MessageStatusValues
      * Este parâmetro só é considerado se posCode for igual a 0.
      */
     suspend fun fetchPositionHistoryList() {
 
-        senderAccess.sendRequest(ApiEndpoints.REQ_POSITION_HISTORY_LIST,0 ,
-            4, null, null)
+        senderAccess.sendRequest(
+            ApiEndpoints.REQ_POSITION_HISTORY_LIST, 0,
+            ActionValues.MessageStatusValues.SENT, null, null
+        )
 
         val fetchedMessages: List<PositionHistory>? = fetchDataFromDataSourceList()
         _positionHistoryList.value = fetchedMessages
@@ -133,6 +141,5 @@ open class LastPositionViewModel: ViewModel() {
             object : TypeReference<MutableList<PositionHistory>>() {})
 
     }
-
 }
 

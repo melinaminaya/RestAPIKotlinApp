@@ -3,4 +3,4 @@
 # isApiOn
 
 [androidJvm]\
-var [isApiOn](is-api-on.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+val [isApiOn](is-api-on.md): [LiveData](https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html)&lt;[Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)&gt;

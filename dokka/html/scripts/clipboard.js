@@ -1,55 +1,3 @@
-window.addEventListener('load', () => {
-    document.querySelectorAll('span.copy-icon').forEach(element => {
-        element.addEventListener('click', (el) => copyElementsContentToClipboard(element));
-    })
-
-    document.querySelectorAll('span.anchor-icon').forEach(element => {
-        element.addEventListener('click', (el) => {
-            if(element.hasAttribute('pointing-to')){
-                const location = hrefWithoutCurrentlyUsedAnchor() + '#' + element.getAttribute('pointing-to')
-                copyTextToClipboard(element, location)
-            }
-        });
-    })
-})
-
-const copyElementsContentToClipboard = (element) => {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(element.parentNode.parentNode);
-    selection.removeAllRanges();
-    selection.addRange(range);
-
-    copyAndShowPopup(element,  () => selection.removeAllRanges())
-}
-
-const copyTextToClipboard = (element, text) => {
-    var textarea = document.createElement("textarea");
-    textarea.textContent = text;
-    textarea.style.position = "fixed";
-    document.body.appendChild(textarea);
-    textarea.select();
-
-    copyAndShowPopup(element, () => document.body.removeChild(textarea))
-}
-
-const copyAndShowPopup = (element, after) => {
-    try {
-        document.execCommand('copy');
-        element.nextElementSibling.classList.add('active-popup');
-        setTimeout(() => {
-            element.nextElementSibling.classList.remove('active-popup');
-        }, 1200);
-    } catch (e) {
-        console.error('Failed to write to clipboard:', e)
-    }
-    finally {
-        if(after) after()
-    }
-}
-
-const hrefWithoutCurrentlyUsedAnchor = () => window.location.href.split('#')[0]
-
 /**
  * Specific changes for client API Documentation.
  * This script must be paste inside clipboard.js
@@ -124,13 +72,17 @@ function findElementWithText(parentElement, searchText) {
 //Remove all unnecessary links
 var elementsToRemove = [
     "br.com.autotrac.testnanoclient",
-    "br.com.autotrac.testnanoclient.handlers",
+    "br.com.autotrac.testnanoclient.adapter",
     "br.com.autotrac.testnanoclient.common",
+    "br.com.autotrac.testnanoclient.data",
+    "br.com.autotrac.testnanoclient.handlers",
+    "br.com.autotrac.testnanoclient.logger",
     "br.com.autotrac.testnanoclient.navigation", 
     "br.com.autotrac.testnanoclient.screens",
     "br.com.autotrac.testnanoclient.security",
     "br.com.autotrac.testnanoclient.ui.theme",
-    "br.com.autotrac.testnanoclient.vm"
+    "br.com.autotrac.testnanoclient.vm",
+    
 ];
 
 elementsToRemove.forEach(function(elementText) {
@@ -151,8 +103,8 @@ elementsToRemove.forEach(function(elementText) {
 //Replace link names
 var myMap = new Map();
 myMap.set('br.com.autotrac.testnanoclient.consts', 'Constantes');
-myMap.set('br.com.autotrac.testnanoclient.dataRemote', 'DataClasses');
-myMap.set('br.com.autotrac.testnanoclient.retrofit', 'Endpoint Genérico');
+myMap.set('br.com.autotrac.testnanoclient.models', 'Models');
+myMap.set('br.com.autotrac.testnanoclient.retrofit', 'Endpoint Genérico para chamadas HTTPS sem Websocket');
 myMap.set('br.com.autotrac.testnanoclient.requestObjects', 'Objetos das Requisições')
 myMap.forEach(function(elementText, key){
     var tableRowElements = document.querySelectorAll('div.table-row');
@@ -164,4 +116,3 @@ myMap.forEach(function(elementText, key){
         }
     });
 });
-

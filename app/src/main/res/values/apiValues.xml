@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="baptized">"Batizada"</string>
+    <string name="mct_not_authorized">"MCT não autorizado a se comunicar."</string>
+    <string name="baptism_timedout">"Houve timeout no processo de batismo."</string>
+</resources>

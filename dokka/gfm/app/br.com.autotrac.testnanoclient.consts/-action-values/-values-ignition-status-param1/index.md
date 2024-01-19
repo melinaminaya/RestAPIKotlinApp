@@ -5,7 +5,7 @@
 [androidJvm]\
 object [ValuesIgnitionStatusParam1](index.md)
 
-Status retornados pelo Param1 da ação [ActionValues.IGNITION_STATUS](../-i-g-n-i-t-i-o-n_-s-t-a-t-u-s.md). Utilizado também para [ApiEndpoints.GET_PARAM_IGNITION_STATUS](../../-api-endpoints/-companion/-g-e-t_-p-a-r-a-m_-i-g-n-i-t-i-o-n_-s-t-a-t-u-s.md)
+Status retornados pelo Param1 da ação [ActionValues.IGNITION_STATUS](../-i-g-n-i-t-i-o-n_-s-t-a-t-u-s.md). Utilizado também para [ApiEndpoints.GET_PARAM_IGNITION_STATUS](../../-api-endpoints/-g-e-t_-p-a-r-a-m_-i-g-n-i-t-i-o-n_-s-t-a-t-u-s.md)
 
 ## Properties
 

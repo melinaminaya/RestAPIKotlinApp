@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import br.com.autotrac.testnanoclient.ObservableUtil
 import br.com.autotrac.testnanoclient.consts.ApiEndpoints
 import br.com.autotrac.testnanoclient.handlers.MessageSenderAccess
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -35,19 +34,16 @@ open class CurrentDateViewModel: ViewModel() {
     private suspend fun fetchDataFromDataSource(): String {
         delay(500)
         val valueOnLaunched = ObservableUtil.getValue(ApiEndpoints.REQ_GET_CURRENT_DATE)
-        val jsonOnLaunched =  gson.toJson(valueOnLaunched)
-        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
-//        val date = dateFormat.parse(jsonOnLaunched.trim('"'))
+        if (valueOnLaunched != null) {
+            val jsonOnLaunched = gson.toJson(valueOnLaunched)
 
-        mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
-        return if (jsonOnLaunched != null && jsonOnLaunched.isNotBlank()) {
-
-                val result = mapper.readValue(jsonOnLaunched, String::class.java)
-                result
-
-        } else {
-            "JSON string is null"
+            if (jsonOnLaunched != null && jsonOnLaunched.isNotBlank()) {
+                val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+                mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true)
+                return mapper.readValue(jsonOnLaunched, String::class.java)
+            }
         }
+        return "JSON string is null"
     }
 
 }

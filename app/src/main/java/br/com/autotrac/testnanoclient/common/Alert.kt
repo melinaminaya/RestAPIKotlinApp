@@ -12,9 +12,8 @@ fun Alert(
     onClick: () -> Unit,
     title: String,
     content: (@Composable () -> Unit),
+    showMarkAsRead: Boolean,
 ){
-
-    //  val dialogState = remember { AlertDialogState() }
     AlertDialog(
         onDismissRequest = onDismissRequest,
         // state = dialogState,
@@ -23,10 +22,12 @@ fun Alert(
         },
         text = {content()},
         confirmButton = {
-            Button(
-                onClick = onClick
-            ) {
-                Text(text = "Marcar como Lida")
+            if (showMarkAsRead) {
+                Button(
+                    onClick = onClick
+                ) {
+                    Text(text = "Marcar como Lida")
+                }
             }
         },
         dismissButton = {

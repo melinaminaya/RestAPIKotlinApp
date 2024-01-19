@@ -3,4 +3,4 @@
 # deleteMessage
 
 [androidJvm]\
-fun [deleteMessage](delete-message.md)(message: [IntegrationMessage](../../br.com.autotrac.testnanoclient.dataRemote/-integration-message/index.md))
+fun [deleteMessage](delete-message.md)(message: [IntegrationMessage](../../br.com.autotrac.testnanoclient.models/-integration-message/index.md))
